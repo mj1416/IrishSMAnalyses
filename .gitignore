@@ -1,0 +1,83 @@
+# Compiled source and cached #
+##############################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+*.ipynb
+*.ipynb_checkpoints
+
+# Large files #
+###############
+*.pdf
+*.ps
+*.eps
+*.gif
+*.dat
+*.png
+*.fig
+
+# Build directories
+###################
+build
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+
+# Logs and databases #
+######################
+*log
+log*
+*Log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+core
+
+# backup files #
+################
+*~
+*#
+*old
+*.bak
+
+# Latex generated files #
+#########################
+*.aux
+*.out
+*.spl
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.toc
+*.blg
+
+# R generated files#
+*.RData
+*.Rapp.history
+*.Rhistory
