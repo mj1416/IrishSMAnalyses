@@ -1,0 +1,110 @@
+\begin{thebibliography}{}
+
+\bibitem[Beirlant et~al., 2006]{beirlant}
+Beirlant, J., Goegebeur, Y., Segers, J., and Teugels, J. (2006).
+\newblock {\em Statistics of extremes: theory and applications}.
+\newblock John Wiley \& Sons.
+
+\bibitem[Bingham et~al., 1989]{Binghametal:87}
+Bingham, N.~H., Goldie, C.~M., and Teugels, J.~L. (1989).
+\newblock {\em Regular variation}, volume~27.
+\newblock Cambridge university press.
+
+\bibitem[Bishop, 2006]{bishop}
+Bishop, C.~M. (2006).
+\newblock {\em Pattern recognition and machine learning}.
+\newblock Springer.
+
+\bibitem[Charlton and Singleton, 2014]{char14}
+Charlton, N. and Singleton, C. (2014).
+\newblock A refined parametric model for short term load forecasting.
+\newblock {\em International Journal of Forecasting}, 30(2):364--368.
+
+\bibitem[Cheng and Amin, 1979]{ChengAmin:79}
+Cheng, R. C.~H. and Amin, N. (1979).
+\newblock Maximum product of spacings estimation with application to the
+  lognormal distribution.
+\newblock {\em Math Report}, 79(1).
+
+\bibitem[De~Haan, 1975]{deHaan:70}
+De~Haan, L. (1975).
+\newblock On regular variation and its application to the weak convergence of
+  sample extremes.
+\newblock {\em MC Tracts}, 32:1--124.
+
+\bibitem[De~Haan and Ferreira, 2007]{deHF:06}
+De~Haan, L. and Ferreira, A. (2007).
+\newblock {\em Extreme value theory: an introduction}.
+\newblock Springer Science \& Business Media.
+
+\bibitem[Douglas et~al., 1998]{douglas98}
+Douglas, A.~P., Breipohl, A.~M., Lee, F.~N., and Adapa, R. (1998).
+\newblock The impacts of temperature forecast uncertainty on bayesian load
+  forecasting.
+\newblock {\em IEEE Transactions on Power Systems}, 13(4):1507--1513.
+
+\bibitem[Einmahl et~al., 2016]{einmahl16}
+Einmahl, J.~H., Haan, L., and Zhou, C. (2016).
+\newblock Statistics of heteroscedastic extremes.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 78(1):31--51.
+
+\bibitem[Embrechts et~al., 2013]{embrechts}
+Embrechts, P., Kl{\"u}ppelberg, C., and Mikosch, T. (2013).
+\newblock {\em Modelling extremal events: for insurance and finance},
+  volume~33.
+\newblock Springer Science \& Business Media.
+
+\bibitem[Ferreira et~al., 2015]{FdeH:15}
+Ferreira, A., de~Haan, L., et~al. (2015).
+\newblock On the block maxima method in extreme value theory: Pwm estimators.
+\newblock {\em The Annals of statistics}, 43(1):276--298.
+
+\bibitem[Fisher and Tippett, 1928]{ft28}
+Fisher, R.~A. and Tippett, L. H.~C. (1928).
+\newblock Limiting forms of the frequency distribution of the largest or
+  smallest member of a sample.
+\newblock In {\em Mathematical Proceedings of the Cambridge Philosophical
+  Society}, volume~24, pages 180--190. Cambridge Univ Press.
+
+\bibitem[Frey and Dueck, 2007]{frey07}
+Frey, B.~J. and Dueck, D. (2007).
+\newblock Clustering by passing messages between data points.
+\newblock {\em science}, 315(5814):972--976.
+
+\bibitem[Gnedenko, 1943]{Gnedenko:43}
+Gnedenko, B. (1943).
+\newblock Sur la distribution limite du terme maximum d'une serie aleatoire.
+\newblock {\em Annals of mathematics}, pages 423--453.
+
+\bibitem[Haben et~al., 2014]{dan14}
+Haben, S., Ward, J., Greetham, D.~V., Singleton, C., and Grindrod, P. (2014).
+\newblock A new error measure for forecasts of household-level, high resolution
+  electrical energy consumption.
+\newblock {\em International Journal of Forecasting}, 30(2):246--256.
+
+\bibitem[Hong and Fan, 2016]{hong16}
+Hong, T. and Fan, S. (2016).
+\newblock Probabilistic electric load forecasting: A tutorial review.
+\newblock {\em International Journal of Forecasting}, 32(3):914--938.
+
+\bibitem[McLachlan and Basford, 1988]{bk:mixmod}
+McLachlan, G.~J. and Basford, K.~E. (1988).
+\newblock {\em Mixture models: Inference and applications to clustering},
+  volume~84.
+\newblock Marcel Dekker.
+
+\bibitem[Ranneby, 1984]{Ranneby:84}
+Ranneby, B. (1984).
+\newblock The maximum spacing method. an estimation method related to the
+  maximum likelihood method.
+\newblock {\em Scandinavian Journal of Statistics}, pages 93--112.
+
+\bibitem[Wijaya et~al., 2015]{cbaf}
+Wijaya, T.~K., Vasirani, M., Humeau, S., and Aberer, K. (2015).
+\newblock Cluster-based aggregate forecasting for residential electricity
+  demand using smart meter data.
+\newblock In {\em Big Data (Big Data), 2015 IEEE International Conference on},
+  pages 879--887. IEEE.
+
+\end{thebibliography}

@@ -1,0 +1,28 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{HWG{\etalchar{+}}14}
+
+\bibitem[CS14]{Char14}
+Nathaniel Charlton and Colin Singleton.
+\newblock A refined parametric model for short term load forecasting.
+\newblock {\em International Journal of Forecasting}, 30:364--368, 2014.
+
+\bibitem[HF16]{hong16}
+Tau Hong and Shu Fan.
+\newblock Probabilistic electric load forecasting: A tutorial review.
+\newblock {\em International Journal of Forecasting}, 32:914--938, 2016.
+
+\bibitem[HWG{\etalchar{+}}14]{Dan14}
+Stephen Haben, Jonathan Ward, Danica~Vukadinovic Greetham, Colin Singleton, and
+  Peter Grindrod.
+\newblock A new error measure for forecasts of household-level, high resolution
+  electrical energy consumption.
+\newblock {\em International Journal of Forecasting}, 30:246--256, 2014.
+
+\bibitem[Wmo13]{fExtremes}
+Diethelm Wuertz and many others.
+\newblock {\em fExtremes: Rmetrics - Extreme Financial Market Data}, 2013.
+\newblock Several parts are still preliminary and may be changed in the future.
+  this typically includes function and argument names, as well as defaults for
+  arguments and return values.
+
+\end{thebibliography}

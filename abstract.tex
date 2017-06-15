@@ -1,0 +1,45 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[mathscr]{euscript}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+%Useful Commands
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{ex}[thm]{Example}
+
+
+
+\title{Impacts of Science Abstract}
+\author{Maria Jacob}
+
+\begin{document}
+\maketitle
+
+With our society and climate changing rapidly, so too will the way we interact with our electric grid. On the one hand, households and businesses may reduce dependency on the electric grid by installing solar panels, wind turbines and/or electric storage but overall demand may increase as more electric vehicles are bought and charging stations are built. Equally, since there is a seasonal dependence on energy consumption, how much buildings and houses are heated or cooled may change. The way these interactions evolve may require the energy industry to adapt their services and/or the infrastructure to be upgraded.
+
+One way to understand electric consumption, or more accurately electric load, in the future is to understand the influences on current electric load. To do this, we can use high-resolution data that are available through smart meters to produce better electric load forecasts. Most research on this has been on point load forecasts but there is a growing body of work on more probabilistic approaches. Most existing forecasting techniques work well for average behaviour however there is very little for forecasting unusually large loads.
+
+In order to create better forecasts, we intend to split households into two major categories: those with high electric load and everyone else. We are also particularly interested in finding the largest possible load from these households. We will do this by using extreme value theory to conduct inference on the tail behaviour of the data and deduce the properties of block maxima (maxima in some time-frame, say in a day or week). Moreover we are interested in introducing confidence bounds on these results which is of particular use to the energy industry.
+
+We have already set up a benchmark forecast and currently have some initial results about the tail behaviour of weekly maxima but further testing and validation is required.
+
+Though the application of extreme value theory to electric load forecasting is very novel, the results are promising. Quantifying the upper limits of electric demand as well as confidence bounds on these limits are particularly useful for businesses who may want to invest in storage technologies and/or generators through so called auxiliary grid services that provide timely but expensive solutions. Furthermore, combining these results from extreme value theory with the data driven approach to generate better load forecasts will allow for more efficient energy use. In return, this would reduce stress on the grid and reduce excessive costs on expensive infrastructure upgrades.
+
+\end{document}

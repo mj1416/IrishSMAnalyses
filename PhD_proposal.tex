@@ -1,0 +1,143 @@
+%######################################################################################################################################
+%######################################################################################################################################
+%###################											Page Set up										      ###################
+%######################################################################################################################################
+%######################################################################################################################################
+
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[mathscr]{euscript}
+\usepackage{makecell}
+\usepackage{hhline}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
+\hypersetup{colorlinks = true, citecolor= black, linkcolor=blue}
+
+%Useful Commands
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{ex}[thm]{Example}
+
+
+\newcommand{\id} {\ensuremath{\displaystyle{\mathop {=} ^d}}}
+
+
+\newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\real}{\ensuremath{{\field{R}}}}
+\newcommand{\mc}[1]{{\ensuremath{\mathcal{#1}}}}
+
+\newcommand{\sumab}[2]{\ensuremath{\sum\limits_{#1}^{#2}}}
+\newcommand{\intab}[2]{\ensuremath{\int_{#1}^{#2}}}
+\newcommand{\intinf}[1]{\ensuremath{\int_{#1}^{\infty}}}
+\newcommand{\intunit}{\ensuremath{\int_{0}^{1}}}
+
+\newcommand{\arrowf}[1]{\ensuremath{\displaystyle {\mathop {\longrightarrow}_{#1 \rightarrow \infty}\,}}}
+\newcommand{\limit}[1]{\ensuremath{\displaystyle {\lim_{#1 \rightarrow{\infty}}}}}
+\newcommand{\suprem}[1]{\ensuremath{\displaystyle {\sup_{#1}}}}
+\newcommand{\minarg}[1]{\ensuremath{\displaystyle {\min_{#1}}}}
+\newcommand{\argmax}[1]{\ensuremath{\displaystyle {\arg\max_{#1}}}}
+\newcommand{\conv}[1]{\ensuremath{\, \displaystyle {\mathop {\longrightarrow}_{n \rightarrow \infty} ^{#1}}}\, }
+
+\title{PhD Proposal}
+%\author{Maria Jacob}
+\begin{document}
+\maketitle
+
+\noindent \textbf{Student Name:} Maria Jacob \newline
+
+\noindent \textbf{Supervisors:} \begin{enumerate} \item Dr Danica Vukadinovic Greetham, Department of Mathematics and Statistics, University of Reading \item Dr Claudia Neves, Department of Mathematics and Statistics, University of Reading \end{enumerate}
+
+\noindent \textbf{Industrial Partner:} Dr. Maciej Fila, Scottish and Southern Energy \newline
+
+
+\noindent \textbf{Introduction}
+
+Electric load forecasts are extremely important for both industry and society as they are hugely informative in various decision making processes. For example, in the utility industry, electric load forecasts can be used to make decisions about energy trading, pricing and generation. At the national and community level, these forecasts can inform if and by how much the infrastructure should be upgraded.Most studies in electric load forecasting in the past century have focused on point load forecasting. However, in the most recent decade, more researchers have delved into providing probabilistic load forecasts (PLF) as business needs and electricity demand and generation evolve. \citet{hong16} provided an in depth literature review outlining various multiple linear regression, machine learning and those based in graph theory forecasts and various ways to validate a forecasts such as $p^{th}-$norm error.
+
+While most of these forecasts produce reasonably good forecasts in terms of averages, they smooth out much of the peakiness of the actual electric load and no studies quantifying the behaviour of the tails of load distribution has been conducted.
+
+Although moderate usage across households is not cause for concern for most electricity providers it is advantageous and indeed valuable to be able to forecast and prepare for spikes in demand particularly when they occur simultaneously in multiple households. 
+
+Engaging in this kind of study which enables electricity distributors to generate better electricity load forecasts enables us to be able to better manage our electricity grid and implement timely infrastructure development but also to minimise resource consumption and thus reduce carbon emissions. Equivalently, as energy trading becomes more common place, load determines the instantaneous unit price of electricity thus being able to forecasts peaks accurately both in time and magnitude will allow to maximise profits in the energy market. \newline
+
+
+\noindent \textbf{Summary of the State of the Art}
+
+Firstly, let's review some of the forecasting and forecasting validating algorithms in the literature. \cite{char14} used a multiple linear regression technique, specifically a refined parametric model, to forecast electricity demand for a specific region in the US. The model used both temperature and calendar variables (weekday, weekend, national holiday) as input and was refined so that data were combined from multiple weather stations and outliers were removed. There are other studies which model uptake of electric vehicles and solar panels and the influence such as \cite{danEV17}. \cite{cbaf} used cluster information to create load forecasts.
+
+Some conventional error metrics for point load forecasts, which have also been used for PLF, are mean absolute percentage error (MAPE) and mean absolute error \cite{hong16}. These are quite simple and transparent and thus quite favourable. However as noted by \cite{dan14}, error measures such as MAPE incur a double penalty: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs and a ``good'' peaky forecast may be judged as a bad forecast by MAPE whereas an undesirable flat-forecast will be judges as good. Thus \cite{dan14} developed an adjusted error measure which uses a $p^th-$ norm error and but if the peak occurs within some window of the observed peak is considered to be a ``better'' forecast than if it had not been forecasted at all. 
+
+Peaks in magnitude can be thought of as extremes in data set and one way to study these extremes is to use the framework set by extreme value theory which describes the limiting distribution of maxima (minima) much like the central limit theorem describes average behaviour.
+
+Results from extreme value theory have been mainly applied to financial data in studies such as \citet{einmahl16} however there are papers where floods, rainfall and meteorological parameters have be studied such as \citet{ferreira17} \todo{inlcude some other papers}.
+
+The results of extreme value theory, like that of Central Limit theorem, apply to identically and independently distributed data however adaptations to these have been made for example in \citet{einmahl16} where the assumption of identically distributed data was relaxed. \citet{einmahl16} developed and described the behaviour of heteroscedastic extremes and present estimators for the extreme value index, which describe the whether the data are heavy tailed or light tailed and for what was termed the \textit{scedasis} function which can be loosely interpreted as a measure of where extremes are most likely to occur. \newline
+
+\noindent \textbf{Project Description}
+
+As in the above section, the project will also take a two-pronged approach. One of the two prong will look to improving forecasts in general by adding more features such as renewable energy integration, temperature, demographics, clustering. The other will adapt existing methodology to the data and application at hand. The project will bring the two together in that it will use concepts of heteroscedasticity and error analysis and forecast validation and include parametric estimators which describe the dependency with meteorological parameters such as rainfall and temperature and thus describe extreme behaviour under various conditions. \newline
+
+\noindent Electricity load forecast will be improved in the following way:
+\begin{itemize}
+\item More features will be added to early biased forecasts so that the model mimics reality more truly integrating both weather and calendar variables with demographic details, information on cluster, electric vehicle and renewable energy integration.
+\item Better error measures will be developed to validate forecasts efficiently as well as give more probabilistic view of forecasts rather than point forecasts.
+\end{itemize}
+
+\noindent Inference on extremes will be conducted in the following way:
+\begin{itemize}
+\item New estimators will be developed and their (asymptotic) properties will be investigated.
+\item The existing methodology where it applies to non i.i.d. data will be extended and adapted to electrcity load data and new methodology will be developed.
+\item New methodologies will include introduction of parametric statistics by introducing regression-like models to describe the behaviour of extreme under various realistic situations such as rain and other weather variables.
+\item The model will also consider the influence of usage clusters.
+\end{itemize}
+
+These methods can be combined to give a better picture of both moderate and extreme usage in real-world environment and take into account how both environmental and societal factors change. It will also thus be possible to do some climate change experiments to see how the right endpoint and frequency and or magnitude of extremes may change in the future in order to determine how best, if necessary, to plan for the future and mitigate adverse consequences.
+
+The techniques developed throughout this project are driven with the electricity industry in mind however these techniques and results are widely adaptable for other industries and applications. \newline
+
+\noindent \textbf{Work Plan}
+
+The intended work plan to accomplish the above mentioned goals is given in table \ref{tab:workplan}.
+
+\begin{table}
+\centering
+\begin{tabular}{|r|c|c|c|}
+\hline
+ & 2017-18 & 2018-19 & 2019-20 \\
+\hhline{|=|=|=|=|}
+September &  &  &  \\ \hline
+October &  &  &  \\ \hline
+November &  &  &  \\ \hline
+December &  &  &  \\ \hline
+January &  &  &  \\ \hline
+February &  &  &  \\ \hline
+March &  &  &  \\ \hline
+April &  &  &  \\ \hline
+May &  &  &  \\ \hline
+June &  &  &  \\ \hline
+July &  &  &  \\ \hline
+August &  &  &  \\ \hline
+\end{tabular}
+\caption{PhD work plan}
+\label{tab:workplan}
+\end{table}
+
+\bibliographystyle{apalike}
+\bibliography{sample}
+\end{document}

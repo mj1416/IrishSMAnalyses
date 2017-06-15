@@ -1,0 +1,498 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[mathscr]{euscript}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{MRes Project Report}
+\author{Maria Jacob}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+
+This is the report of everything that I have read and done and the results from these endeavours.
+Firstly, this project has several questions it aims to answer. Some of these questions are:
+\begin{enumerate}
+\item Is it better to predict energy load and then cluster clients into groups or is it better to cluster and then predict?
+\item Can we apply Extreme Value Theory to the available data?
+\item If we can, how do we implement it and what are the conditions and restrictions? What results do we get?
+\item Can we identify clusters or groups of consumers who generate peaks and use that information to incentivise a shift in consumption to other hours so fewer peaks of smaller amplitudes are present in load demand?
+\end{enumerate}
+
+In the following section I will briefly review some relevant literature and in section 3 I will describe the data and present some starting results.
+
+\section{Literature}
+
+\cite{hong16} reviewed probabilistic electric load forecasting. The paper went through the developments that have been made in load forecasting and highlighted areas which are still under researched. The authors also provided comparisons of different techniques and methodologies and provided arguments for each and pointed out the potential pitfalls.
+
+\cite{Char14} introduced a refined parametric model to forecast electricity demand for a specific region in the US. The initial code is unrefined and depends on temperature. The relationship between electricity demand and temperature is given as quadratic relationship to account for the use heating in cold weather and the use of air conditioning in warm weather. Additional refinements are added such as:
+\begin{enumerate}
+\item combining data from multiple weather systems.
+\item removing outliers.
+\item special consideration of some national holidays.
+\end{enumerate}
+The authors explain the rational behind each refinement and argue for how each refinement improved the forecasting ability. The final code was entered in an energy forecasting competition known as GEFCom 2012, where the code is said to have done reasonably well and much better than the benchmark code even without any restrictions.
+
+Another notable comment \cite{Char14} made, though it was just a comment and no discussion or evidence was presented, was that it is better to predict and then cluster rather than to cluster and predict. It will be valuable to confirm or contrast this statement throughout the course of this project.
+
+Although for this project the interest is in outliers that are large, it is worth noting that \cite{Char14} considered low outliers, which were defined to be the lowest 20\% of the data.
+
+\cite{Dan14} introduces a new method of assessing measures in forecasts of high resolution data as those used in this report. The motivation behind this development is that peaky forecast, which is what is desirable for this application, is often more "erroneous" than a flat forecast, i.e. one that is a horizontal line found some form of an average, because the peaky forecast is penalised twice: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs. A flat-forecast does not incur this double penalty. The authors, therefore developed, an adjusted error that penalises less a forecast which predicts a peak that is slightly shifted than a forecast where the peak is not predicted at all. The authors also test out three different forecasting techniques:
+\begin{enumerate}
+\item flat forecast: as explained before
+\item Last week (LW) forecast: The usage on the same day of the week, e.g. Forecasts for the coming Thursday is predicted to be the same as the Thursday from previous week.
+\item Averaged Adjustment (AA) Forecast: takes into account both a historic average and a baseline usage.
+\end{enumerate}
+
+Using both the new error measure, compared to the common error measures, as well as the mean displacements of peaks, \cite{Dan14} show that the flat forecast is not a forecasting technique for this application and that in general the best technique out of the three is AA with LW performing relatively well too.
+
+Also of interest to us in this study is that \cite{Dan14} uses this new error measure to cluster 600 households where the forecasting skill is poor, good after being adjusted and good. This will be particularly useful to this study in the future as we consider the ways in which we can cluster households.
+
+\section{Data and Results}
+Data on each household is collected by a smart meter at every half hours (assumed to be measured on the hour and half past the hour). Thus 48 readings are taken per day per household and are taken all year round. A reading of zero at any point indicates a failure to accurately measure consumption and the household is indicated as having incomplete data. These households have been omitted from all analyses presented here.
+
+Overall there are 547 household altogether, 503 of which have complete data. We will only consider these 503. In the data set, along with the readings, we also have information about what day of the week the data were taken, at which half hour they were taken and the week as well. The data set did not explicitly give data or times but it recorded timesteps i.e. 1 - 48 for the half hours, 1-22 for the weeks, 1-7 for the days. We therefore sought out information to be able to identify the date and thus the week and the day.
+
+While the complete data is 153 days which is roughly 22 weeks (5.5 months), the initial analysis began on a smaller data set of 48 days or roughly 7 weeks of data. Results on these will be provided now.
+
+The first plot contains four different plots. Each plot shows total usage for all 503 customers. For example, the top left plot shows how much energy was measured to have been consumed by all 503 customers at each half hour for the 7 weeks. The top right figure shows how much energy was used each week cumulatively by everyone. The bottom left shows the daily total load demand whereas the bottom right divides it by the day of the week. It should be noted that though the axis says Monday  to Sunday, it should range from Friday to Thursday.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{16_22_sums.png}
+\caption{the top left plot shows how much energy was measured to have been consumed by all 503 customers at each half hour for the 7 weeks. The top right figure shows how much energy was used each week cumulatively by everyone. The bottom left shows the daily total load demand whereas the bottom right divides it by the day of the week. It should be noted that though the axis says Monday  to Sunday, it should range from Friday to Thursday.}
+\label{fig:sums} 
+\end{figure}
+
+While figure \ref{fig:sums} (bottom left) shows the total usage from all household for each day in the dataset, figure \ref{fig:totes} shows the total consumption for each household for each day in the data set.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{tot_daily_per_customer.pdf}
+\caption{ This image breaks down figure \ref{fig:sums} (bottom left) by showing the daily consumption of each household on each day in the 7 week period.}
+\label{fig:totes}
+\end{figure}
+
+Additionally, to check for independence in the data, the daily total electric demand of each household was plotted against the daily total of the same household for the same data. This plot is given in \ref{fig:ty}. The idea is to investigate that each household demand is independent of the others. Also notable is the range: some household using very little energy (perhaps they were not at home) whereas others using considerable more. There are quite a few outliers as well.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{today_yesterday.png}
+\caption{This image plots the total daily electric demand of each household against the demand of the same household for the previous day.}
+\label{fig:ty} 
+\end{figure}
+
+This suggests that there is some correlation between the electricity usage today  and electricity usage yesterday. To test this further and also to investigate if the same days of the weeks have some correlation some similar plots have been presented.
+The first one is similar to the one already shown in \ref{fig:ty}, except it is coloured in 503 colours for each household. This doesn't hold much value because the number of data points but does show that there is not that much more correlation in one one household as in the whole data set in general.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{correlation_coloured.png}
+\caption{This image plots the total daily electric demand of each household against the demand of the same household for the previous day.}
+\label{fig:ty_colour} 
+\end{figure}
+
+We also want to see if there is a correlation between day d of this week and day d of the previous week.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-7.png}
+\caption{This image plots the total daily electric demand of each household against the demand of the same household on the same day of the previous week.}
+\label{fig:day_d_autocorr} 
+\end{figure}
+
+In both these case, notice that it is the light blue colour that is particularly removed from the from the main cluster. It is possible that in a certain week they may have been on holidays and not the other week. Also because the data is in August-September it is possible that the start of a new academic year may have had an influence. The holiday is unlikely as the light blues in question are high usage in both times. Also considering both figures \ref{fig:ty_colour} and \ref{fig:day_d_autocorr}, the household's energy consumption is very varied from day to day.
+
+Other correlations are given in figures \ref{fig:day_2_autocorr} - \ref{fig:day_6_autocorr}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-2.png}
+\caption{This image plots the daily energy demand of each household on some dat against their daily demand 2 days before.}
+\label{fig:day_2_autocorr} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-3.png}
+\caption{This image plots the daily energy demand of each household on some dat against their daily demand 3 days before}
+\label{fig:day_3_autocorr} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-4.png}
+\caption{This image plots the daily energy demand of each household on some dat against their daily demand 4 days before.}
+\label{fig:day_4_autocorr} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-5.png}
+\caption{This image plots the daily energy demand of each household on some dat against their daily demand 5 days before.}
+\label{fig:day_5_autocorr} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-6.png}
+\caption{This image plots the daily energy demand of each household on some dat against their daily demand 6 days before.}
+\label{fig:day_6_autocorr} 
+\end{figure}
+
+
+There is still analysis that needs to be done. For example. If we take all the outliers out of the figure \ref{fig:ty} and see why those are there. Questions such as "is it because yesterday was a $X_{t-1}$ was a weekend and the $X_t$ is a weekday?" still need to be addressed.
+
+Continuing with the smaller data set, the next step is to set a benchmark for prediction. I have used the first 6 weeks of the 7 weeks to predict the sixth week using a simple mean at every half hour for each household. To visually compare these I plotted the prediction to the measured readings and have plotted these however doing this for the over 500 households is a lot of images and thus only the first 10 are presented here.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{compare_0_10.png}
+\caption{\label{fig:mean_pred} This shows the prediction (blue) and the observed electric demand from the first ten households. The x-axis in each case is the half hours ranging from midnight to 23.30 the next day.}
+\end{figure}
+
+The prediction was made as follows:
+\begin{enumerate}
+\item The first six weeks were isolated.
+\item The mean for each household at each half hour was calculated and stored into a matrix (48 rows and 504 columns). This is the prediction (an overly simplistic method).
+\item A second matrix (also of dimensions 48 and 504) is created containing the actual consumption of the each household at each half hour.
+\item For the visual comparison, 503 plots are created, each showing the prediction and the actual.
+\end{enumerate}
+
+How might we cluster these people?
+
+How might we define outliers?
+
+Can we account for the difference if we use temperature?
+Already looking at top right image of figure \ref{fig:sums}, it is clear that there is a shift in total consumption after the third week which means that using the mean of the past 6 weeks to predict the seventh will be skewed to be lower than what we would expect having seen the consumption in the recent weeks. Perhaps a weighted mean should be used where the last 3 weeks are most important. Also important to note is the peak in week labeled week 20. Was this a week with special holidays such as Christmas or other national holidays?
+
+But before we do that we need to come up with some way of assessing the error in the prediction in the first place. One way to do this is mean square error. While this not the best way, it is a very common way to measure error. \todo[inline, color=green!40]{add here that paper from Danica that discusses the pitfalls using this error measure (i.e flat line being better etc).}
+The Mean Square Error (MSE) was calculated as follows:
+\begin{enumerate}
+\item Another matrix with the same dimensions as the prediction matrix and the observation matrix is created by calculated the element wise difference between the prediction reading and the actual reading which was then squared (also element wise).
+\item The column mean of each (i.e. the mean of each household) was stored into a vector of length 503.
+\item this was then plotted to visualise \ref{fig:mse_means}
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{mse_means.png}
+\caption{\label{fig:mse_means} This shows the mean square error of each household between what we predicted it would be (using unweighted mean) and the actual observation.}
+\end{figure}
+
+Clearly there are peaks, some quite large.
+
+Also to understand the shape of the data, a histogram of the all the measurements of the 503 households are given in \ref{fig:hist}. This figure plots the histogram of every measurement taken in each of 503 households. Thus, because the data set is for 503 household over 7 weeks, measured 48 times each day, the histogram plots 1,183,056 (=503 x 7 x 7 x 48) data points.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{usage_histogram.png}
+\caption{\label{fig:hist} This shows the histogram for the electricity usage for the 503 households. The usage given is instantaneous i.e. the x-axis is the what the smart meter record at any given hour or half hour in the 7 week period (in excess of 1 million data points). The median and mode are given by 0.221 and 0.12, respectively.}
+\end{figure}
+
+Clearly from the above image (fig. \ref{fig:hist}) there are some clear outliers, such as a household recording upto 12 kW of energy at one point. Thus to get a better picture of what "most" household are doing, the next image shows a similar image except only plots those households that are in the 3rd quartile (75th percentile). This image was created in the following manner:
+\begin{enumerate}
+\item the data set generting figure \ref{fig:hist}, was ordered (ascending).
+\item then the data set was divided into four equal parts.
+\item the third quartile is taken to be the first three quarters of this ordered data set.
+\item this subsection is then plotted into a histogram (using 500 bins).
+\end{enumerate}
+This is a much more appropriate plot since the median of all these measurements is 0.221 and the mode is given by 0.12.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{third_quartile_hist.png}
+\caption{\label{fig:3quart} This shows the histogram for the electricity usage for the 503 households in the third quartile. The usage given is instantaneous i.e. the x-axis is the what the smart meter record at any given hour or half hour in the 7 week period. The data is cut off for any of the measurement that were "too high", meaning that only the first three quarters of the ordered measurements have been plotted.}
+\end{figure}
+
+Next I am going to present the two QQ plots. They are both of the same data and under the same assumptions The only difference being that the second is zoomed in of the first image.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{qqplot_beta.png}
+\caption{\label{fig:beta} This image shows the QQ plot using the beta distribution. The data points are every electricity measured at each half hour, i.e. in excess of a million data points have been plotted.}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{qq_plot_beta_100k-500k.png}
+\caption{\label{fig:beta_sub} This image shows the QQ plot using the beta distribution. The data points are every electricity measured at each half hour but only the values between the first 100,000 and 500,000 values have been plotted.}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{r_hill_100k.pdf}
+\caption{\label{fig:hill_100k} This is the hill estimator for the first 100,000 data points.}
+\end{figure}
+
+An alternative way to forecast consumption is to use the Adjusted Average method that is described in \cite{Dan14}. I will describe my understanding and implementation of this algorithm and show some results.
+
+The adjusted average algorithm still uses the average of all the past (relevant) data. Our benchmark says that the forecast is exactly the average  of the data i.e. if the average suggests that there is a peak at 35th half-hour then we take the forecast to have that peak at 35th half-hour. However, it is likely that even when we have forecasted a peak correctly (i.e. the magnitude of that peak roughly matches the observation when error analysis is done), that it is not exactly at the same time i.e. the forecasted peak appears slightly earlier or later than it did in real life.
+
+This is the modification of the adjusted average algorithm. For example if we are trying to forecast tomorrow's consumption (take it to be a Monday), the benchmark at the $n^{th}$ half hour is some statistic of the data at the $n^{th}$ half-hour of all previous Mondays. Thus the benchmark is a vector which contains 48 elements.
+
+The adjusted algorithm then re-orders these 48 elements in such a way that the $||\textbf{x}||_p$ is minimised, where $\textbf{x}$ is understood to be the error between the benchmark and forecast. This will make more sense if I outline the algorithm mathematically.
+
+The adjusted average algorithm:
+\begin{enumerate}
+\item For the $d^{th}$ day of th week, suppose we N daily usage profiles at half-hourly resolution.
+\item We denote \begin{itemize}
+\item $\textbf{G}^{(k)} = (g^{(k)}_1,g^{(k)}_2,g^{(k)}_3,...,g^{(k)}_{48})$ where $k=1,2,...,N$. $\textbf{G}^{(1)}$ is understood to be the daily usage profile for day $d$ of the most recent week.
+\item $\textbf{F}^{(1)} = (f^{(1)}_1,...,f^{(1)}_{48})$ is the initial baseline (the benchmark from the explanation above). From my understanding of appendix A in \cite{Dan14}, $f^{(1)}_i := median(g^{(1)}_i,...,g^{(1)}_i)$ for $i = 1,2,...,48$
+\end{itemize}
+\item Update the baseline iteratively by: \begin{enumerate}
+\item $\textbf{F}^{(k)}$ is taken to be the baseline for the $k^{th}$ iteration for $1\le k \le N-1$. 
+\item define $\tilde{\textbf{G}}^{(k)} = \tilde{P}\textbf{G}^{(k)}$, where $\tilde{P} \in \mathscr{P}$ such that  $||\tilde{P}\textbf{G}^{(k)} - \textbf{F}^{(k)}||_4 = \displaystyle{\min_{P \in \mathscr{P}}}||P\textbf{G}^{(k)} - \textbf{F}^{(k)}||_4$, where $\mathscr{P}$ represent the set of restriction permutations of the half hour loads.
+\item The updated baseline then is $\textbf{F}^{k+1} = \frac{1}{(k+1)}(\tilde{\textbf{G}}^{(k)} + k\textbf{F}^{(k)})$.
+\end{enumerate}
+\item The final forecast is $\textbf{F}^{N}$.
+\end{enumerate}
+
+I implemented this in python as the minimisation can be done using the Hungarian algorithm which python supported algorithm in the package munkres and can be used by calling the function Munkres. My python implementation of this was done in the following manner:
+\begin{enumerate}
+\item Firstly, the algorithm performs for one customer on one day of the week. The default is set to be the customer 1 on day 1 (not necessarily Monday).
+\item The data consists of 7 weeks that is we are trying to forecast the seventh week and we have 6 weeks of past data i.e. N = 6
+\item The data is separated by weeks. G1 is the most recent week and G6 is earliest week.
+\item the initial baseline is calculated using the median as described above.
+\item We want to allow the shift in the peaks to be one hour in each direction i.e. we can associate the peak at half hour i to be actually have happened at $i-2,i-1,i,i+1,i+2$.
+\item So $\mathscr{P}$ contains roughly $10^{28}$ contains matrices that fit this criteria. Due to the complexity and inefficiency in coding so many matrices, it was a "cost" that was minimised rather than the p-norm of vector as suggested by the algorithm above. The Hungarian algorithm can be applied to a cost matrix and it picks the indices in such a way as to minimise the cost. I have built the cost to be the difference between $\textbf{G}$ and the baseline.
+\item The structure of the cost matrix (for the $k^{th}$ iteration) is given below \newline
+$\begin{bmatrix}
+    |g_1^{(k)} - F_1^{(k)}| & |g_2^{(k)} - F_1^{(k)}| & |g_3^{(k)} - F_1^{(k)}| & \infty  & \infty & \infty & \dots & \infty & \infty &\infty \\
+    |g_1^{(k)} - F_2^{(k)}| & |g_2^{(k)} - F_2^{(k)}| & |g_3^{(k)} - F_2^{(k)}| &  |g_4^{(k)} - F_2^{(k)}| & \infty &\infty & \dots & \infty & \infty & \infty \\
+    |g_1^{(k)} - F_3^{(k)}| & |g_2^{(k)} - F_3^{(k)}| & |g_3^{(k)} - F_3^{(k)}| &  |g_4^{(k)} - F_3^{(k)}| & |g_5^{(k)} - F_3^{(k)}|& \infty & \dots & \infty & \infty & \infty\\
+    \infty & |g_2^{(k)} - F_4^{(k)}| & |g_3^{(k)} - F_4^{(k)}| &  |g_4^{(k)} - F_4^{(k)}| & |g_5^{(k)} - F_4^{(k)}|&|g_5^{(k)} - F_4^{(k)}| &\dots & \infty & \infty & \infty\\
+     &  &  \dots &   & &  &  &  &  \\
+\end{bmatrix}$
+\item the fact that the minimisation isn't exactly as in the mathematical algorithm may pose some problems but for the time being this is put aside.
+\item Then $\tilde{\textbf{G}}^{(k)}$ is updated to be the arrangement that yields the minimum cost (from the above matrix), which is calculated using the Munkres function in python.
+\item And $\textbf{F}^{(k+1)}$ is calculated.
+\end{enumerate}
+
+Using this algorithm and using an forecast that doesn't do this adjustment, days 1 through 7 for customer 1 is given below.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_1_1.png}
+\caption{\label{fig:AA_1_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_2_1.png}
+\caption{\label{fig:AA_2_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_3_1.png}
+\caption{\label{fig:AA_3_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_4_1.png}
+\caption{\label{fig:AA_4_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_5_1.png}
+\caption{\label{fig:AA_5_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_6_1.png}
+\caption{\label{fig:AA_6_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{AA_7_1.png}
+\caption{\label{fig:AA_7_1} This image compares forecasts that were generated using two different techniques against what was observed. }
+\end{figure}
+
+Similarly, a new error measure was also implemented in python, using python's Hungarian algorithm. The idea of this error measure is to penalise more harshly the lack of a peak than the shift of the peak (if within some prescribed window).
+
+Similarly, the error was also minimised. The mathematical set up is as follows:
+\begin{itemize}
+\item $E_p^\omega = \displaystyle{\min_{P \in \mathscr{P}}||P\textbf{f}-\textbf{x}||_p}$, where \textbf{f} is the forecast and \textbf{x} are the observations and $\mathscr{P}$ is as before.
+\end{itemize}
+
+This was coded similar to before where the matrix to which the hungarian algorithm is applied has the following structure.
+
+$\begin{bmatrix}
+    |f_1 - x_1| & |f_2 - x_1| & |f_3 - x_1| & \infty  & \infty& \infty & \infty & \dots & \infty \\
+    |f_1 - x_2| & |f_2 - x_2| & |f_3 - x_2| &  |f_4 - x_2| & \infty & \infty &\infty & \dots & \infty\\
+    |f_1 - x_3| & |f_2 - x_3| & |f_3 - x_3| &  |f_4 - x_3|& |f_5- x_3|& \infty & \infty & \dots  & \infty\\
+    \infty & |f_2 - x_4| & |f_3 - x_4| & |f_4 - x_4| &  |f_5 - x_4|& |f_6- x_4|& \infty &\dots & \infty\\
+     &  & \dots &  &  & &  & \\
+\end{bmatrix}$
+
+The results of this are shown in 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{adj_err.png}
+\caption{\label{fig:adj_err} This shows the error between the mean forecast and the adjusted mean forecast where the error measure is also adjusted.}
+\end{figure}
+
+Unfortunately, from this image it is not clear which performs better. In fact it looks as if the mean is better than the adjusted average. If in fact this is true, it could be because we used the same day rather than the day before. By the correlation plots we saw that yesterday was a more correlated to the usage today than the same day in the week before.
+
+In the future I will try to implement this.
+
+But to ensure which error is smaller, the difference between the two errors will be plotted. Where the difference is negative, the adjusted average is understood to have a smaller error and where the difference is positive the adjusted average is understood to have a bigger error.
+
+Also maybe this error can be used to cluster the households as was done in \cite{Dan14}.
+
+
+Some simplistic analyses in clustering and forecasting and the influence of the order in which these processes occur were carried out. We want to consider the benefits (and disadvantages) of clustering customers and forecasting versus forecasting and then clustering them. The following describes the first attempt, or maybe benchmark, into this question. \newline
+The forecasting technique in the following discussion is slightly different from those used before but is outlined now:
+\begin{enumerate}
+\item for each day d in the week to be forecasted, days d in the past data are identified and isolated.
+\item the forecast for day d, at half-hourly resolution, is found by averaging (unweighted) over all the day d in the past data.
+\item the week forecast then simply concatenates each day forecast.
+\item The error that is used a 4-norm between the observed and the forecasted, i.e. for each household there are 48 times and 7 days. The absolute value error between the observed and the forecast at each of these is raised to the power of four. The elements of this vector is then summed and fourth root is stored as the error for that household.
+\item it is these errors that are plotted in figure \ref{fig:clustering}.
+\end{enumerate}
+
+\textbf{Clustering and then Forecasting} 
+\begin{enumerate}
+\item The household were clustered into two categories:
+\begin{enumerate}
+\item outliers: these were the houses whose total daily usage exceeded the 70th percentile total daily usage on more than 20 days.
+\item non-outliers: these were the household whose daily usage exceeded the 70th percentile for total daily usage on at most 20 days.
+\end{enumerate}
+\item Each cluster was separately forecasting using the same day forecasting technique discussed above.
+\item the 4-norm error (non-adjusted) was calculated for each household in each categories.
+\end{enumerate} 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{m4e_clustered.pdf}
+\caption{\label{fig:clustering} This shows the 4-norm error all household, for outlier household and non outlier household.}
+\end{figure}
+
+\textbf{Forecasting then Clustering} 
+\begin{enumerate}
+\item The same day forecast was done for all household.
+\item Their 4-norm (non-adjusted) errors were calculated
+\item households were considered to be outliers if their error was larger than the 70th percentile 4-norm error of all household.
+\end{enumerate}
+
+The mean of the following 4-norm error for each category is outlined in the table below. \newline
+
+\begin{tabular}{|l|l||l|}
+\hline
+ & \textbf{Clustering, Forecasting} & \textbf{Forecasting, Clustering}\\
+\hline
+\textbf{All} & 3.81 & 3.81\\
+\hline
+\textbf{Outlier} & 5.05 & 5.79\\
+\hline
+\textbf{Non-Outlier} & 3.23 & 2.99\\
+\hline
+\end{tabular}
+
+For as long as the same forecasting technique is used for all households, whether they are identified as outliers or not, it is not beneficial to contemplate the virtue in clustering before forecasting or after. Thus, the next logical step in this analyses is try different forecasting techniques for various clusters of people.
+
+Additionally, other clusters are worthy of consideration. One example is to cluster customers by time of day  i.e. those who use a lot of electricity during breakfast hours and those who use less. Another is by days of the week e.g. weekdays being treated differently to weekends (this is taken care of in the same day forecasting technique as only previous Sundays influence the forecast for the coming Sunday).
+
+\section*{Extreme Value Analysis}
+In additon to the QQ plots introduced before, R (and matlab) was used to produce some more plots to help analyse other properties of the dataset.
+
+To start with the mean excess plot is given. There are two variants. In one the mean excess is plotted against the threshold and in another mean excess is plotted against the k, the data point's ordered position in data set.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{R_meplot.png}
+\caption{\label{fig:r_me} This shows the mean excess plot plotted against threshold.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{maria_meplot_k_full.png}
+\caption{\label{fig:me_k_full} This shows the mean excess plot plotted against k}
+\end{figure}
+
+There is a lot going at start of figure \ref{fig:me_k_full} thus a zoom is given in figure \ref{fig:me_k_zoom}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{maria_meplot_k_zoom.png}
+\caption{\label{fig:me_k_zoom} This provides a very close zoom on figure \ref{fig:me_k_full} where the first value is also ignored.}
+\end{figure}
+
+To conduct these initial analysis, the data for these 503 customers were considered to be data points and not time series. Once the fundamentals are established, the time series analyses may be revisited.
+
+The next plots are maximum to sum ratio plots. These tell us more about some of the properties from which the distribution may come. I've plotted these plots at 5 values of p. If the red lines tends toward zero, it implies that the $p^{th}$ moment is finite. If it does not seem to do this, then it suggests that the data comes from some distribution whose $p^{th}$  moment is infinite.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{msratio_1.pdf}
+\caption{\label{fig:msratio1} This image shows plots the ratio between the maximum and sum for p=1. It shows that the underlying distribution has finite first moment.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{msratio_2.pdf}
+\caption{\label{fig:msratio2} This image shows plots the ratio between the maximum and sum for p=2. It shows that the underlying distribution has finite second moment.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{msratio_3.pdf}
+\caption{\label{fig:msratio3} This image shows plots the ratio between the maximum and sum for p=3. It shows that the underlying distribution has finite third moment.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{msratio_5.pdf}
+\caption{\label{fig:msratio1} This image shows plots the ratio between the maximum and sum for p=5. It shows that the underlying distribution has finite fifth moment.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{msratio_10.pdf}
+\caption{\label{fig:msratio10} This image shows plots the ratio between the maximum and sum for p=5. It shows that the underlying distribution has infinite tenth moment.}
+\end{figure}
+
+Furthermore, sharp increase are indicative of heavy tails according to the documentation for the R package 'fExtremes' \cite{fExtremes}.
+
+The next three plots show hill plots, with the latter two just being zoom-ins of the first. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{R_hill_full.png}
+\caption{\label{fig:hill_full} This image shows the full hill plot.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{R_hill_1000.pdf}
+\caption{\label{fig:hill_1000l} This image shows the full hill plot which zooms in on the first 1000.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{R_hill_100k.pdf}
+\caption{\label{fig:hill_100k} This image shows the full hill plot which zooms in on the first 100,000.}
+\end{figure}
+
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}

@@ -1,0 +1,299 @@
+\documentclass{beamer}
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{crane} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{hhline}
+\usepackage[font=small,labelfont=bf]{caption}
+
+\title[Your Short Title]{Forecasting Energy Peaks Efficiently}
+\author[Jacob]{Maria Jacob\\ {\small Supervisors: Danica Greetham, Claudia Neves}}
+
+
+\institute{Mathematics of Planet Earth}
+\date{24th May 2017}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+
+\begin{frame}{Introduction}
+
+\begin{itemize}
+%\item Motivation
+\item Data and Methodology \begin{itemize} \item Forecasting Techniques
+\item Validation
+\item Extreme Value Theory \end{itemize}
+\item Results
+\item Future Plans
+\end{itemize}
+
+%\vskip 1cm
+
+\end{frame}
+
+\begin{frame}[plain,c]
+%\frametitle{A first slide}
+
+\begin{center}
+\Huge Data and Methodology
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Data}
+\begin{itemize}
+\item Domestic Smart Meter Data (controlled)
+\item Half hourly resolution
+\item 503 households
+\item 7 weeks (22 weeks)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Forecasting}
+\begin{itemize}
+\item Last Week Forecast (LW)
+
+\begin{center} $\hat{x_n} = x_{n-1}$ \end{center}
+
+\item Same Day Forecast (SD)
+
+\begin{center} $\hat{x}_n = \frac{1}{n-1} \displaystyle \sum_{i=1}^{n-1} x_i$ \end{center}
+
+\item Linear Regression Forecast (LR)
+
+\begin{center} $\hat{x}_n = \displaystyle \sum_{i=1}^{n-1} \beta_i x_i + \epsilon_i$ \end{center}
+
+\item Bayesian Regression Forecast (BR)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Error Measures}
+\begin{itemize}
+\item Mean Absolute Percentage Error (MAPE)
+
+\begin{center} $MAPE^j = \frac{100}{n} \displaystyle \sum_{i=1}^n \left|\frac{x^j_i - \hat{x}^j_i}{x_i}\right|$ \end{center}
+
+\item $p^{th}-$norm error
+
+\begin{center} $E_p^j = \left(\displaystyle \sum_{i=1}^n |\hat{x}^j_i - x^j_i|^p\right)^{\frac{1}{p}}$ \end{center}
+
+where $E_p^j$ is the $p^{th}-$ norm error for household $j$, $\hat{x}^j_i$, $x^j_i$ are the forecast and actual observations for household $j=1, ... , 503$, respectively at time $i = 1, ... , n$.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extreme Value Theory}
+\begin{itemize}
+\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$. The \textbf{sample/block maximum} is defined to be:
+
+\begin{center} $ X_{n,n} = \max\{X_1, ... , X_n\}$ \end{center}
+
+\item The \textbf{right endpoint} is defined as
+
+\begin{center} $x^F := \sup\{x | F(x) < 1\}$ \end{center}
+
+\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extreme Value Theorem}
+
+If there exist constants $a_n >0$ and $b_n \in \mathbb{R}$ s.t. \newline
+
+\begin{center}$\displaystyle \lim_{n \rightarrow \infty} \mathbb{P}\left(\frac{X_{n,n} - b_n}{a_n} \le x\right) =  \lim_{n \rightarrow \infty} F^n (a_n x + b_n) = G(x)$ \end{center}
+
+for every continuity of $G$, then $G(x) = G_\gamma(x)$ is given by
+
+\begin{center} $G_\gamma(x) = \exp\{-(1+\gamma x)^{-\frac{1}{\gamma}}\} $ \end{center}
+
+for $1 + \gamma x >0$. $G$ is known as a Generalised Extreme Value (GEV) distribution and $F$ is said to be in the (maximum) domain of attraction of $G_\gamma$, $F \in MDA(G_\gamma)$. \newline
+
+
+$\gamma$ is known as the \textit{Extreme Value Index} (EVI) or shape parameter.
+
+\end{frame}
+
+\begin{frame}[plain,c]
+%\frametitle{A first slide}
+
+\begin{center}
+\Huge Results
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Patterns}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{16_22_sums.png}
+%\setbeamerfont{caption}{series=\normalfont,size=\fontsize{20}{24}}
+\caption{Cumulative demand profiles in kilo Watt hours (kWh) for various time horizons.}
+\label{fig:sums} 
+\end{figure}
+\end{frame}
+
+\begin{frame}{Profiles}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{days_sum.png}
+\caption{Cumulative daily profiles for each day of the week.}
+\label{fig:days} 
+\end{figure}
+\end{frame}
+
+\begin{frame}{Forecasting}
+\begin{figure}
+\centering
+\includegraphics[scale=0.35]{Forecasts_P3.pdf}
+\caption{Daily forecast for one customer for each day of the week.}
+\label{fig:days} 
+\end{figure}
+\end{frame}
+
+\begin{center}
+\begin{frame}{Validation}
+\begin{tabular}{|c|c|c|}
+\hline
+Forecast & MAPE (\%) & $E_4$ (kWh) \\ 
+\hhline{|=|=|=|}
+LW & 84.027 & 4.765 \\
+\hline
+SD & 81.505 & 3.829\\
+\hline
+LR & 97.138 & 3.866\\
+\hline
+BR & 97. 021 & 3.805 \\
+\hline
+\end{tabular}
+\end{frame}
+\end{center}
+
+\begin{frame}{EVI using estimators}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{GammaEstimates.pdf}
+\caption{Estimates for the shape parameter based on the weekly maxima.} \label{fig:gammaEst}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{EVI with Order Statistics }
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{EVIestimation.pdf}
+\caption{Extreme value index estimation using the $k$th largest order statistics.} \label{fig:POTEst}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Right endpoint}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.5]{EndpointEst.pdf}
+\caption{Estimates for the right endpoint, based on the weekly maxima.} \label{fig:EndPointEst}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}[plain,c]
+%\frametitle{A first slide}
+
+\begin{center}
+\Huge Conclusion
+\end{center}
+
+\end{frame}
+
+\begin{frame}{So far}
+\begin{enumerate}
+\item Regression techniques performed better.
+\item Weekly maxima of electric load are Light tailed.
+\item Right Endpoint: 12-13.5 kWh.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{What's Next?}
+\begin{enumerate}
+\item Probabilistic and early biased forecasts
+\item Confidence bounds for right endpoint
+\item Clustering
+\item Heteroscedasticity in the tail observations
+\item New estimators for scedasis function
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[plain,c]
+%\frametitle{A first slide}
+
+\begin{center}
+
+\Huge Thank you!
+
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Estimators for $\gamma$}
+
+\begin{itemize} 
+\item Maximum Lq-likelihood Estimator (MLq):
+
+\begin{center} $\hat{\gamma} = \arg \displaystyle \max_{\gamma \in \Theta} \sum_{i=1}^n L_q (f(X_i; \gamma)), \quad q >0$ \end{center}
+where
+\begin{center} $L_q(u) =  \begin{cases} \log u, & \text{if } q= 1 \\ \frac{u^{1-q} -1}{1-q}, & \text{o/w} \end{cases}$ 
+\end{center}
+
+and $f$ is the density function of $G$. $q$ is the distortion parameter.
+
+\item Maximum spacing product (MSP)
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Estimators for $x_F$}
+
+\begin{itemize} 
+\item Moment Estimator (M):
+\begin{center} $ \hat{\gamma} = 1+ H_n^{(1)} + \frac{1}{2} \left(\frac{\left(H_n^{(1)}\right)^2}{H_n^{(2)}}-1\right)^{-1} $ 
+where $ H_n^{(p)} = \frac{1}{k} \displaystyle \sum_{j=1}^k \left(\log(X_{n-j+1,n}) - \log(X_{n-k,n}) \right)^p$
+\end{center}
+\item Mixed Moment Estimator (MM):
+
+\begin{center} $\hat{\gamma} = \frac{\hat{\phi}_n^k -1}{1+ 2\min(\hat{\phi}_n^k -1, 0)}$  \end{center}
+
+where
+
+\begin{center} $\hat{\phi}_n^k := \frac{M_n^{(1)}(k) - L_n^{(1)}(k)}{\left(L_n^{(1)}(k)\right)^2}, L_n^{(p)} := \frac{1}{k} \displaystyle \sum_{i=1}^k \left( 1- \frac{X_{n-k,n}}{X_{n-i+1,n}}\right)^p\newline M_n^{(p)} := \frac{1}{k} \sum_{i=1}^k \left(1 - \frac{X_{n-i+1,n}}{X_{n-k,n}} \right)^p $ \end{center}
+
+
+\end{itemize}
+\end{frame}
+
+
+
+\end{document}
+

@@ -1,0 +1,1287 @@
+%===================================================
+%					Page Set up
+%===================================================
+
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[mathscr]{euscript}
+\usepackage{makecell}
+\usepackage[inline]{enumitem}
+%\usepackage{enumerate}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+%Useful Commands
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{ex}[thm]{Example}
+
+
+\newcommand{\id} {\ensuremath{\displaystyle{\mathop {=} ^d}}}
+
+
+\newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\real}{\ensuremath{{\field{R}}}}
+\newcommand{\mc}[1]{{\ensuremath{\mathcal{#1}}}}
+
+\newcommand{\sumab}[2]{\ensuremath{\sum\limits_{#1}^{#2}}}
+\newcommand{\intab}[2]{\ensuremath{\int_{#1}^{#2}}}
+\newcommand{\intinf}[1]{\ensuremath{\int_{#1}^{\infty}}}
+\newcommand{\intunit}{\ensuremath{\int_{0}^{1}}}
+
+\newcommand{\arrowf}[1]{\ensuremath{\displaystyle {\mathop {\longrightarrow}_{#1 \rightarrow \infty}\,}}}
+\newcommand{\limit}[1]{\ensuremath{\displaystyle {\lim_{#1 \rightarrow{\infty}}}}}
+\newcommand{\suprem}[1]{\ensuremath{\displaystyle {\sup_{#1}}}}
+\newcommand{\minarg}[1]{\ensuremath{\displaystyle {\min_{#1}}}}
+\newcommand{\argmax}[1]{\ensuremath{\displaystyle {\arg\max_{#1}}}}
+\newcommand{\conv}[1]{\ensuremath{\, \displaystyle {\mathop {\longrightarrow}_{n \rightarrow \infty} ^{#1}}}\, }
+
+\title{MRes Report}
+\author{Maria Jacob}
+
+\begin{document}
+\maketitle
+
+
+%===================================================
+%					Introduction
+%===================================================
+
+\section{Introduction}
+\subsection{Motivation}
+\label{subsec:intro}
+Electric load forecasts are extremely important for both industry and society as they inform various decision making processes. For example in the utility industry, electric load forecasts can be used to make decisions about energy trading, pricing and generation. At the national and community level, these forecasts can inform if and by how much the infrastructure should be upgraded.
+
+As communities and businesses move towards a low carbon future, the demand on the grid will evolve. On the one hand, technologies such as solar panels reduce the demand on the grid but on the other hand the increasing number of technologies and facilities that rely on electricity such as electric vehicles and charging stations for electric vehicles increase the demand, especially at the low voltage level (households and substations). To understand and meet these demands efficiently smart grids are being developed in many countries, including the UK. One of the features of smart grids is the availability of high resolution data obtained from smart meters. This allows for faster and better analysis, identification of issues and control of electric networks. Evaluating how these low carbon technologies and renewable energy sources interact with each other to change demand at household and substation level will allow energy distributors and policy makers to manage infrastructure development and maintenance effectively.
+
+Rarely though inevitably, businesses and even households may experience power outages. To reduce the impact of these outages, households and businesses may consider investing in generators or other storage facilities which are currently very expensive. For this reason, particularly for businesses, reducing the uncertainty in the risk of a power outage by as little as 10\% is valuable.
+
+There is a growing body of literature on point load forecasts and some on probabilistic load forecasts (see section \ref{subsec:litrev}) which use smart meter data. However, what has been largely ignored in the literature is an analysis of the ``extreme values''  in the context of electric demand. The bridging of this gap is the overarching aim of this project. We are particularly interested in the short term load forecasting (STLF) at the household level. Thus, this work will focus on producing better forecasts across different demands. To do this, data driven approaches will be combined with Extreme Value Theory (see section \ref{subsec:EVT}) to estimate the upper limits of electric demand. Further, we also want to produce confidence bounds on these limits which can result in financial savings for businesses and better estimates for infrastructure development. As the project proceeds it is also valuable to see how the frequency and magnitude of extreme usage may change among cluster of households and/or individual households.
+
+
+%===================================================
+%					Literature Review
+%===================================================
+
+
+\subsection{Electric Load Forecasting}
+\label{subsec:litrev}
+As mentioned above most studies in electric load forecasting in the past century have focused on point load forecasting. However in the most recent decade, more researchers have delved into providing probabilistic load forecasts (PLF) as business needs and electricity demand and generation evolve. Forecast horizons for electric load vary from minutes and hours to years and decades. Each forecast horizon has its own application, for example forecasts for up to a day ahead are generated for the purpose of responding to changing demands whereas daily to yearly forecasts may be produced for energy trading and yearly to decadal forecasts to allow for system planning and informing energy policy (figure \ref{fig:elecfor}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{elecfor.png}
+\caption{Various classifications for electric load forecasts and their applications. The abbreviations are Short Term Load Forecasting (STLF), Very Short Term Load Forecasting (VSTLF), Medium Term Load Forecasting (MTLF) and Long Term Load Forecasting (LTLF). Source: \cite{hong16}}
+\label{fig:elecfor} 
+\end{figure}
+
+The decision making process in the utility industry relies mostly on expected values so it is no surprise that point load forecasts have been the dominant tool in the past. However, market competition and requirements to integrate renewable technology mean that PLF are increasingly used for system planning and operations. PLF can come in the form of quantiles, intervals and density functions as noticed by \cite{hong16} who provided an extensive review of various techniques and methodologies that are used in generating PLF. 
+
+\cite{hong16} referred to techniques as a group of models that fall in the same family. Some of the techniques that were reviewed from the literature included multiple linear regression (MLR), semi-parametric additive models, exponential smoothing models and autoregressive moving average models. To discuss some of these statistical models further, take MLR as an example. MLR uses the load as the dependent variable whereas weather and calendar variables are the independent variables. The algorithm used by \cite{char14} is one example where a MLR technique, specifically a refined semi-`parametric model, was used to forecast electricity demand for a specific region in the US. The initial code was unrefined and depended only on temperature. The relationship between electricity demand and temperature was found, to a good enough approximation, to be quadratic signifying the use heating in cooler weather and the use of air conditioning in warmer weather. Additional refinements were added one at a time and their impact on the overall performance of the algorithm and the rationale for why these refinements were introduced were provided. The refinements included:
+\begin{enumerate}
+\item Combining data from multiple weather stations.
+\item Removing outliers.
+\item Treating some national holidays as special cases.
+\end{enumerate}
+
+In contrast to MLR, exponential smoothing models assign weights to past observations that decrease exponentially over time. While these techniques have been quite successfully, they have been less readily adopted as a good candidate for real-world short term load forecasting (STLF) \citep{hong16}. These techniques offer the advantage of requiring less data as these models do not usually rely on weather and calendar variables but consequently suffer in cases where the weather is extremely cold or hot or particularly volatile.
+
+\cite{hong16} went further still and presented some common methodologies, which refer to "general solution framework" that can be implemented with multiple techniques. One methodology that is particularly relevant to this project is the similar day method. The idea is to find a day(s) in the historical data that is similar to the one being forecasted. For example a normal weekday such as Thursday may be forecasted as the average of all past Thursdays. \cite{hong16} noted that this method is often used with clustering techniques which combine similar days or similar segments of a day to produce the forecast.
+
+\cite{char14} is yet again a good example of one clustering technique. The data were clustered into various zones depending on geography, into two seasons, into 24 hours of the day and either weekday or weekend. Thus, the authors treat load to be categorically different for a weekday and weekend and geography and seasonality to be impactful. This is an example when data are clustered before the forecast is produced. In contrast \cite{dan14} uses the forecast, specifically an error metric to cluster roughly 600 households into three categories, one where the forecasting skill is poor, the second where the skill is good after being adjusted and the third where it is good overall. The forecasting skill here refers to how good the forecast is to the observed load in general.
+
+Clearly clustering has a significant impact on forecast and vice versa. Specifically, one can chose to cluster households and then forecast each cluster or use the forecast in order to cluster households. \cite{char14}, notably, commented that it is better to forecast first and then cluster households rather than to cluster first and forecast later however no discussion or reference to this was given.  We hope to either confirm or deny the validity of the comment through this project.
+
+Since some forecasting techniques and methods have been discussed it is also valuable to discuss how to assess the goodness of a forecast. Some conventional error metrics for point load forecasts, which have also been used for PLF, are mean absolute percentage error (MAPE) and mean absolute error \citep{hong16}. These are quite simple and transparent and thus quite favourable. However as noted by \cite{dan14}, for STLF  a peaky forecast is more desirable and realistic than a flat forecast but error metrics such as mean square errors and MAPE unjustly penalise peaky forecasts and can often quantify the flat forecast to be better. This is because the peaky forecast is penalised twice: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs. A flat-forecast does not incur this double penalty. \citet{dan14}, therefore, developed an adjusted error metric that penalises less so a forecast which predicts a peak that is slightly shifted than a forecast where the peak is not predicted at all. The authors also test out three different forecasting methods:
+\begin{enumerate}
+\item flat forecast: a horizontal line determined from an average of past data.
+\item Last week (LW) forecast: The usage on the same day of the week, e.g. Forecasts for the coming Thursday is predicted to be the same as the Thursday from previous week.
+\item Averaged Adjustment (AA) Forecast: takes into account both a weighted historic average and a baseline usage.
+\end{enumerate}
+
+Using both the new error measure, relative to the typical error measure, as well as the mean displacements of peaks, \cite{dan14} show that the flat forecast is not a good forecasting method for this application and that in general the best technique out of the three is AA with LW performing relatively well too.
+
+This will be particularly useful to this study in the future as we consider the ways in which we can cluster households and the forecasting methods to be used on different clusters. This analyses was already partially conducted by \cite{cbaf}. In this paper three strategies of ``clustering'' were considered:
+
+\begin{enumerate}
+\item \label{strat1} The energy consumption of all households were aggregated into one time series and this aggregate was forecasted. This is equivalent to having exactly one cluster.
+\item \label{strat2} The second strategy involves forecasting each household separately and then aggregating the forecast into one time series. This is equivalent to having $N$ clusters were $N$ is the number of households in the data set.
+\item \label{strat3} The third strategy falls somewhere in between the first two as it puts households into $k$ clusters where $1 < k < N$. Four different clustering algorithms  were considered: \begin{itemize} \item one where the autocorrelation is maximised, \item another where standard deviation is minimised, \item a third where ``similarity'' is maximised, and \item the last where customers are clustered at random with equal probabilty. \end{itemize}
+\end{enumerate}
+\citet{cbaf} confirm the intuition that strategy 1 will outperform strategy 2 but for certain values of $1<k<N$, the number of clusters, strategy 3 outperforms strategy 1. Even when clustering technique was randomised strategy 3 gave lower forecast error than strategy 1. Some of the lowest forecasting errors are however achieved when maximising auto-correlation. The authors do however state that this may be an artefact of the effect of good auto-correlation rather than actual accuracies of the clustering method.
+
+We've discussed some common methods to produce forecast however one case that would be interesting to look at particularly in conjunction with regression would be those algorithms which are set in a Bayesian environment. For example,  \cite{douglas98} used Bayesian estimation together with a dynamic linear model (DLM) to create short-term forecasts for Oklahoma City. This study was ultimately interested in quantifying the impact of imperfect weather data on forecasts. This however is not what is relevant (at this point) for this project instead it is the use of Bayesian estimation (described below). The method proposed requires historical load data (acquired in hourly resolution), historical temperature data and temperature forecast data. The temperature data, acquired through the National Weather Service, traditionally only contains the average, highest, and lowest temperature for any given day. Thus, while two models were proposed the hourly model, which requires hourly temperature inputs, was not used.
+
+The model that was used was called the daily peak model in which ``peak load is forecasted, and then a typical load profile is linearly scaled to generate the required load profile'' \citep{douglas98}. It was noted in the study that, for days when drastic weather changes or anomalies are not occurring, a ``typical'' day is a reasonable representative of the load for that day and thus can be used to forecast the load reasonably accurately. This model uses peak temperature, average temperature, and temperature at hour 24 from the previous day and peak and average temperature forecast for the relevant days as the explanatory variables in a linear regression model. The Bayesian estimation procedure is described below.
+\begin{enumerate}
+\item Let us set up the problem first. A state space is given in equation \ref{eq:statespace}, where $\theta_t$ is the state vector which is time-dependent with dimensions $(k \times 1)$, $G$ is the state evolution matrix with dimension $(k \times k)$, $Y_t$ is the scalar output, $F_t$ is the regression vector with dimensions $(k \times 1)$, $V_t$ is the scalar variance and $W_t$ is the covariance matrix with dimensions $(k \times k)$.) $\mathscr{N}(a,b)$ denotes the normal distribution with mean $a$ and variance $b$ and $(\cdot)^T$ denotes the transpose.
+\begin{align} \label{eq:statespace}
+\begin{split}
+\theta_t &= G\theta_{t-1} + \omega_t, \quad \omega \sim \mathscr{N}(0,W_t) \\
+Y_t &= F_t\theta_{t-1} + \nu_t, \quad \nu \sim \mathscr{N}(0,V_t)
+\end{split}
+\end{align}
+%
+\item The \textit{a posteriori} distribution for time $t-1$ ($t$ is in days) and \textit{a priori} distribution for time t is shown in equation \ref{eq:pos_pri}. In these set of equations, $D_{t-1}$ is all the information that is available at time $t-1$, $C_{t-1}$ is the posterior convariance matrix, $m_{t-1}$ is the posterior state mean vector. $a_t$ and $R_t$ are the prior mean and covariance at time $t$. $n_{t-1}$ is the degrees of freedom of the student-t test, which is denoted by $T$ and $S_t$ is an estimate of the scalar output variance at time t.
+%
+\begin{align} \label{eq:pos_pri}
+\begin{split}
+(\theta_{t-1}|D_{t-1}) &\sim T_{n_{t-1}}(m_{t-1},C_{t-1}) \\
+(\theta_{t-1}| D_t) &\sim T_{n_{t-1}}(a_t,R_t)
+\end{split}
+\end{align}
+%
+where
+%
+\begin{equation*}
+a_t = Gm_{t-1}, \qquad R_t = \delta^{-1} \cdot GC_{t-1}G^T
+\end{equation*}
+%
+\item The forecast, for a day ahead, distribution then follows equation \ref{eq:bayforecast}. In addition to those variables defined above, $f_t$ and $Q_t$ are the mean and variance of the scalar forecast distribution.
+%
+\begin{align} \label{eq:bayforecast}
+\begin{split}
+(Y_t | D_{t-1}) \sim T_{n_{t-1}}(f_t,Q_t) \\
+\end{split}
+\end{align}
+%
+where
+%
+\begin{equation*}
+f_t = F^T_t a_t, \qquad Q_t = F_t R_t F_t^T + S_t
+\end{equation*}
+%
+\item Finally, the $a$ $posteriori$ distribution for time $t$ is calculated in accordance with \ref{eq:pos_update}, where $m_t$ and $C_t$ now are the posterior mean and covariance. The adaptive factor, $A_t$, in practice is often replaced by a scalar, namely $\delta$ which is then called a discount factor. A high $\delta$ is indicative of the relatively high importance of past load. The best value of $\delta$ was found to be 0.93 \citep{douglas98}.
+%
+\begin{align} \label{eq:pos_update}
+(\theta_t|D_t) \sim N(m_t,C_t)
+\end{align}
+%
+where
+%
+\begin{align*}
+\begin{split}
+m_t &= a_t + A_te_,t \\
+C_t &= U_t R_t U_t^T + A_t S_t A_t^T, \\
+U_t &= (I - A_tF_t^T), \\ 
+e_t &= Y_t - f_t \\
+A_t &= R_tF_tQ_t^{-1}, \\ 
+n_t &= n_{t-1} + 1\\
+d_t &= d_{t-1} + e^2S_tQ_t^{-1}
+\end{split}
+\end{align*}
+%
+\item Where the forecast is required for the $k^{th}$ day ahead, then the forecast distribution is given as shown in equation \ref{eq:kbayforecast} where all the variables are as before except $Y_{t+k}$ is the $k^{th}$ step ahead forecast distribution.
+%
+\begin{align} \label{eq:kbayforecast}
+(Y_{t+k}|D_t) \sim T_{n_{t-1}}(f_t(k),Q_t(k))
+\end{align}
+%
+where
+%
+\begin{align*}
+\begin{split}
+f_t(k) &= F_t^T,a_t(k) \\
+Q_t(k) &= F_t R_t(k) F_t^T + S_t \\
+a_t(k) &= Gm_t(k-1) \\
+R_t(k) &= \delta^{-1}\cdot GR_t(k-1)G^T
+\end{split}
+\end{align*}
+%
+\end{enumerate}
+
+To generate a daily forecast, a set of 2 linear equations (equation \ref{eq:simul_bay}) are solved. These equation depend on the $\hat{l}(p)$, the peak load estimate at hour $p$ with $p=0$ corresponding to the load estimate at hour 24 of the previous day, and on $l_t(p)$ being the typical day peak load at hour $p$ again with $p=0$ corresponding to hour 24 of the previous day.
+
+\begin{align} \label{eq:simul_bay}
+\begin{split}
+\hat{l}(p) &= a + bl_t(p) \\
+\hat{l}(0) &= a + bl_t(0)
+\end{split}
+\end{align}
+
+\noindent The solution then looks like equation \ref{eq:simul_bay_sol}.
+
+\begin{align} \label{eq:simul_bay_sol}
+\begin{split}
+a &= \frac{l_t(p)\hat{l}(0) - l_t(0)\hat{l}(p)}{l_t(p) - l_t(0)} \\
+b &= \frac{\hat{l}(p) - \hat{l}(0)}{l_t(p) - l_t(0)}
+\end{split}
+\end{align}
+
+\noindent Thus the typical day can then be (linearly) scaled according to equation \ref{eq:scale}.
+
+\begin{equation} \label{eq:scale}
+\hat{l}(i) = a + bl_t(i), \qquad \forall i= 1,...,24
+\end{equation}
+
+\cite{douglas98} does not, however, offer alternative strategies to deal with days when there are drastic weather changes or anomalies. Because the process is set up so that the load for the typical day passes both the peak load forecast and the load at hour 24 of the previous day, a typical load for the hour 24 of the previous day is required and subsequently a typical week must be generated to support the execution of this procedure. The authors do not quantify ``typical'' however they do say that it is generated from the historical load data. Thus it is reasonable to take ``typical'' to be the mean or median.
+
+%\todo[inline]{explain bayesian papers}
+
+%===================================================
+%					Objectives
+%===================================================
+
+
+\subsection{Objectives}
+\label{subsec:objectives}
+There are two main objectives in this project. While literature provides good forecasts, there are no studies that specifically forecast households which have unusually large electric load. Thus in this project we want to split the households into "extremes" and "non-extremes" and in this way produce overall better forecasts for all households. Within this objective, we will also investigate whether it is more beneficial to produce forecasts first and then cluster households or cluster first and produce the forecasts later. This will constitute the data driven part of the project. The second part then combines extreme value theory (section \ref{subsec:EVT}) using primarily the block maxima (BM) method to estimate extreme value index and right endpoint and produce the confidence bounds for the right endpoint estimation. BM methods have largely been overlooked in extreme value theory but have become more popular recently as extreme value analyses becomes increasingly popular analytic tool for applications outside of finance. Of the many applications currently employing extreme value theory, application to electric load is novel as is calculating upper limits (endpoint) and their confidence bounds using BM methods.
+
+The results of this study will answer some very practical industry-based questions as well as being strongly grounded in the theoretical framework.
+
+%===================================================
+%					Data and Methodology
+%===================================================
+
+
+\clearpage
+\section{Data and Methodology}
+\label{sec:D&M}
+This section acts as the preamble for results presented in section \ref{sec:results}. Basic forecasts, error measures and clustering techniques that will be used are explained. Finally, the general framework of Extreme Value theory is set up and various underlying theorems and principles are discussed.
+
+\subsection{Data Description}
+\label{subsec:DataDesc}
+Before starting the data analyses, it is valuable to discuss the basic structure of the data. The data presented here spans a 7 week period (unless stated otherwise) starting in August at half hourly resolution acquired from smart meter data in Ireland. There are 503 customers/households for which complete data are available, meaning that the measurements from the smart meters are present at every half hour. All analyses presented are for these 503 customers again unless explicitly stated otherwise. The terminology of "household" and "customers" will be used interchangeably and is to be considered as equivalent since a household is considered to be the unit regardless of the number of occupants within the household.
+
+
+%===================================================
+%					Forecasting Methods
+%===================================================
+
+
+\subsection{Forecasts}
+\label{subsec:ForecastMethods}
+
+\subsubsection{Same Day Forecasts} \label{subsubsec:sdforecast}
+This section presents one of the most common forecasting methods known as the Same Day (SD) forecast. This forecast will act as the benchmark for future improvements and other forecasting methods. SD forecast is generated as follows:
+\begin{enumerate}
+\item The forecast at any given half hour (HH) for any given day of the week is taken to be the arithmetic mean of all past observations which exist at the same HH for the same day of the week.
+\item For example, the forecast for 9 am on Monday of week 23 (the last week in the 7 week data) will be the arithmetic mean of measurements taken at 9 am on all previous Mondays (the starting 6 weeks).
+\item Thus the forecast generated is also at half hourly resolution.
+\end{enumerate}
+
+\subsubsection{Last Week Forecast} \label{subsubsec:lwforecast}
+The Last Week (LW) forecast is a very simple forecast. As the name suggests, the forecast is produced by using data only from the most recent week. It can be seen as a special case of the SD forecast where instead of using all historical data only the most recent week is used. Even before we test this method, it is probable that this is a good forecasting method as relevant data, if available, may go unused. However where data is not available, this may be a good enough option. Additionally, it is possible that the LW forecasts performs reasonably well for households which are very predictable.
+
+\subsubsection{Adjusted Average Forecast} \label{subsubsec:AAforecast}
+\cite{dan14} introduced an adjusted average (AA) forecast. In this section, this will be discussed in detail and its implementation in Python will be outlined.
+
+The forecast, as described by \cite{dan14}, forecasts each day of the week individually though analogously.
+\begin{enumerate}[label=\roman*)]
+\item Let $d$ be the day of the week being forecasted $(d=1,...,7)$ and suppose that there are $N$ daily usage profiles (i.e. historical data for day $d$ exists for the most recent $N$ weeks) at half hourly resolution. For $k = 1, ..., N$, the daily usage profile is denoted by $\boldsymbol{G}^{(k)} = (g_1^{(k)}, ... , g_{48}^{(k)})^T$. Note the convention that $\boldsymbol{G}^{(1)}$ is the profile for day $d$ in the most recent week whereas $\boldsymbol{G}^{(N)}$ is of the earliest week.
+\item A base profile, $\boldsymbol{F}^{(1)} = \left(f_1^{(1)}, ... , f_{48}^{(1)} \right)^T$. Each $f_i^{(1)}$ is defined by the median of past load of the corresponding half hour i.e $ \forall \quad i \in (1, ..., 48), \quad f_i^{(1)} = \text{median}(g_i^{(1)}, ..., g_i^{(N)})$.
+\item This baseline is updated iteratively to get the final forecast, $\boldsymbol{F}^{(N)}$, in the following way. Suppose, at iteration $k$, we have the $\boldsymbol{F}^{(k)}$ for $1 \le k \le N-1$, then $\boldsymbol{F}^{(k+1)}$ is obtained by setting $\boldsymbol{F}^{(k+1)} = \frac{1}{k+1} \left( \boldsymbol{\hat{G}}^{(k)} + k \boldsymbol{F}^{(k)}\right)$, where $\boldsymbol{\hat{G}}^{(k)} = \hat{P}\boldsymbol{G}^{(k)}$ with $\hat{P} \in  \mathscr{P}$ being a permutation matrix s.t. $||\hat{P}\boldsymbol{G}^{(k)} - \boldsymbol{F}^{(k)}||_4 = \displaystyle \min_{P \in \mathscr{P}}||P\boldsymbol{G}^{(k)} - \boldsymbol{F}^{(k)}||_4 $.
+\item $\mathscr{P}$ is the set of restricted permutations i.e, for a chosen deformation limit $\omega$, the load at half hour $i$ can be moved to some half hour $j$ if $|i-j| \le \omega$. In \cite{dan14} and this report $\omega=3$.
+\item Thus one can see that the final forecast is given by $\boldsymbol{F}^{(N)} = \frac{1}{N+1}\left(\displaystyle \sum_{k=1}^n \boldsymbol{\hat{G}}^{(k)} + \boldsymbol{F}^{(1)} \right)$.
+\end{enumerate}
+
+In the implementation, we have used the Hungarian algorithm to solve the minimisation problem, which can be thought of as an optimisation problem. The Hungarian algorithm uses a cost matrix and choses a path through the matrix the minimises the cost thus for this implementation we must also specify a cost matrix. Recall that we have a deformation limit, $\omega$ which we set to 3. This comes into play as for any index $i$, which relates to half hour $i$, $(i,j)^{th}$ element is set to be the cost if $|i-j|\le\omega$ or set to be infinity if $|i-j| > \omega$. Thus at iteration $k$, the cost matrix looks like:
+
+\centerline{$\begin{bmatrix}
+    |g_1^{(k)} - f_1^{(k)}| & |g_2^{(k)} - f_1^{(k)}| & |g_3^{(k)} - f_1^{(k)}| & |g_4^{(k)} -f_1^{(k)}| & \infty  & \infty& \infty & \infty & \dots & \infty \\
+    |g_1^{(k)} - f_2^{(k)}| & |g_2^{(k)} - f_2^{(k)}| & |g_3^{(k)} - f_2^{(k)}| &  |g_4^{(k)} - f_2^{(k)}| & |g_5^{(k)} - f_2^{(k)}| & \infty & \infty &\infty & \dots & \infty\\
+    |g_1^{(k)} - f_3^{(k)}| & |g_2^{(k)} - f_3^{(k)}| & |g_3^{(k)} - f_3^{(k)}| &  |g_4^{(k)} - f_3^{(k)}|& |g_5^{(k)}- f_3^{(k)}| & |g_6^{(k)}-f_3^{(k)}| & \infty & \infty & \dots  & \infty\\
+    |g_1^{(k)}-f_4^{(k)}| & |g_2^{(k)} - f_4^{(k)}| & |g_3^{(k)} - f_4^{(k)}| & |g_4^{(k)} - f_4^{(k)}| &  |g_5^{(k)} - f_4^{(k)}| & |g_6^{(k)}- f_4^{(k)}|& |g_7^{(k)} - f_4^{(k)}| &\infty &\dots & \infty\\
+    \infty & |g_2^{(k)} - f_5^{(k)}| & |g_3^{(k)} - f_5^{(k)}| & |g_4^{(k)} - f_5^{(k)}| &  |g_5^{(k)} - f_5^{(k)}|& |g_6^{(k)}- f_5^{(k)}|& |g_7^{(k)} - f_5^{(k)}| &|g_8^{(k)} - f_5^{(k)}| &\dots & \infty\\
+     &  & \dots &  & &  & &  & \\
+\end{bmatrix}$}
+
+
+\subsubsection{Linear Regression} \label{subsubsec:linregforecast}
+Regression allows the relation between the target variable (the variable that is being modelled or fitted) and the features (or independent variables; variables which may impact the target) to be quantified. While many regression methods exist, it is quite common to start with what is known as linear regression. Linear regression can be used in applications where the model depends linearly on the unknown parameters, $\boldsymbol \beta$, (equation \ref{eq:lin_reg}) but the relationship between the features doesn't need to be linear.
+
+Given a data set $\{y_i, x_{i1}, ... , x_{ip}\}_{i=1}^n$, linear regression, in vector form, can be represented as shown in equation \ref{eq:lin_reg}.
+
+\begin{equation} \label{eq:lin_reg}
+\textbf{y} = X \boldsymbol \beta +\boldsymbol \epsilon
+\end{equation}
+where $\textbf{y} = (y_1, y_2, ... , y_n)^T $, $X =  (\textbf{x}_1^T, \textbf{x}_2^T,, ... ,\textbf{x}_n^T)^T$,  $\textbf{x}_i^T, = (x_{i1}, ... , x_{ip})$ for $i = 1, ... , n$, $\boldsymbol \beta = (\beta_1 , ... , \beta_p)$ and $\boldsymbol \epsilon = (\epsilon_1, ... , \epsilon_n)$.
+
+The $\boldsymbol \epsilon$ is a disturbance or error variable which adds noise to the model as is commonly assumed to be normally distributed with zero mean and variance $\sigma^2$.
+
+Thus, in the context of electric load, we can use linear regression to predict each load at each half hour by modelling the relationship between the half hour in question and available observations that we deem relevant. Thus by running 48 linear regressions, a one day forecast can be generated. The specifics of the implementation for the purpose of this report are as follows:
+\begin{enumerate}
+\item Using the python's SciKit package, linear regression is done on variable $X$ and $Y$, where $X$ is the matrix of features and $Y$ is the target variable.
+\item As mentioned before, the data set contains 7 weeks of data. These weeks range from 16 to 22. Week 22 is the week being forecasted and weeks 16 to 21 are considered "past" data which will form part of the feature matrix. 
+\item The implementation contains two steps: \begin{enumerate} \item The first step is to find/learn the parameters $\boldsymbol \beta$. To do this both $X$ and $Y$ are required. In this first step, $Y$ is a vector which contains information about the half hour (HH) in question for each household for the most recent "past" week i.e week 21 whereas matrix $X$ contains data for the same HH as well a lag 1 hour in each direction from weeks 16 to 20 (inclusive). Thus by using ordinary least squares, $\boldsymbol \beta$ are found by fitting $X$ to $Y$.
+\item In the second step, the forecast is created. The python implementation requires the feature matrix in the fitting phase and the forecasting phase to have the same dimension thus $X$ has to be adjusted. Since we are now forecasting week 22, we use the same HH and lags but are taken from weeks 17 to 21 to ensure that the new $X$ has the same dimensions as the old $X$. The values predicted by the model are the considered to be the forecast for the HH in question for week 22. \end{enumerate}
+\item The forecast that is produced using the above step is for the prescribed half hour of the prescribed day $d$ of the week. Thus, both the desired half hour and the day of the week are required inputs of the implementation.
+\item The daily forecast for day $d$ is then produced by repeating the two steps for each half hour.
+\item Then acquiring the weekly forecast, just means running the day forecast for each day of the week.
+\end{enumerate}
+
+In this way it is possible to think of the SD forecast as a special case of the linear regression where the coefficients/parameters of the lag are zero in the SD forecast and equal regardless of how recent some HH measurements are. Since this is a learning algorithm, it is feasible that this is a better forecast than the previous two presented. This will be investigated as we proceed.
+
+%===================================================
+%					Error Measures
+%===================================================
+
+\subsection{Error Measure}
+\label{subsec:ErrMethods}
+
+\subsubsection{$4^{th}$-norm error}
+\label{subsubsec:4-norm} Typically mean square errors are used as error measures for forecasts however our benchmark error will be the $4^{th}$-norm error since this exaggerates larger errors more so than the smaller ones. This benchmark error measure is calculated as follows:
+\begin{enumerate}
+\item The difference, at each HH, between the forecast and the observation is raised to the power of four.
+\item These differences are summed for each household and its fourth root is considered to be the $4^{th}$-norm error for that household.
+\end{enumerate}
+
+\subsubsection{Adusted error}
+\label{subsubsec:Adj_err} While the above error measure provides a good benchmark for an error measure, another error measure that is worth considering is the one introduced in \cite{dan14}. The mathematical set up for this error measure is as follows:
+\begin{itemize}
+\item $E_p^\omega = \displaystyle{\min_{P \in \mathscr{P}}||P\textbf{f}-\textbf{x}||_p}$, where \textbf{f} is the forecast and \textbf{x} are the observations and where $\mathscr{P}$ represents the set of restricted permutations i.e. we allow the forecast to be matched to an observation within some window. The window was chosen to be 2 and a half hours, i.e. $\omega = 2$, although $\omega$ was chosen to be 3 in \cite{dan14}.
+\item The solution to above minimisation problem can be found using optimisation. One way to do is to come up with some sort of cost matrix and to choose a path through that matrix such that the cost is minimised. One way to do this is to use the Hungarian algorithm
+\end{itemize}
+The cost matrix used in the implementation is: \newline
+
+\centerline{$\begin{bmatrix}
+    |f_1 - x_1| & |f_2 - x_1| & |f_3 - x_1| & \infty  & \infty& \infty & \infty & \dots & \infty \\
+    |f_1 - x_2| & |f_2 - x_2| & |f_3 - x_2| &  |f_4 - x_2| & \infty & \infty &\infty & \dots & \infty\\
+    |f_1 - x_3| & |f_2 - x_3| & |f_3 - x_3| &  |f_4 - x_3|& |f_5- x_3|& \infty & \infty & \dots  & \infty\\
+    \infty & |f_2 - x_4| & |f_3 - x_4| & |f_4 - x_4| &  |f_5 - x_4|& |f_6- x_4|& \infty &\dots & \infty\\
+     &  & \dots &  &  & &  & \\
+\end{bmatrix}$}
+\noindent where we have chosen these values because the cost is the absolute difference between the forecast and observations. The choice of $\omega$ comes into play because we set to cost to be large for those values are outside the window. For example for HH 4, all cost outside of 2 and 6 are set to be infinitely large (or some sufficiently large number).
+%===================================================
+%					Clustering
+%===================================================
+
+
+\subsection{Clustering} \label{subsec:clustering}
+Clustering is the task that groups a set of objects that are considered to be similar and separates them from other objects which are not. There are many notions of what it means to be similar, how to measure similarity and then how to effectively find the relevant clusters. There are two major branches of clustering: supervised and unsupervised. In the first branch, the analyst must specify the number of clusters before the clustering begins whereas in the latter, the number of clusters is also part of the results of the algorithm. Along with supervised and unsupervised clustering methods, other distinctions are also possible.
+\begin{itemize}
+\item Hard and soft clustering: \begin{enumerate} \item Hard clustering means that a data object either belongs to a cluster or it does not. \item Soft clustering on the other hand means that each object belongs to a cluster with some likelihood. This is also known as fuzzy clustering. \end{enumerate}
+\item Strict partitioning clustering is where each object belongs to exactly one cluster. An extension of this type of clustering is where an object can belong to no cluster and is then considered an outlier.
+\item Overlapping clustering is where objects may belong to more than one clustering.
+\item Hierarchical clustering has the concept of parent and child cluster where the child cluster also belongs to the parent cluster. Within Hierarchical clustering, it is possible to have strong and weak clustering where the former identifies each entity (in our case, each household) to be its own cluster and the latter identifies exactly one cluster for all entities.
+\end{itemize}
+
+Within various branchings, there are techniques which can be implemented using various algorithms. In this section we will review some of these techniques.
+
+\subsubsection{$K$-means}\label{subsubsec:kmeans}
+One of the most commonly discussed clustering method is a centroid-based technique known as $K$-means clustering. This is a supervised clustering, the essence of which is to minimise the (Euclidean) distance from a centroid. As explained in \cite{bishop}, the exact variable being minimised is known as the \textit{distortion measure}, $J$, given by
+
+\begin{equation} \label{eq:distortion}
+J =\sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \| \textbf{x}_n - \textbf{$\mu$}_k \|
+\end{equation}
+where $N$ is the number of households (or time series in the data), $K$ is the number of specified clusters, $\textbf{x}_n$ is ta data point, $\mu_k$ is the centroid of the $k^{th}$ cluster and $r_{nk}$ is an indicator function which is 1 when $x_n$ is in the $k^{th}$ cluster and 0 otherwise. The goal of the $K$-means algorithm is to find values for \{$r_{nk}$\} and \{$\boldsymbol \mu_k$\} which minimises the $J$ in equation \ref{eq:distortion}. The name $K$-means arises from the fact that centroid is defined to be equal to the mean of all the data points $\textbf{x}_n$ assigned to cluster k. Mathematically, $ \boldsymbol \mu_k = \frac{\sum_n r_{nk} \textbf{x}_n}{\sum_n r_{nk}}$. To visualise this process, consider the simplified case where the data set has mean zero and standard deviation 1, then clustering this data set into two clusters is equivalent to deciding which side of a perpendicular bisector each data point lies. Since the cost function $J$ is being minimised, convergence is guaranteed however solution may be a local minimum instead of a global one.
+
+There are other clustering methods that can be used however $K$-means is a good starting point especially because other methods, such as the Gaussian mixture model (section \ref{subsubsec:mixmodels}, use it to initialise parameters. Because convergence is guaranteed, it doesn't matter where the initial centroids are however a good start is to take randomly generated $K$ data points.
+
+%\subsubsection{Mean Shift}
+%\label{subsussec:msclus}
+
+%Mean Shift clustering is also a centroid based algorithm which aims to find 'blobs' in data. It is a method of unsupervised clustering but a parameter which is known as the bandwidth must be user defined. The bandwidth can be loosely understood as the distance from the cluster centre that the algorithm can search through to find the data points in the cluster.
+
+\subsubsection{Affinity Propagation}
+\label{subsubsec:afprop}
+Affinity Propagation was first introduced by \cite{frey07}. It was proposed as a faster and more versatile clustering algorithm than the common clustering algorithm similar to the $K$-Means algorithm and has the added advantage of being unsupervised. \cite{frey07} applied it to various applications such as detecting clusters in images of faces, clusters clustering images of faces, detecting genes from arrays and sentences within a manuscript. Other than being unsupervised, the algorithm is much faster than $K$-centroid algorithms, is relatively simple to understand and can be applied to various applications without introducing added complexities. In this section, this algorithm as presented by \cite{frey07} is described and the inputs are discussed in section \ref{subsubsec:affprop_res}.
+
+Affinity propagation aims to find what are referred to as ``exemplars'', which are cluster centres that are selected from actual data points i.e. the cluster centres are a subset of the data. There are a few general similarities between $K$-Means and affinity propagation but it's more valuable to discuss the differences. Most notably, affinity propagation considers all data points as potential exemplars simultaneously. The name for the algorithm is inspired by the way in which messages are passed between pairs of data points regarding one's``affinity'' to choose another as its exemplar.
+
+Before discussing the actual algorithm let's discuss some of the variables that are required or used in the algorithm. These variable are called ``availability'', ``responsibility'' and ``similarity'', denoted by $a(i,k)$, $r(i,k)$ and $s(i,k)$ respectively. In this notation, $i$ and $k$ relate to the relationship between data point with index $i$ and data point with index $k$. In the case where $i=k$, the variables are called ``self-availability'', ``self-responsibility'' and ``preference''.  $s(i,k)$ can be understood as an indication of how well data point with index $k$ is suited to being the exemplar for data point with index $i$. As with $K$-means, the aim is to minimise an error, the similarity is set to be negative squared error i.e for points $x_i$ and $x_k$., $s(i,k) = -||x_i - x_k||^2$. Technically, other metrics can be used to make the algorithm more general however the python implementation of the algorithm currently only supports three metrics, one of which is the Euclidean distance presented here. 
+
+The algorithm uses $s(k,k)$, i.e. preference, as input for each data point $x_k$. Data points with larger values of preference are more likely to be chosen as exemplars than those with smaller values. Both the message passing part of the algorithm, discussed shortly and the choice of preference influences the number of clusters identified. As intuition would lead us to believe each data point $x_k$ is initially equally likely to be chosen as an exemplar if all $x_k$ have a shared preference. Using the minimum $s(i,k)$ as the shared preference will lead to a small number of exemplars.
+
+Thus similarity impacts the algorithm in the input but it also comes into play in the message passing phase. Two kinds of messages are passed, namely availability, $a(i,k)$, and responsibility, $r(i,k)$. $r(i,k)$ passed from data point with index $i$ to data point with index $k$, where $x_k$ is the candidate exemplar. $r(i,k)$ is a measure how well-suited $x_k$ is to serve as the exemplar for $x_i$, taking into account other potential exemplars $x_i$ has. The availability, $a(i,k)$ is the other message passed from $x_k$ to $x_i$ communicating the suitability for $x_i$ to chose $x_k$ as its exemplar taking into account ``the support from other points'' that point $k$ should be an exemplar \citep{frey07}. %$r(i,k)$ and $a(i,k)$ can be thought of as log-probability ratios.
+
+The algorithm is initialised with the availabilities being set to zeros and responsibility then is computed as
+
+\begin{equation}\label{eq:resp}
+r(i,k) = s(i,k) - \max_{k' s.t. k' \ne k}\{a(i,k') + s(i,k')\}
+\end{equation}
+
+According to \citet{frey07}, this update allows all candidate exemplars to ``compete for ownership of a data point''. A negative $r(k,k)$ indicates that $x_k$ is more suited to belonging to another exemplar than being an exemplar itself. The self-responsibility is thresholded by requiring that the total sum not exceed 0 and thus limit the influence of strong updated responsibilities. 
+
+The availability is then updated which gathesr evidence from data points as to whether each candidate exemplar would make a good exemplar:
+
+\begin{equation}\label{eq:avail}
+a(i,k) = \min\{0, r(k,k) - \sum_{i' s.t. i \notin \{i,k\}}\max\{0,r(i',k)\}\}
+\end{equation}
+
+The self-availability, $a(k,k)$, is updated differently according to the rule:
+\begin{equation}\label{eq:avail2}
+a(k,k) = \sum_{i' s.t. i' \ne k}\max\{0,r(i',k)\}
+\end{equation}
+
+%This message sends the positive responsibilities to candidate exemplar $k$ from other points.
+
+%The method in its entirety follows these algorithmic steps:
+%\begin{enumerate}
+%\item
+%\end{enumerate}
+
+Exemplars are identified by combining availabilities and responsibilities and can be done at any point. \citet{frey07} suggests three options when it comes to termination of the message passing procedure:
+\begin{enumerate*}[label=\roman*)] \item after a fixed number of iterations, \item after changes in the message fall below a certain threshold, or \item local decisions remain unchanged for a certain number of constants. \end{enumerate*}. For data point $x_i$, the value of $k$ which maximises $a(i,k) + r(i,k)$ identifies the exemplar. If $i=k$, then $x_i$ identifies itself as an exemplar. In conclusion, each iteration of the affinity propagation algorithm has three steps: \begin{enumerate*}[label=\roman*)] \item updating all responsibilities given availabilities, \item updating all availabilities using the updated responsibilites, and \item combining availabilities and responsibilties to find exemplars \end{enumerate*}. \citet{frey07} chose to terminate the algorithm when the decision about the exemplars remain unchanged for 10 iterations.
+
+The algorithm may do well in terms of identifying which, and how many, of the data points are the exemplars however the paper makes no mention of the case where the cluster centres are not exactly actual data points. Additionally, the algorithm also does not deal with outliers i.e. cases where data points do not fall into one cluster and neither do the authors specify about what happens when there are two data points which are equally suitable to being exemplars, at the end of the algorithm, for one data point.
+
+\subsubsection{Mixture Models}
+\label{subsubsec:mixmodels}
+Mixture models refer to models that are superpositions of multiple, usually Gaussian, distributions. The idea is that while the Gaussian distribution has some very interesting and useful properties, it is not a good enough representation of all data sets, especially those data sets which are multi-modal (have multiple peaks in the distribution). However these, and in fact all continuous, distributions can be approximated to arbitrary accuracy by a linear combination of a sufficient number of Gaussian distributions with appropriately adjusted mean and covariance \citep{bk:mixmod} (see figure \ref{fig:mixgauss}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{mixgauss.png}
+\caption{Example of a Gaussian mixture distribution. Source: \cite{bishop}}
+\label{fig:mixgauss} 
+\end{figure}
+
+Mixture models can be thought of as generalisations of the $K$-means clustering. Decomposing a finite mixture of distributions is typically a very difficult task and though much work was done before, major breakthroughs occurred as high speed computers made likelihood estimation of the parameters of the mixture models more feasible \cite{bk:mixmod}. In most usage, including the one that will be used in this report, the implementation uses the Expectation-Maximisation (EM) algorithm to fit mixture models.
+
+Let's introduce some new \todo{note this may be overlapping with above terminology so check this before any official submission}terminology. Suppose the data is given by $\textbf{x}_1,...,\textbf{x}_n$, where each $\textbf{x}_j$ is a vector of $p$ dimensions i.e. $p$ attributes. In the context of this project, $n$ is the number of households that we're clustering and $p$ is the number of smart meter measurements we have for each household. Each $\textbf{x}_j$ can be viewed as arising from the super- population G which is a a mixture of a finite number of populations, $G_1, ... , G_g$. Here $g$ is the number of populations that create the super-population. The proportions $\pi_1, ... ,\pi_g$ adhere to the following rule:
+
+\begin{align}\label{eq:pi}
+\sum_{i=1}^g \pi_i = 1, \quad & \pi_i \ge 0,  \quad (i = 1, ... , g)
+\end{align}
+
+$\textbf{x}_1,...,\textbf{x}_n$ are assumed to be randomly sampled from $G$ i.e. that the data are realised values of n independently and identically distributed (i.i.d.) random variables with common distribution function $G$ which can be represented by the equation \ref{eq:data}.
+
+\begin{align}\label{eq:data}
+\begin{split}
+\textbf{x}_1, ... , \textbf{x}_n \displaystyle  \stackrel{iid}{\sim} \quad &G(\textbf{x}; \phi), \\
+&\phi \in \Omega
+\end{split}
+\end{align}
+
+\begin{equation}\label{eq:log_likelihood}
+\partial L(\phi)/ \partial \phi = 0
+\end{equation}
+where $L(\phi)$ is the log-likelihood, $\phi$ is a vector of all unknown parameters and $\Omega$ is the parameter space. Let $\hat{\phi}$ to be the solution of equation \ref{eq:log_likelihood}, however $\hat{\phi}$ may not be unique. Despite this, roughly speaking, the aim of likelihood estimation is to determine $\hat{\phi}$ for each $n$. \todo[inline]{should this not say $x_j$ for $j = 1, ... , n$ ?}
+
+The likelihood equation \ref{eq:log_likelihood} can be manipulated into
+
+\begin{equation}\label{eq:pi_mod}
+\hat{\pi}_i = \sum_{j=1}^{n} \hat{\tau}_{ij} /n (i = 1, ... , g)
+\end{equation}
+
+and 
+
+\begin{equation}\label{eq:log_mod}
+\sum_{i=1}^g \sum_{j=1}^n \hat{\tau}_{ij} \partial log f_i(x_j;\hat{\theta}) / \partial \hat{\theta} = 0
+\end{equation}
+
+where $\theta$ is the vector of all unknown parameters associated with the g component densities, and for $i = 1, ... , g$, $f_i(\textbf{x},\theta)$ is the probability density function (p.d.f) corresponding to $G_i$ and
+
+$$\hat{\tau}_{ij} \equiv \tau_i(\textbf{x}_j;\hat{\phi}) = \pi_i f_(\textbf{x}_j;\theta) / \sum_{t=1}^g \pi_t f_t(\textbf{x}_j;\theta)$$
+
+Equations \ref{eq:pi_mod} and \ref{eq:log_mod} can be solved with direct application of the EM algorithm.
+
+
+%===================================================
+%					Extreme Value Theory
+%===================================================
+
+\subsection{Extreme Value Theory}
+\label{subsec:EVT}
+As \cite{hong16} noted, the utility industry cares about expected values of electric load. At the household or substation level, the stress comes from both the collective use from several households but also from collections of households requiring (unusually) large amounts of electricity. The statistics of these ``extremes'' is the topic of this section.
+
+While classical large sample theory allows the use of the empirical distribution to make some inferences about what happens in the tail behaviour, it fails in cases where the second moment and even the first moment (the variance and mean, respectively) cease to be finite. This is because classical theory is based on the law of large numbers and relies mostly on the normal distribution whose first and second moment are both finite. Additionally, classical theory does not allow the quantification of a probability of an event greater than any of the samples. This is the strength of extreme value theory (EVT); it offers us techniques that focus on the ``extreme values of a sample, on extremely high quantiles or on small tail probabilities'' \cite[ch.~1]{beirlant}.
+
+As a precursor to what follows, %let us assume that the random sample $X_1, ... , X_n$ is independent and identically distributed (i.i.d.). This means that each $X_i$ for $ i = \{1, ... , n\}$ is independent and has the same distribution function (df). Then the order statistics are defined as $X_{1,n} \le X_{2,n} \le , ... , \le X_{n,n}$.
+let $F$ be a distribution function (d.f.) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of i.i.d. random variables with common d.f. $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the sample maximum by $X_{n,n}$, that is $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$, and we shall always be concerned with sample maxima.
+
+The celebrated Fisher and Tippet theorem or Extreme Value theorem \citep{ft28}, with prominent unifying contributions by \cite{Gnedenko:43} and \cite{deHaan:70}, establishes the Generalised Extreme Value (GEV) distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
+\begin{equation}\label{EVTheo}
+	\limit{n} \mathbb{P} \Bigl( \frac{X_{n,n}-b_n}{a_n} \leq x\Bigr)= \limit{n} F^n (a_n x + b_n) = G(x),
+\end{equation}
+for every continuity point of $G$, then $G(x)= G_{\gamma}(x)$ is given by
+\begin{equation}\label{GEVd}
+	G_{\gamma}(x)= \exp \{ -(1+ \gamma\, x)^{-1/\gamma}\}, \quad 1+\gamma\,x >0.
+\end{equation}
+We then say that $F$ is in the (maximum) domain of attraction of $G_\gamma$,  for some extreme value index (EVI) $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. 
+
+The theory of regular variation \citep{Binghametal:87,deHaan:70, deHF:06}, provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalised inverse of $1/(1-F)$, i.e.
+\begin{equation*}
+U(t):=   F^{\leftarrow} \bigl( 1-1/t\bigr), \quad \mbox{ for } t>1.
+\end{equation*}
+Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurable function $a(\cdot)$ such that the condition of \emph{extended regular variation}
+\begin{equation}\label{ERVU}
+	\limit{t}\,\frac{U(tx)-U(t)}{a(t)}= \frac{x^{\gamma}-1}{\gamma},
+\end{equation}
+holds for all $x>0$ [notation: $U\in ERV_{\gamma}$].
+
+Within the two main approaches in Extreme Value analysis we plan to tackle:
+\begin{enumerate}
+\item\label{BM} Block maxima (BM) method: take observations in blocks of equal size and assume that the maximum in each block (time window) follows exactly the Generalised Extreme Value (GEV) distribution defined in equation \ref{GEVd}.
+\item\label{POT} Peaks over threshold (POT) method: restrict attention to those observations from the sample that exceed a certain level or threshold, supposedly high, while assuming that these exceedances follow exactly the Generalised Pareto distribution.	
+\end{enumerate}
+
+A difficulty in applying EVT is that observations generally do not follow the exact extreme value distribution. The best we can hope for is that they come from a distribution in one of the only possible three domains of attraction. Hence an interesting aspect is to derive large sample properties of the obtained estimators by replacing the word ``exactly'' with ``approximate'' in points \ref{BM} and \ref{POT} above. The latter conveys a semi-parametric framework, which also proves to be a  fruitful setting in analysing extreme events. 
+
+Inference for Block Maxima has received much attention recently. The relative merits of this approach are discussed in \cite{FdeH:15}, where they lay down several results in line with equation \ref{ERVU}, cementing the path towards the semi-parametric approach to block maxima estimation.
+
+The maximum Lq-likelihood estimator (MLqE) of $\theta$ (real or vector-valued parameter) is defined as
+\begin{equation*}
+	\hat{\theta}= \argmax{\theta \in \Theta} \, \sumab{i=1}{n} L_q\bigl( f(X_i; \, \theta)\bigr), \quad q>0,
+\end{equation*}
+with $L_q(u)= \log u$ if $q=1$ and $L_q(u)= (u^{1-q}- 1)/(1-q)$, otherwise (cf. Definition 2.2 in Ferrari and Yang, 2010). The function $L_q$ is quite similar to the Box-Cox transformation in statistics. The parameter $q$ gauges the degree of distortion in the underlying density. If $q=1$, then the estimation procedure reads as the ordinary maximum likelihood (ML) method.
+
+The rationale to the maximum product spacing (MSP) estimator can be found in \cite{ChengAmin:79} and \cite{Ranneby:84}. These will be used in the analyses presented in section \ref{subsec:EVres}.
+
+Now that we've set up the basic framework, it is useful to consider some graphical tools. A quantile-quatile (QQ) plot answers the typical question: does a particular model plausibly fit the distribution of the random variable at hand? It is relatively simple to generate and can even be done by hand in some cases e.g. for the exponential distribution. For each data point in the sample, equivalent quantile of the proposed model is calculated. Then the ordered data points are plotted against these quantiles to get the QQ plot. Mathematically speaking, the QQ plot is given by the graph \cite[ch.~6]{embrechts}. \newline
+
+\centerline{$\{(X_{k,n},F^{\leftarrow}(\frac{n-k+1}{n+1})), k = \{1,...,n\}\}$}
+
+\noindent where $n$ is number of observations. The linearity in the QQ plots can be used as a goodness of fit test between the model and the random variable at hand.
+
+The other graphical tool that is often used in extreme value analysis is a mean excess plot. Mathematically, the mean excess function, $e$,  is defined as
+
+ \centerline{$e(t) = \mathbb{E}[X-t | X>t], t \in \mathbb{R}$} 
+ 
+In practice however, the mean excess function can be estimated by its the empirical counterpart, $\hat{e}_n$ \citep[ch.~1]{beirlant}
+
+\centerline{$\hat{e}_n(t) = \frac{\sum\limits_{i=1}^n x_i 1_{(t,\infty)}(x_i)}{\sum\limits_{i=1}^n 1_{(t,\infty)}(x_i)} - t$}
+
+This empirical mean excess function can be plotted against the fixed threshold $t$ or against the $k$, the number of $x_i$ that are larger than the random threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the shape of the mean excess function can inform us further about the the distribution of the data. Further, from the figure we can also assess the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails whereas a decreasing trend of light tails.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{beirfig.png}
+\caption{Typical mean excess function for some common distributions. Source: \cite{beirlant}}
+\label{fig:beir} 
+\end{figure}
+
+
+%However, extremes analysis goes much deeper than these graphical tools. Two major branches of analysis of extreme values are Peak Over Threshold (POT) method and the Block Maxima (BM) method.
+
+%The block maxima or sample maxima are defined, for $ n \in \mathbb{N}$, by \newline
+
+%\centerline{$M_1 = X_1,  M_n = max\{X_1, ... , X_n\}, n \ge 2$}
+
+%The BM method is inspired by the limiting behaviour of the normalised maximum of a random sample which tend to one of three extreme value distributions \cite{ft28}: (i) Fr$\acute{e}$chet, (ii) Weibull, and (iii) Gumbel.
+
+%The POT method however concentrates on the conditional distribution of the excesses over relatively high thresholds \cite{pot74}, \cite{pot75}.The excess distribution function is given by \newline \centerline{$F_u(y) = \mathbb{P}(X-u \le y | X > u) \rightarrow 1 - (1+ \gamma x)^{-\frac{1}{\gamma}}, 1+ \gamma x > 0$ as $u \uparrow x^F$}
+
+%\noindent where $x^F := sup\{x | F(x) < 1\}$.
+Lastly, what was referred to as the upper limits in the earlier section is known as the right endpoint in this framework and is defined as $x^F := \sup\{x | F(x) < 1\}$.
+
+The above discussion describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case. \cite{einmahl16} develop and describe the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, the distribution function $F$ also shares this right endpoint.
+
+\cite{einmahl16} then introduces what is termed the \textit{scedasis function}, denoted by $c$ defined on $[0,1]$, and is indicative of the frequency of extremes. The condition presented in equation \ref{eq:scedasis_cond} ensures that the definition presented in equation \ref{eq:scedasisfn} is unique $\forall n \in \mathbb{N}$ and $\forall 1 \le i \le n$.
+
+\begin{equation} \label{eq:scedasisfn}
+\lim_{x \rightarrow x^F} \frac{1-F_{n,i}(x)}{1 - F(x)} = c(\frac{i}{n})
+\end{equation}
+
+\begin{equation} \label{eq:scedasis_cond}
+\int_0^1 c(s)d(s) = 1
+\end{equation}
+
+The theory is developed for positive EVI, $\gamma > 0 $ which means that the estimator used was the Hill estimator (equation \ref{eq:hill_est}). Although in the case of the electric load data at hand some early testing has suggested that the data are light tailed i.e. $\gamma < 0 $, there is not yet reason to be disappointed since \cite{einmahl16} state that estimators other than those presented in the paper may be used, particularly for $\gamma \in \mathbb{R}$ and the results such as the asymptotic independence between those estimators and the estimator for the integrated scedasis function $\hat{C}$ still hold.
+
+\begin{equation} \label{eq:hill_est}
+\hat{\gamma}_H := \frac{1}{k} \sum_{j=1}^k log(X_{n,n-j+1}) - log(X_{n,n-k})
+\end{equation}
+where $k=k(n)$ is a suitable intermediate sequence such that 
+
+\begin{align*} 
+\begin{split}
+\lim_{n \rightarrow \infty} k &= \infty \\
+\lim_{n \rightarrow \infty} \frac{k}{n} &= 0
+\end{split}
+\end{align*}
+
+\cite{einmahl16} splits their study into three main sections that are of significance to this report. In the first of these section, some properties of $c$ are deduced and $\gamma$ is estimated. In this section, two test statistics, $T_1$ and $T_2$, are used to reject the presence of homoscedastic extremes ($H_0: c \equiv 1$). In the second section, test statistics, $T_3$ and $T_4$ are used to test whether $\gamma$ is constant. The test statistics are given in equation \ref{eq:test_stat}.
+
+\begin{align} \label{eq:test_stat}
+\begin{split}
+T_1 : = \sup_{0 \le s \le 1} |\hat{C}(s) - C_0(s)|\\
+T_2 : = \int_0^1 \{\hat{C}(s) - C_0(s)\}^2 dC_0(s)\\
+T_3 := \sup_{0 \le s_1 < s_2 \le 1, \hat{C}(s_2) - \hat{C}(s_1)}|\frac{\hat{\gamma}_{(s_1,s_2]}}{\hat{\gamma}_H} -1| \\
+T_4 := \frac{1}{m} \sum_{j=1}^m (\frac{\hat{\gamma}_{(l_{j-1},l_j]}}{\hat{\gamma}_H}-1)^2
+\end{split}
+\end{align}
+
+\noindent where $C_0(s) = \int_0^s c_0(u)du$ for some $c_0$ that is given, $\hat{\gamma}_{(s_1,s_2]}$ is the Hill estimator based on $X_{[ns_1]+1}^{(n)}, ... , X_{[ns_2]}^{(n)}$,  $l_j : = \sup\{s: \hat{C}(s) \ge j/m\}$, where $m$ is the how many blocks the full sample has been divided into, and the estimator for $C$ is given by equation \ref{eq:C_hat_est}.
+
+
+\begin{equation} \label{eq:C_hat_est}
+\hat{C}(s) : = \frac{1}{k} \sum_{i=1}^{[ns]} \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}
+\end{equation}
+
+While equation \ref{eq:C_hat_est} estimates the integral of the scedasis function, equation \ref{eq:c_hat_est} gives the estimator of the scedasis function itself, which is the one that we're interested in.
+
+\begin{equation} \label{eq:c_hat_est}
+\hat{c}(s) = \frac{1}{kh} \sum_{i=1}^n \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}G(\frac{s-\frac{i}{n}}{h})
+\end{equation}
+
+\noindent where $G$ is a continuous, symmetric kernel on $[-1,1]$ s.t. $\int_{-1}^{1} G(s)ds = 1$ and $G(s) = 0 \quad \forall s \notin [-1,1]$ , $h := h_n$ is known as the bandwidth s.t. $h \rightarrow 0$ and $kh \rightarrow \infty$ as $n \rightarrow \infty$. In the simulations using the data generating process (described below) in \cite{einmahl16}, $h$ was chosen to be 0.1, the kernel was chosen to be $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$ and for $n=5000$, $k$ was chosen to be 400.
+
+The final section of \cite{einmahl16} then applies these results and models firstly to four different type of data-generating processes, with the parameters and the kernel as specified above, all of which confirm the presence of heteroscedastic extremes in financial losses. Nothing could be inferred when the data included the financial crisis which erupted in 2008 but when the preceding 20 years of data were considered, then it shown that the null hypothesis that $\gamma$ was constant could not be rejected but that the frequency of extremes was invariant was rejected. Thus it was concluded that $\gamma$ was constant whereas the frequency of extremes changed. It was also noted that the scedasis function showed a sharp increase at the end of 2007 even before the financial crisis occurred.
+
+While the results of this paper will need to adjusted a little bit and other estimators will need to be considered, this is a valuable direction to proceed to gain more insight into the extremes in electricity load profiles.
+ 
+\clearpage
+
+%===================================================
+%					Basic Results
+%===================================================
+
+\section{Results}
+\label{sec:results}
+
+In this section, the results to all that was discussed in section \ref{sec:D&M} will be presented and discussed.
+Before we do that it is valuable to recall the basic data structure. We're analysing 7 weeks of data that are labelled from 16 to 22 inclusive. This includes data at every half hour (HH) which are labelled from 1 to 48 (inclusive), where we take 1 to be measurement at 00:00 and 48 to be the measurement at 23:30. The days aren numbered starting from 593 to 641 inclusive and as mentioned before the data starts in August, specifically $16^{th}$ August 2010. The day of the week was deduced from the day number and was added to the data set and are numbered from 1 to 7 inclusive where 1 is Monday and 7 is Sunday. Being equipped with this knowledge, let us explore some basic properties of the data.
+
+\subsection{Data}
+\label{subsec:basic} 
+This section presents some basic plots to visualise the general nature of electricity demand. First consider the histogram of the measurements shown in figure \ref{fig:hist}. The $75^{th}$ percentile of this data is 0.5 kWh so clearly most households use less than 0.5 kWh at any given time, however there are households which record almost as high as 12 kWh. These high consumers are most likely operating a small business from home and/or may have multiple large appliances and electric vehicles in their homes.
+
+Where figure \ref{fig:hist} told us about half hourly (HH) demand, figure \ref{fig:sums} gives some general profiles. These four plots show the total/cumulative pattern of electricity demand. The top left image, shows the dip in usage overnight, the increase for breakfast which stabilises during typical working hours and rises again for the evening peak. These are as expected. Similarly the bottom left image shows a recurring pattern indicating that there are specific days in the week where usage is relatively high and other days where it is relatively low. This is further confirmed by the image on the bottom right. The image on the top right shows a rise in demand starting in week 18, which is around the beginning of September, aligning with the start of the academic year for all primary and some secondary schools in Ireland. This explains why the jump in data occurs as the weeks preceding are weeks when lots of people travel abroad and thus may simply not be at home.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{usage_histogram.png}
+\caption{histogram of the HH smart meter readings for all 503 households.}
+\label{fig:hist} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{16_22_sums.png}
+\caption{Cumulative demand profiles in kilo Watt hours (kWh) for various time horizons.}
+\label{fig:sums} 
+\end{figure}
+
+It is also valuable to see how the top left profile changes for each day of the week (fig. \ref{fig:days}). From this image it is clear that there are differences between weekdays and weekend. Clearly, the breakfast peak is delayed on weekends with no categorical differences in the evening peaks between weekends and weekdays. This is useful for clustering.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{days_sum.png}
+\caption{Total daily profiles for each day of the week.}
+\label{fig:days} 
+\end{figure}
+
+Another way to see if there are ``extreme'' household is to breakdown the daily consumption by each household. This is shown in figure \ref{fig:totes}. The various colours show the various households though there is not a unique colour for each household. It is noteworthy that the houses that mostly seem to be using the most amount of energy per day are coloured in light blue. It could be that this is one house which consistently has particularly high demand due to a small business that its occupants are operating from home.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{tot_daily_per_customer.png}
+\caption{Total daily usage per household for each day in the data.}
+\label{fig:totes}
+\end{figure}
+
+One last thing to be considered in this section is the auto-correlation. It is reasonable to suspect that the demands of households are correlated to its past demand and that future weekdays will be like past weekdays and future weekends will be like past weekends and similarly that today's demand is much like yesterday's demand (if yesterday and today are both weekends or both weekdays). Indeed all of of our forecasts rely on this property so it is good to verify it.  Figure \ref{fig:ty_colour} shows the correlation between the total daily demand of each house, again colour coordinated, on day d and day d-1 at the same HH.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{autocorr_t_t-1.png}
+\caption{Daily total electric load for day d against day d-1.}
+\label{fig:ty_colour} 
+\end{figure}
+
+To see how far back this relationship holds (certainly holds for a week back), an autocorrelation function for one day (fig. \ref{fig:acf_day}) is provided. The autocorrelation function plotted is an arithmetic mean of all customers at each HH.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{r_autocorr_day.png}
+\caption{Auto-correlation function for 1 day. Lag is in HH}
+\label{fig:acf_day} 
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{r_autocorr_2wks.png}
+%\caption{Auto-correlation function for 2 weeks. Lag is in HH.}
+%\label{fig:acf_2} 
+%\end{figure}
+
+
+%===================================================
+%					Forecasting Results
+%===================================================
+
+\subsection{Forecasts}
+\label{subsec:forecasts}
+
+\subsubsection{Same Day Forecast} \label{subsubsec:SD_res}
+Now that some basic properties of the data are known, a forecast based on the SD method described in section \ref{subsec:ForecastMethods} was generated. A sample comparison between this forecast and observations, i.e. forecasted load and observed load of one household, is provided in figure \ref{fig:SDforecast}. From this image, we can see that though the peaks are largely underestimated, they occur at roughly the right time, specifically the breakfast hours for the weekdays and in the evenings though this is more varied. The underestimation is most probably because of the shift in usage in the two weeks leading up to the forecasted week (fig. \ref{fig:sums}). Since the SD forecast weight all past data the forecast is in general lower than the observed.
+
+There are improvements that can be made to this algorithm for example finding appropriate weights using some regression technique, etc. but this forecasts provides a good enough benchmark against which to compare other algorithms and refinements.
+
+%In a bid to allow for more recent data to have more influence on the forecast, the adjusted average (AA) method described in \cite{dan14} was implemented. Some adjustments were made as a starting point and the algorithm is described below.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{same_day_forecast_cust1.png}
+\caption{SD forecast (for each day of the week) and the observations for customer 1.}
+\label{fig:SDforecast} 
+\end{figure}
+
+\subsubsection{Last Week Forecast} \label{subsubsec:LW_res}
+Similarly, for customer 1, the LW forecast versus the observations are given shown in figure \ref{fig:LW_forecast_P1}. Much like the SD forecast, LW is also not very well suited to representing the peaks accurately and is particularly vulnerable due to the week to week volatility in load. However, it can be seen that there are cases where, even though the magnitude of the peak is not correct, the peaks are being forecasted at roughly the right time. With this in mind we can combine the ideas from the SD and LW forecasts to generate an adjusted average forecast (section \ref{subsubsec:AA_res}).
+
+\begin{figure}
+\includegraphics[scale=0.6]{LW_forecast_P1.pdf}
+\caption{LW forecast (for each day of the week) for customer 1.}
+\label{fig:LW_forecast_P1} 
+\end{figure}
+
+\subsubsection{Adjusted Average Forecast} \label{subsubsec:AA_res}
+Again, we show the observation versus the adjusted average (AA) forecast for customer 1. In addition, so as to provide a comparison, a SD forecast is also laid. This is presented in figure \ref{fig:AA_forecast_P1}. Clearly, not all peaks are represented well however from looking at this one customer, it seems that more peaks are being forecasted and roughly the correct times. The magnitudes are still not correct however in many cases they are closer to the observed than the SD forecast. To quantify this further we can look at the $4^{\text{th}}$ of each household for each of those days. This is shown in figure \ref{fig:adj_err_diff}. This image shows the difference between the adjusted error of the SD forecast and that of the AA forecast. For all households where the black line is below the zero line (represented by the blue line) indicates the adjusted error (discussed in section \ref{subsubsec:Adj_err}) of the AA forecast was less than adjusted error of SD forecast. From figure \ref{fig:adj_err_diff}, it is clear that for most houses the AA forecast is a better forecast for all days.
+
+\begin{figure}
+\centering
+\includegraphics[scale=1]{AA_forecast_P1.pdf}
+\caption{AA forecast (for each day of the week) for customer 1 where the solid black line is the observed load, the broken black line is the SD forecast and broken blue line is the AA forecast.}
+\label{fig:AA_forecast_P1} 
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{adj_err_fixed.png}
+\caption{The adjusted error of the AA forecast relative to the adjusted error of the SD forecast for all households.}
+\label{fig:adj_err_diff} 
+\end{figure}
+
+\subsubsection{Linear Regression} \label{subsubsec:lin_reg_res}
+And finally for linear regression, the forecast of customer 1 along with the observations is shown in figure \ref{fig:LR_forecast_P1}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{lin_reg_forecast_P1.pdf}
+\caption{Linear Regression forecast (for each day of the week) for customer 1.}
+\label{fig:LR_forecast_P1} 
+\end{figure}
+
+%===================================================
+%					Error Results
+%===================================================
+
+
+\subsection{Error Measures}
+\label{subsec:errs}
+Some error measures were calculated for the various forecasts and are described below and the results are also discussed.
+
+\subsubsection{$4^{th}$ -Norm Errors} \label{subsubsec:4_err_res}
+
+Using the $4^{th}$- norm error for the SD forecast for each of the 503 households is given in figure \ref{fig:m4e_all}. \newline
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{m4err_all.png}
+\caption{\label{fig:m4e_all} $4^{th}$-norm error between the SD forecast and the observations for all customers.}
+\end{figure}
+
+Additionally we can also compare the $4^{th}$-norm errors of the SD forecast (above), LW forecast and linear regression forecast. This is presented in figure \ref{fig:forecasts_compare}. Note this image has removed one household (502 used in analyses) that had unusually high usage.
+
+\begin{figure}
+\includegraphics[scale=0.6]{forecasts_compare.pdf}
+\caption{\label{fig:forecasts_compare} $4^{th}$-norm error between forecast and the observations for 502 customers.}
+\end{figure}
+
+Unlike what was expected, the linear regression does not give much better results than the SD although both are a significant improvement on the LW forecast. When one compares the mean $4^{th}-$ norm error among all households then for SD the error is 3.829 kWh whereas linear regression is 3.866 kWh. This error is quite high given that the $75^{th}$ percentile is around the 0.5 kWh. This further demonstrates that point errors such as $4^{th}$ -norm may not be ideal due to the double penalty discussed above. For the moment we will use this as the benchmark.
+%To compare the AA forecast and the benchmark forecast, the adjusted error measure is used. Figure \ref{fig:adj_err} shows the error of the adjusted error of the AA forecast relative to the adjusted error of the benchmark for all 503 households for each of the seven days.
+
+
+%===================================================
+%					Clustering results
+%===================================================
+
+\subsection{Clustering} \label{subsec:clus_res}
+We discussed some of the theoretical background of clustering and clustering algorithms in section \ref{subsec:clustering}. In this section we will show the results of clustering households by their electric load. Before we proceed, it is valuable to note that electric load is what is used to quantify clusters rather than other aspects of social and geographical demographic details. This is because often households had been clustered by the location however it was found \todo{will need references} that it was more accurate and beneficial to electricity providers to cluster by load instead. This is why it is reasonable to assume independence in the sample.
+
+The data set was firstly split into three time of days: the first starting at 00:00 and ending at 07:30 i.e. just after breakfast on most weekdays, the second starting from 08:00 to about 16.30 and the last being the evening which is from 17:00 onwards., referred to as breakfast, daytime and evening respectively. Each of these were split further into weekdays and weekends. Recall the household in figure \ref{fig:totes} where the same house was observed to have consistently high usage. For each of the clustering procedures this household was removed from the analyses thus that presented in this section is clustering 502 households.
+\subsubsection{$K$-Means} \label{subsubsec:kmeans_res} 
+
+Starting with $K$-means clustering, the data were sorted into three clusters using the in-built $K$-means algorithm in Python's SciKit package. Since each of the 502 customers have various measurements, principle component analysis was used to represent each customer on a two dimensional plot and it's this representation that is shown in figures \ref{fig:kmeans_break} - \ref{fig:kmeans_eve}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_breakfast_cluster.pdf}
+\caption{\label{fig:kmeans_break}Three clusters for breakfast period where each household is plotted using principle component analysis.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_daytime_cluster.pdf}
+\caption{\label{fig:kmeans_day}Three clusters for daytime period where each household is plotted using principle component analysis.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_evening_cluster.pdf}
+\caption{\label{fig:kmeans_eve} Three clusters for evening period where each household is plotted using principle component analysis.}
+\end{figure}
+
+It is interesting that the three clusters are not consistent i.e. the reds are not always on the far right or the most tightly knit cluster. To see if there is some connection between the usage of customers with their clusters, for each of three clusters in each of the six categories, we can plot the mean usage against the standard deviation. The results of this are given in figures \ref{fig:kmeans_break_sm} - \ref{fig:kmeans_eve_sm}. From these images, it is clear that the $K$-means clustering has clustered customers by whether they have, on average, high, medium or low usage. The only one where this is very confused is the weekday breakfast time. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_breakfast_sd_mean.pdf}
+\caption{\label{fig:kmeans_break_sm} Mean against standard deviation for breakfast period.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_daytime_sd_mean.pdf}
+\caption{\label{fig:kmeans_day_sm}Mean against standard deviation for daytime period.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.9]{kmeans_s_evening_sd_mean.pdf}
+\caption{\label{fig:kmeans_eve_sm}Mean against standard deviation for evening period.}
+\end{figure}
+
+It is important to realise that the number of clusters here was chosen somewhat arbitrarily and also because we wanted to split households into low, medium and high usage. This may not be the ideal number of clusters. To get a ball park idea of what would be the ideal number of clusters, the following experiment was carried out on the weekday breakfast group. Using $K$-means, the group was clustered into various number of clusters (a certain number was picked for each experiment). Then for each cluster identified for a fixed number of clusters, an SD forecast was generated for each household in that cluster and mean over all these households were calculated. For the same households, their observed load were averaged. These averages were used to come up with an ``error'' for each cluster for a fixed number of clusters. More precisely:
+\begin{enumerate} \label{k_errs}
+\item The data set for the breakfast time on weekdays was isolated.
+\item All 502 customers (again removing the one outlier) were clustered into $k$ clusters where $k$ was fixed for the duration of the experiment/iteration.
+\item for each iteration, a week long forecast of all customers in the same cluster was produced using the SD method.
+\item This was then averaged across all customers which meant that we had one week long forecast for all households in one cluster.
+\item The observed load was equivalently averaged across all customers in the same cluster and mean square root error was computed for each cluster.
+\item Thus, the ``error'' for when $k=3$, for example, is the mean of the mean square root error of the three clusters.
+\item This result is given in table \ref{tab:cluserrs}
+\end{enumerate}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+$\textbf{k}$& \textbf{Error}\\
+\hline
+2 & 0.003\\
+\hline
+3 & 0.0579\\
+\hline
+4 & 0.0266\\
+\hline
+5 &0.129\\
+\hline
+6 & 0.283\\
+\hline
+7 & 0.143\\
+\hline
+8 & 0.0741\\
+\hline
+9 & 0.149\\
+\hline
+10 & 0.126 \\
+\hline
+11 & 0.09061\\
+\hline
+50 & 0.175\\
+\hline
+100 & 0.147\\
+\hline
+\end{tabular}
+\caption{Number of clusters, $k$, and their mean square errors using $K$-means clustering algorithm, SD forecast for the Breakfast Weekday.}
+\label{tab:cluserrs}
+\end{table}
+
+It is interesting that though we picked 3 arbitrarily it seems very close to the ``ideal'' number of clusters which looking at the errors looking like it is around 4. Again this only validates our choice of $k$ very roughly. This is by no means a good enough evidence to conclude that the ideal number of clusters is 4. For the moment we will stick to $k=3$ until other more rigorous experiments are conducted. %This should be tried with various forecasting methods and maybe even with various clustering techniques applied to different clusters.
+Additionally, though it seems that in cases where we have forced large number of clusters the error is relatively low (compare $k=6$ with largest number of clusters), many of the clusters are empty thereby further suggesting that maybe a smaller number of clusters is ideal given the data.
+
+%To understand if this holds for the other times, the next step is to apply it to the other 5 sets.
+
+\subsubsection{Affinity Propoagation} \label{subsubsec:affprop_res}
+As was discussed above \ref{subsubsec:afprop}, Affinity Propagation is an example of unsupervised clustering. While the theoretical framework of this method was discussed above, here the specifics of the python implementation, again with the SciKit Learn package, is outlined and explained. The main input is preference and it does indeed impact the number of clusters that are identified. A preference value can be specified or not. For various choices of preference, including where ``none'' was chosen, the number of clusters found by the algorithm are shown in table \ref{tab:affprop}. It was found that for a preference that is non-negative, regardless of the time, one cluster was found for each household. This is not surprising given the algorithm as described by \cite{frey07}. The preferences shownwere picked arbitrarily as a trial by error however the number of clusters that are reasonable one has to choose preferences as low as -1000. It would be valuable to find the ideal ``preference'' according to \cite{frey07}. \todo[inline]{include the investigation at some point}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{Preference} & \thead{\textbf{Weekday} \\ \textbf{Breakfast}} &\thead{\textbf{Weekend} \\ \textbf{ Breakfast}} &\thead{\textbf{Weekday} \\ \textbf{Daytime}} &\thead{\textbf{Weekend} \\ \textbf{Daytime}} &\thead{\textbf{Weekday} \\ \textbf{Evening}} &\thead{\textbf{Weekend} \\ \textbf{Evening}} \\
+\hline
+None & 111 & 107 & 82 &90 &90 &91\\
+\hline
+10  & 502 & 502& 502& 502& 502& 502\\
+\hline
+0 & 502& 502& 502& 502& 502& 502\\
+\hline
+-1 & 493& 424& 502& 599& 502& 500\\
+\hline
+-10 & 335& 169& 487& 468& 480& 440\\
+\hline
+-20 &245 &97 &468 & 435& 461&383\\
+\hline
+-30 &185 &64 &444 &405 &434 &333\\
+\hline
+-40 &154 &44 & 420&370 & 406&298\\
+\hline
+-50 &130 &32 & 402& 346& 394&256\\
+\hline
+-100 &69 & 10&317 &234 &302 &133\\
+\hline
+-1000 &3 & 2& 7& 4& 7&4\\
+\hline
+\end{tabular}
+\caption{Number of Clusters using Affinity Propogation}
+\label{tab:affprop}
+\end{table}
+
+
+\subsubsection{Gaussian Mixture Models} \label{subsubsec:gm_res}
+%\todo[inline]{add some preliminary stuff}
+Unlike with Affinity Propagation, the number of clusters are chosen by the user. Thus I will repeat the experiment described in section \ref{subsubsec:kmeans_res} except using Gaussian mixture models and for all 6 timesets. The only difference to the above experiment is that for each number of clusters and each time set, the algorithm was run for 100 runs and the mean error and standard deviation of these errors is what is presented in tables \ref{tab:cluserrs_gm} and \ref{tab:cluserrs_gm_sd}.
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{No. of Clusters} & \thead{\textbf{Weekday} \\ \textbf{Breakfast}} &\thead{\textbf{Weekend} \\ \textbf{ Breakfast}} &\thead{\textbf{Weekday} \\ \textbf{Daytime}} &\thead{\textbf{Weekend} \\ \textbf{Daytime}} &\thead{\textbf{Weekday} \\ \textbf{Evening}} &\thead{\textbf{Weekend} \\ \textbf{Evening}} \\
+\hline
+3 & 0.0380 & 0.0346 & 0.0982 & 0.0761 & 0.0733 & 0.0665 \\
+\hline
+4  & 0.0532 & 0.0495 & 0.1244 & 0.1076 & 0.0991 & 0.1057 \\
+\hline
+5 & 0.0660 & 0.0573 & 0.138 & 0.1403 & 0.114 & 0.131 \\
+\hline
+6 & 0.0701 & 0.0653 & 0.158 & 0.148 & 0.136 & 0.147 \\
+\hline
+7 & 0.0718 & 0.0675 & 0.174 & 0.169 & 0.143 & 0.173 \\
+\hline
+8 & 0.0735 & 0.0726 & 0.167 & 0.1803 & 0.143 & 0.163 \\
+\hline
+9 & 0.0785 & 0.0751 & 0.155 & 0.188 & 0.164 & 0.184 \\
+\hline
+10 & 0.0833 & 0.0754 & 0.159 & 0.208 & 0.165 & 0.188 \\
+\hline
+\end{tabular}
+\caption{Mean Errors for various number of clusters using Gaussian Mixture Models}
+\label{tab:cluserrs_gm}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{No. of Clusters} & \thead{\textbf{Weekday} \\ \textbf{Breakfast}} &\thead{\textbf{Weekend} \\ \textbf{ Breakfast}} &\thead{\textbf{Weekday} \\ \textbf{Daytime}} &\thead{\textbf{Weekend} \\ \textbf{Daytime}} &\thead{\textbf{Weekday} \\ \textbf{Evening}} &\thead{\textbf{Weekend} \\ \textbf{Evening}} \\
+\hline
+3 & 0.0246 & 0.0231 & 0.0592 & 0.0450 & 0.0320 & 0.0440 \\
+\hline
+4  & 0.0286 & 0.0349 & 0.0538 & 0.0502 & 0.0453 & 0.0520 \\
+\hline
+5 & 0.0314 & 0.0263 & 0.007 & 0.0620 & 0.0439 & 0.509 \\
+\hline
+6 & 0.0251 & 0.0244 & 0.0641 & 0.0526 & 0.0484 & 0.0536 \\
+\hline
+7 & 0.0242 & 0.0246 & 0.0675 & 0.0620 & 0.0443 & 0.0587 \\
+\hline
+8 & 0.0216 & 0.0234 & 0.0537 & 0.0593 & 0.0436 & 0.0593 \\
+\hline
+9 & 0.0192 & 0.0241 & 0.0615 & 0.0568 & 0.0500 & 0.0588 \\
+\hline
+10 & 0.0204 & 0.0236 & 0.0514 & 0.0511 & 0.0499 & 0.0588 \\
+\hline
+\end{tabular}
+\caption{Standard deviation in the errors of SD forecast clustered using Gaussian mixture models.}
+\label{tab:cluserrs_gm_sd}
+\end{table}
+
+
+%===================================================
+%					EVT results
+%===================================================
+
+\subsection{Extreme Value Analyses}
+\label{subsec:EVres}
+Now that we've done some forecasting of averages, it is apt to delve into analyses of the extremes. The results from these are presented and discussed briefly.
+
+In section \ref{subsec:EVT}, quantile-quantile (QQ) plots were discussed. After much fitting, it was found that the standard beta distribution provides a good enough basis, at least for some part of the data. In fact a lot of distribution with light tail behaviour such as uniform distribution also fitted the data very well. As will be shown later the plots showing extreme value index (EVI) estimates also confirm this idea that the data are light tailed. The QQ plot for the whole of the data set (fig. \ref{fig:beta}).
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{qqplot_beta.png}
+\caption{\label{fig:beta} QQ plot.}
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{qq_plot_beta_100k-500k.png}
+%\caption{\label{fig:beta_sub} QQ plot using the first 100,000 to 500,000 data points.}
+%\end{figure}
+
+As discussed the mean excess plot allows us to find the underlying distribution when it is not known. The mean excess is plotted against the threshold in figure \ref{fig:r_me}. It is not useful to interpret based on trends at thresholds that are too high. For the data shown in figure \ref{fig:r_me}, it is not useful to infer the trend for thresholds higher than 9 kWh as there are too few data points and large variability. Thus we look at the trend between 6 kWh and 9 kWh which is decreasing. This is again indicative of the light tails.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{R_meplot.png}
+\caption{\label{fig:r_me} Mean excess plot plotted against threshold.}
+\end{figure}
+
+Moving on to the block maxima (BM) method, we are going to apply both estimation methods (MLqE and MSP) to the available sample of weekly maxima. There are 7 weeks of available data, which we assume as independent observations, but this amounts to only a few extreme (max-)data points if we assign one block to one week. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings.
+
+Figure \ref{fig:gammaEst} displays the estimates for the extreme value index $\gamma$ (or shape parameter) using both Lq-likelihood and MSP estimation procedures upon the Block Maxima method. Figure \ref{fig:POTEst} in contrast uses a Peak Over Threshold (POT) method using the $k$ upper order statistics. These were obtained using weekly maxima for the 7 week period, hence using $7\times 503= 3521$ maxima. Using both MLqE and MSP estimation methods, $\gamma$ is seen to be negative and also for the POT method where $k$ is not so low. This further validates the light tailed nature however this rigorousness holds for weekly maxima not necessarily maxima for other blocks. 
+
+Figure \ref{fig:EndPointEst}  shows two estimates of the right endpoint. This is the upper limit of HH usage. Method 1 of the MLqEP (red) are more conservative estimates and the downfall, as observed, is that it can return values that are less than sample maxima. However, method 2 gives a more realistic estimate.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{GammaEstimates.pdf}
+\caption{Estimates for the shape parameter based on the weekly maxima.} \label{fig:gammaEst}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{EndpointEst.pdf}
+\caption{Estimates for the right endpoint, based on the weekly maxima.} \label{fig:EndPointEst}
+\end{center}
+\end{figure}
+
+Figure \ref{fig:POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. Even though the POT method is not one that we are currently pursuing, it adds to the evidence that the data are indeed light tailed.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{EVIestimation.pdf}
+\caption{Extreme value index estimation using the $k$th larger order statistics.} \label{fig:POTEst}
+\end{center}
+\end{figure}
+
+%Lastly, the maximum to sum ratio plot for the weekly maxima is given is figure \ref{fig:msratioBM}. This maximum to sum ratio plot allows us to decipher more properties of the underlying distrubution. The lines tending to zero for a particular value of $p$ is indicative that it's $p^{th}$ moment is finite. Clearly from figure \ref{fig:msratioBM}, the $5^{th}$ moment and those higher are not finite. Thus for weekly maxima we have a distribution that is light tailed with at least mean and variance being finite.
+
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width=\textwidth]{msratio_weekly_max.png}\\
+%\caption{Max-sum ratio for Weekly maxima.} \label{fig:msratioBM}
+%\end{center}
+%\end{figure}
+
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{maria_meplot_k_full.png}
+%\caption{\label{fig:me_k_full} Mean excess plot plotted against the position of the order statistic.}
+%\end{figure}
+
+%An alternative mean excess plot there is a lot going at start of figure \ref{fig:me_k_full} thus a zoom is given in figure \ref{fig:me_k_zoom}. Even without the zoom figure \ref{fig:me_k_full} allows us to identify the extremes, namely those that come just before the smoother peak at roughly $k = 1.5\times 10^5$.
+
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{maria_meplot_k_zoom.png}
+%\caption{\label{fig:me_k_zoom} This provides a very close zoom on figure \ref{fig:me_k_full} where the first value is also ignored.}
+%\end{figure}
+
+
+The analyses of heteroscedastic extremes presented in \cite{einmahl16} can be applied to electric load data in the following way.
+
+Recall the scedasis function as defined in equation \ref{eq:scedasisfn} which can be estimated using the $\hat{c}$ given in equation \ref{eq:c_hat_est}. The parameters which were used for estimating the scedasis function for electric load are specified in equation \ref{eq:myscedparams}. Note that in these equations, $s$ can be interpreted as time units which have been normalised.
+
+\begin{equation} \label{eq:myscedparams}
+\begin{split}
+G(s) = \frac{15(1-s^2)^2}{16}, \quad s \in [-1,1] \\
+h = 0.1 \\
+k = 200
+\end{split}
+\end{equation}
+
+In \cite{einmahl16}, $k$ was taken to be 400 but they had a sample size of $n=5000$. In the case of 7 weeks of electric load data, $n=2352$ so scaling roughly, $k$ is taken to be 200.
+
+The load data is selected in the following manner:
+\begin{enumerate}
+\item Data is at half hourly resolution which means that for each of 503 households, there are 2352 measurements.
+\item At each half hour, the maximum from any household is taken.
+\item This is used in place of the data generating process in \cite{einmahl16}.
+\item The resulting image is given in figure \ref{fig:mysced_hh_max}.
+\end{enumerate}
+
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{hh_max_sced.pdf}
+\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks.}
+\end{figure}
+
+For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{hh_max_int_sced.pdf}
+\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks.}
+\end{figure}
+
+As with most cases in extremes analyses, \cite{einmahl16} also developed these results with financial applications in mind and they considered daily (and weekly) losses from a particular index (SP500). This can also be done for electric load data. Instead of considering the maximum at each half hour, we can consider the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household and again aggregate them in some way to have one ``time-series''. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
+
+Before the estimated scedasis function for the positive differences are presented, it is useful to review what aggregating statistics were used. The following were thought to be relevant either from an electric load perspective or an extremes perspective: \begin{enumerate*}[label=\roman*)] \item maximum and \item sum. \end{enumerate*} Using these, 4 different positive differences data sets were created in the following way:
+\begin{enumerate}
+\item The data, which contains measurements at half hourly resolution for 503 customers, was grouped by day.
+\item Three groupings, using mean, max or sum, were made meaning that for each house the mean, maximum or total electric load was recorded for each day.
+\item Then to get one time series as before, a maximum or a sum over all households were recorded.
+\item Thus 4 positive differences were recorded. The naming that is present in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``Max of mean'' indicates the for each day and each household the average was used and then the maximum electric load over all households is recorded where ``max of max'' reflects that the daily max for each household is then maxxed over all households.
+\end{enumerate}
+
+While the estimation of the scedasis function is not exactly as in \cite{einmahl16} (see discussion below), we some very large peaks around day 7 - 8 and again 42-43 where extreme usage is more likely. This sort of makes sense, since days 7 and 42 occur on the weekend traditionally have higher load than weekdays.
+
+\begin{figure}
+\centering
+\includegraphics[scale=1]{pos_diffs.pdf}
+\caption{\label{fig:pos_diff} Profiles of various positive differences.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.8]{pos_diff_sced.pdf}
+\caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences.}
+\end{figure}
+
+We also acquired value at close for each day of the SP500 index, which is the data set that was used by \cite{einmahl16}. We can check how correct the implementation of $\hat{c}$ is by using the subset of data that was considered in the study. The result for daily losses, which is defined as $|\frac{X_t - X_{t-1}}{X_{t-1}}|$, from $1^{st}$ of January 1988 to the $31^{st}$ of December 2007, inclusive, is shown in figure \ref{fig:SP500_sced_daily}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{SP500_sced_qwe.pdf}
+\caption{\label{fig:SP500_sced_daily} Estimated scedasis functions, $\hat{c}$ for daily returns of the Standard and Poor 500 Index.}
+\end{figure}
+
+When comparing this to the estimated scedasis function shown in \cite{einmahl16}, it is clear the results are not exactly the same. While most of it is as expected, the diagram varies slightly at the boundaries. The sharp increase at the end of 2007 shown and discussed in \cite{einmahl16} is not recreated as much in figure \ref{fig:SP500_sced_daily}, whose magnitude at the end does not even exceed 1. Similarly, in the start of the image, the function does not start as high it did in the function shown in \cite{einmahl16}. The rest of the image also is not exactly the same though the general shape is there. For example around the 1992, figure \ref{fig:SP500_sced_daily} is much smoother than that shown in \cite{einmahl16}.
+
+However, this means that we can now proceed with this implementation and explore other scedasis results. Let's first look at where the above have just been extended to use the full data set (22 weeks). The first one will be the 22 week equivalent of figure \ref{fig:mysced_hh_max}, given in figure \ref{fig:mysced_hh_max_22}. Recall that the image here is obtained by using the using the maximum over all the households at each half hour.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{22_household_max_sced.pdf}
+\caption{\label{fig:mysced_hh_max_22} Estimated scedasis function, $\hat{c}$ at half hourly resolution with maxima over each household.}
+\end{figure}
+
+Next we can do the same with the positive differences as in figure \ref{fig:pos_diff_sced}, the results of which are given in figure \ref{fig:pos_diff_sced_22}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{pos_diff_sced_22.pdf}
+\caption{\label{fig:pos_diff_sced_22} Estimated scedasis function, $\hat{c}$ for various positive differences for 22 weeks.}
+\end{figure}
+
+It is also beneficial to follow \cite{einmahl16} by using returns instead of actual measurements or positive differences. Returns are defined as $\frac{\left|X_t - X_{t-1}\right|}{X_{t-1}}$.  The following is presented for the 22 weeks of data. Since each day has 48 measurements $X_t$ is taken to be the maximum for the day and $X_{t-1}$ is taken to be the maximum of the day before.
+
+Thus the maximum return for each household was computed and an average was used to create one time series. Then the scedasis function was estimated and is shown in figure \ref{fig:avg_max_ret_sced}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{avg_max_ret_sced.pdf}
+\caption{\label{fig:avg_max_ret_sced} Estimated scedasis function, $\hat{c}$ of the average of maximum returns.}
+\end{figure}
+
+
+However instead of aggregating the data into one time series, we can compute a scedasis function for each household and aggregate the scedasis function. proceeding again with maximum returns, we can have a look at 4 households individually (figs. \ref{fig:max_ret_sced_P1} - \ref{fig:max_ret_sced_P4}) and observe that the scedasis varies greatly from household to household. Thus we can average it or take some percentile (fig. \ref{fig:max_ret_sced_95_50}). However doing this looses much of the shape and thus information. It may be more beneficial to look at a box plot image (fig. \ref{fig:max_ret_sced_boxplot}) though this is quite messy and a better representation will have to be found.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{max_ret_sced_P1.pdf}
+\caption{\label{fig:max_ret_sced_P1} Estimated scedasis function, $\hat{c}$ for maximum returns of household 1.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{max_ret_sced_P2.pdf}
+\caption{\label{fig:max_ret_sced_P2} Estimated scedasis function, $\hat{c}$ for maximum returns of household 2.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{max_ret_sced_P3.pdf}
+\caption{\label{fig:max_ret_sced_P3} Estimated scedasis function, $\hat{c}$ for maximum returns of household 3.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{max_ret_sced_P4.pdf}
+\caption{\label{fig:max_ret_sced_P4} Estimated scedasis function, $\hat{c}$ for maximum returns of household 4.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{max_ret_95_median.pdf}
+\caption{\label{fig:max_ret_sced_95_50} Median (red) and $95^{th}$ percentile of the estimated scedasis function, $\hat{c}$ for maximum returns.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{box_plot_max_ret_sced.pdf}
+\caption{\label{fig:max_ret_sced_boxplot} Boxplot image of the estimated scedasis function, $\hat{c}$ for maximum returns.}
+\end{figure}
+
+
+Whether we are using one time series or all of them, we have used a density scedasis however because we have more than one time series (one for each house it is possible also to look at the proportion of houses which exceed a global threshold which can relate more easily to probability than the density scedasis estimator. The scedasis density does not directly translate to a probability since locally it may be more than one but it still tells us how likely it is for the random variable to be near time $j/n$ however using the frequency of exceedances, it is more straightforward to interpret as a probability.
+
+Thus, the scedasis is now modified as follows. Suppose we have $m$ household which are measured a $n$ time points thus we have $N= n \times m$ observations. The scedasis assumption is
+
+\begin{equation*}
+\frac{\mathbb{P}(X_i(j)>x)}{1-F(x)} \quad  \displaystyle{ \mathop{\rightarrow}^{x \uparrow x*}} \quad c\left(\frac{j}{n}\right)
+\end{equation*}
+\noindent uniformly in $i$ and $n$, $\forall j$ satisfying $\int_0^1 c(t)dt = 1$. Thus we replace the density scedasis estimator by the proportion of households that exceed a global threshold of $X_{N-k,N}$ at time $j/n \equiv s_j$. Thus
+
+\begin{align} \label{eq:sced_prop}
+\begin{split}
+\hat{c}(s_j) =  \frac{k_j}{k} =& \quad \frac{\# \text{exceedances at } \frac{j}{n}}{k} \\
+= & \quad \frac{\sum_{i=1}^m \mathbb{1}_{\{X_i(s_j) > X_{N-k,N}\}}}{k}\\
+\end{split}
+\end{align}
+
+Implementing this in R for the 7 weeks of data at the half hourly time resolution (i.e. $n = 2353$), the frequency scedasis obtained is presented in figure \ref{fig:hh_sced_prop}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{hh_sced_prop.pdf}
+\caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks.}
+\end{figure}
+
+%===================================================
+%					Project Goals
+%===================================================
+
+
+\clearpage
+\section{Project Goals}
+\label{sec:goals}
+This final section outlines the goals, establishes what we have already accomplished and outlines future work and plans for the MRes.
+
+\begin{enumerate}
+\item Identifying the ``extreme'' households.
+\item Formulating an algorithm which will reasonably forecast energy use all household by splitting customers into``extreme'' households and ``non-extreme'' households. We have already implemented a benchmark forecast and error measure. Moving forward, more forecasting methods such as the Adjusted Average method described in \cite{dan14} and its refinements will be tested with various error metrics. 
+\item We have yet to conduct analyses into the influence of the order of clustering and forecasting on the overall forecasting skill.
+\item We have already delved into some extremes analyses using some graphical tools and applied the Block Maxima (BM) method. This analyses informed us of the light tailed behaviour of weekly maxima.
+\item The above also lead us to some estimates of the ultimate upper bound. It still remains to put some confidence bounds on this and to conduct further right endpoint estimation and testing.
+\end{enumerate}
+
+A work plan for the remaining 7 months is provided in table \ref{tab:plan}. \newline
+
+\begin{table}
+\begin{tabular}{|c|p{4cm}|p{7cm}|}
+\hline
+\textbf{Dates} & \textbf{Plan} & \textbf{Deadlines}\\
+\hline
+\hline
+$13^{th} - 19^{th} $ March & Interim Report & Interim Report: $17^{th}$ March\\
+\hline
+$20^{th} -25^{th}$ March & Coursework \newline Abstract \newline \newline Jamboree & Coursework due: $23^{rd}$ March \newline Abstract for impacting Science due: 24th March \newline Jamboree: $21^{st} - 22^{nd}$ March\\
+\hline
+$27^{th}$ March  $- 7^{th}$ May & MRes Project & Official call for PhD Project Proposals: $3^{rd}$ May \\
+\hline
+$8^{th}-31^{st}$ May & MRes Project &  MRes Project Presentations: $17^{th}$ May \newline MRes Project Presentations: $24^{th}$ May \newline MRes Project Presentations: $31^{st}$ May\\
+\hline
+$1^{st}-31^{st}$ June  & MRes Project \newline PhD Project Proposal & Finalised PhD project Proposals due: $14^{th}$ June \\
+\hline
+$1^{st} - 12^{th}$ July & Impacting Science Conference & Impacting Science Conference: $11^{th}$ and $12^{th}$ July \\
+\hline
+$13^{th}$ July $-6^{th}$ August & MRes Project &  \\
+\hline
+$7^{th}$ August $-1^{st}$ September  & Thesis Write up & MRes Thesis Submission: $1^{st}$ September \\
+\hline
+\end{tabular}
+\caption{MRes work plan.}
+\label{tab:plan}
+\end{table}
+
+\clearpage
+\bibliographystyle{apalike}
+\bibliography{sample}
+
+\end{document}

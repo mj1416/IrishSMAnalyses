@@ -1,0 +1,51 @@
+\begin{thebibliography}{}
+
+\bibitem[Bingham et~al., 1987]{Binghametal:87}
+Bingham, N.~H., Goldie, C., and Teugels, J.~L. (1987).
+\newblock {\em Regular Variation}.
+\newblock Encyclopedia of Mathematics and its Applications, vol. 27, Cambridge
+  University Press.
+
+\bibitem[Cheng and Amin, 1979]{ChengAmin:79}
+Cheng, R. C.~H. and Amin, N. A.~K. (1979).
+\newblock Maximum product of spacings estimation with application to the
+  lognormal distribution.
+\newblock {\em Math. Report 79-1, University of Wales Institute of Science and
+  Technology, Cardiff.}
+
+\bibitem[de~{H}aan, 1970]{deHaan:70}
+de~{H}aan, L. (1970).
+\newblock {\em On regular variation and its application to the weak convergence
+  of sample extremes}.
+\newblock CWI Tract 40, Center for Mathematics and Computer Science, Amsterdam,
+  the Netherlands.
+
+\bibitem[de~{Haan} and Ferreira, 2006]{deHF:06}
+de~{Haan}, L. and Ferreira, A. (2006).
+\newblock {\em Extreme Value Theory: An Introduction}.
+\newblock Springer.
+
+\bibitem[Ferreira and de~Haan, 2015]{FdeH:15}
+Ferreira, A. and de~Haan, L. (2015).
+\newblock On the block maxima method in extreme value theory: {PWM} estimators.
+\newblock {\em Ann. Statist.}, 43(1):276--298.
+
+\bibitem[Fisher and Tippett, 1928]{FisherTippett:28}
+Fisher, R.~A. and Tippett, L. H.~C. (1928).
+\newblock Limiting forms of the frequency distribution of the largest and
+  smallest member of a sample.
+\newblock {\em Math. Proc. Cambridge Philos. Soc.}, 24:180--190.
+
+\bibitem[Gnedenko, 1943]{Gnedenko:43}
+Gnedenko, B.~V. (1943).
+\newblock Sur la distribution limite du terme maximum d'une s\'{e}rie
+  al\'{e}atoire.
+\newblock {\em Ann. of Math.}, 44:423--453.
+
+\bibitem[Ranneby, 1984]{Ranneby:84}
+Ranneby, B. (1984).
+\newblock The maximum spacing method. an estimation method related to the
+  maximum likelihood method.
+\newblock {\em Scand. J. Statist.}, 11:93--112.
+
+\end{thebibliography}

@@ -1,0 +1,45 @@
+\begin{thebibliography}{}
+
+\bibitem[Charlton and Singleton, 2014]{char14}
+Charlton, N. and Singleton, C. (2014).
+\newblock A refined parametric model for short term load forecasting.
+\newblock {\em International Journal of Forecasting}, 30:364--368.
+
+\bibitem[Einmahl et~al., 2016]{einmahl16}
+Einmahl, J., de~Haan, L., and Zhou, C. (2016).
+\newblock Statistics of heteroscedastic extremes.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 78(1):31--51.
+
+\bibitem[Ferreira et~al., 2017]{ferreira17}
+Ferreira, A., Friederichs, P., de~Haan, L., Neves, C., and Schlather, M.
+  (2017).
+\newblock Estimating space-time trend and dependency of heavy rainfall.
+\newblock {\em Biometrika}, 103:1--23.
+
+\bibitem[Haben et~al., 2014]{dan14}
+Haben, S., Ward, J., Greetham, D.~V., Singleton, C., and Grindrod, P. (2014).
+\newblock A new error measure for forecasts of household-level, high resolution
+  electrical energy consumption.
+\newblock {\em International Journal of Forecasting}, 30:246--256.
+
+\bibitem[Hattam and Greetham, 2017]{danEV17}
+Hattam, L. and Greetham, D.~V. (2017).
+\newblock Green neighbourhoods in low voltage networks: measuring impact of
+  electric vehicles and photovoltaics on load profiles.
+\newblock {\em Journal of Modern Power Systems and Clean Energy},
+  5(1):105--116.
+
+\bibitem[Hong and Fan, 2016]{hong16}
+Hong, T. and Fan, S. (2016).
+\newblock Probabilistic electric load forecasting: A tutorial review.
+\newblock {\em International Journal of Forecasting}, 32:914--938.
+
+\bibitem[Wijaya et~al., 2015]{cbaf}
+Wijaya, T.~K., Vasirani, M., Humeau, S., and Aberer, K. (2015).
+\newblock Cluster-based aggregate forecasting for residential electricity
+  demand using smart meter data.
+\newblock In {\em Big Data (Big Data), 2015 IEEE International Conference on},
+  pages 879--887. IEEE.
+
+\end{thebibliography}

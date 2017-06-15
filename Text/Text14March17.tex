@@ -1,0 +1,178 @@
+\documentclass[10pt, a4paper, oneside]{article}
+\usepackage[body={15.5cm, 24.0cm},left=2cm,right=2cm]{geometry}
+\usepackage{natbib}
+\usepackage{amsmath, amssymb}
+\usepackage{amsfonts}
+
+
+\usepackage{graphicx}
+\usepackage[usenames]{color}
+\usepackage{setspace}
+\usepackage{pifont}                  % Line spacing
+\setstretch{1.2}
+\usepackage{hyperref}
+\hypersetup{colorlinks = true, citecolor= black, linkcolor=blue}
+
+
+
+% ==================================
+% Begin of Commands Used in Document
+% ==================================
+
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{ex}[thm]{Example}
+
+
+\newcommand{\id} {\ensuremath{\displaystyle{\mathop {=} ^d}}}
+
+
+\newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\real}{\ensuremath{{\field{R}}}}
+\newcommand{\mc}[1]{{\ensuremath{\mathcal{#1}}}}
+
+\newcommand{\sumab}[2]{\ensuremath{\sum\limits_{#1}^{#2}}}
+\newcommand{\intab}[2]{\ensuremath{\int_{#1}^{#2}}}
+\newcommand{\intinf}[1]{\ensuremath{\int_{#1}^{\infty}}}
+\newcommand{\intunit}{\ensuremath{\int_{0}^{1}}}
+
+\newcommand{\arrowf}[1]{\ensuremath{\displaystyle {\mathop {\longrightarrow}_{#1 \rightarrow \infty}\,}}}
+\newcommand{\limit}[1]{\ensuremath{\displaystyle {\lim_{#1 \rightarrow{\infty}}}}}
+\newcommand{\suprem}[1]{\ensuremath{\displaystyle {\sup_{#1}}}}
+\newcommand{\minarg}[1]{\ensuremath{\displaystyle {\min_{#1}}}}
+\newcommand{\argmax}[1]{\ensuremath{\displaystyle {\arg\max_{#1}}}}
+\newcommand{\conv}[1]{\ensuremath{\, \displaystyle {\mathop {\longrightarrow}_{n \rightarrow \infty} ^{#1}}}\, }
+
+% ================================
+% End of Commands Used in Document
+% ================================
+
+\title{Extremes bit for the report}
+
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\strut
+
+
+
+
+%\vspace{0.2cm}
+
+%\keywords{***}
+
+
+%===========================MAIN TEXT==============================
+
+%==================================================================
+\section{Introduction and Motivation}
+\label{Sec.Intro}
+
+Let $F$ be a distribution function (d.f.) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of i.i.d. random variables with common .d.f. $F$. Because there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the sample maximum by $X_{n,n}$, that is $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$, and we shall always be concerned with sample maxima.
+
+The celebrated Fisher and Tippet theorem or Extreme Value theorem \citet{FisherTippett:28}, with prominent unifying contributions by \citet{Gnedenko:43} and \citet{deHaan:70}, establishes the GEV distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
+\begin{equation}\label{EVTheo}
+	\limit{n} P \Bigl( \frac{X_{n,n}-b_n}{a_n} \leq x\Bigr)= \limit{n} F^n (a_n x + b_n) = G(x),
+\end{equation}
+for every continuity point of $G$, then $G(x)= G_{\gamma}(x)$ is given by
+\begin{equation}\label{GEVd}
+	G_{\gamma}(x)= \exp \{ -(1+ \gamma\, x)^{-1/\gamma}\}, \quad 1+\gamma\,x >0.
+\end{equation}
+We then say that $F$ is in the (max-)domain of attraction of $G_\gamma$,  for some extreme value index (EVI) $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. The parameter $\gamma \in \real$ is the so-called extreme value index.
+
+The theory of regular variation \citep{Binghametal:87,deHaan:70, deHF:06}, provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalised inverse of $1/(1-F)$, i.e.
+\begin{equation*}
+U(t):=   F^{\leftarrow} \bigl( 1-1/t\bigr), \quad \mbox{ for } t>1.
+\end{equation*}
+Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurable function $a(\cdot)$ such that the condition of \emph{extended regular variation}
+\begin{equation}\label{ERVU}
+	\limit{t}\,\frac{U(tx)-U(t)}{a(t)}= \frac{x^{\gamma}-1}{\gamma},
+\end{equation}
+holds for all $x>0$ [notation: $U\in ERV_{\gamma}$].
+The limit  in  \eqref{ERVU} coincides with the $U$-function of the Generalized Pareto (GP) distribution, with distribution function $1+\log G_\gamma$, which suggests the commonly known improved inference attached to the Peaks over Threshold (POT) method. In fact, the extreme value condition \eqref{ERVU}  on the tail quantile function $U$ is the usual assumption in semi-parametric inference for extreme outcomes. However, we will not pursue this direction.
+
+Within the two main approaches in Extreme Value  we plan to tackle:
+\begin{enumerate}
+\item\label{BM} Block maxima (BM) method: take observations in blocks of equal size and assume that the maximum in each block (year) follows exactly the Generalised Extreme Value (GEV) distribution defined in \eqref{GEVd}.
+\item\label{POT} Peaks over threshold (POT) method: restrict attention to those observations from the sample that exceed a certain level or threshold, supposedly high, while assuming that these exceedances follow exactly the Generalised Pareto distribution.	
+\end{enumerate}
+
+A difficulty in applying EVT is that observations generally do not follow the exact extreme value distribution. The best we can hope for is that they come from a distribution in one of the only possible three domains of attraction. Hence an interesting aspect is to derive large sample properties of the obtained estimators by replacing the word ``exactly'' with ``approximate'' in points \ref{BM} and \ref{POT} above. The latter conveys a semi-parametric framework, which also proves to be a  fruitful setting in analysing extreme events. 
+
+
+Inference for Block Maxima has received much attention nowadays. The relative merits of this approach are discussed in \citet{FdeH:15}, where they lay down several results in line with \eqref{ERVU}, cementing the path towards the semi-parametric approach to block maxima estimation.
+
+
+The maximum Lq-likelihood estimator (MLqE) of $\theta$ (real or vector-valued parameter) is defined as
+\begin{equation*}
+	\hat{\theta}= \argmax{\theta \in \Theta} \, \sumab{i=1}{n} L_q\bigl( f(X_i; \, \theta)\bigr), \quad q>0,
+\end{equation*}
+with $L_q(u)= \log u$ if $q=1$ and $L_q(u)= (u^{1-q}- 1)/(1-q)$, otherwise (cf. Definition 2.2 in Ferrari and Yang, 2010). The function $L_q$ is quite similar to the Box-Cox transformation in statistics. The parameter $q$ gauges the degree of distortion in the underlying density. If $q=1$, then the estimation procedure reads as the ordinary maximum likelihood (ML) method.
+
+The rationale to the maximum product spacing (MSP) estimator can be found in \citet{ChengAmin:79} and \citet{Ranneby:84}.
+
+
+\section{Results on Weekly Maxima}
+
+We are going to apply both estimation methods to the available sample of weekly maxima. There are 7 weeks of available data, which we assume as independent observations, but this amounts to only a few extreme (max-)data points if we assign one block to one week. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings, displayed in Figure \ref{Fig.WeeklyMax}. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{figures/WeeklyMaxPlot.pdf}
+\caption{Meter readings for 503 customers per week of observation.} \label{Fig.WeeklyMax}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{figures/WeeklyMaxThres6.pdf}\\
+\includegraphics[scale=0.6]{figures/OverlayPlot.pdf}
+\caption{Weekly maxima above the threshold 6.} \label{Fig.WeekMaxThres}
+\end{center}
+\end{figure}
+
+
+It is clear from this plot that there are nearby customers with similar consumption patterns. Also, customers with large consumption amounts in one week are more likely to show again large consumption on the next. We exemplify with customer number 146, showing an outstanding amount of 12 (units??). The plots in Figure \ref{Fig.WeekMaxThres} are intended to highlight this behaviour. Here, we restrict our attention to those weekly maxima above a the fixed threshold 6 (units??). From the plots in the second and third rows, a few more customers now seem to bubble up as heavy consumers, with a great demand. In this respect we point out customers 74, 146 and 280, for example. Although we are assuming that meter readings are independent from week to week, there seems to be a non-stationary effect in the distribution of electricity demand. This will not disturb us for the moment. We will focus in drawing inference for the stationary case, that is, for samples of i.i.d. observations and their maxima obtained according to the Block Maxima (BM) method. We shall tackle the problem of non-stationarity across space in future research.
+
+Figure \ref{Fig.BMEst} displays the estimates paths for the extreme value index $\gamma$ (or shape parameter) using both Lq-likelihood and MSP estimation procedures upon the Block Maxima method. These were obtained for the entire sample of weekly maxima, hence using $7\times 503= 3521$ maxima. *** Comment ****
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{figures/GammaEstimates.pdf}\\
+\includegraphics[scale=0.6]{figures/EndPointEst.pdf}
+\caption{Estimates for the shape parameter and right endpoint, based on the weekly maxima.} \label{Fig.BMEst}
+\end{center}
+\end{figure}
+
+Figure \ref{Fig.POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. *** Comment ****
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{figures/EVIestimation.pdf}\\
+\caption{Extreme value index estimation using the $k$th larger order statistics.} \label{Fig.POTEst}
+\end{center}
+\end{figure}
+
+
+
+
+
+
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\bibliography{bibExtremes}
+\bibliographystyle{apalike}
+
+\end{document}
+
+
