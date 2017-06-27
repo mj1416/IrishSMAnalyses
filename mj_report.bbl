@@ -1,3 +1,4 @@
+\providecommand{\noopsort}[1]{}
 \begin{thebibliography}{}
 
 \bibitem[Beirlant et~al., 2006]{beirlant}
@@ -26,17 +27,6 @@ Cheng, R. C.~H. and Amin, N. (1979).
   lognormal distribution.
 \newblock {\em Math Report}, 79(1).
 
-\bibitem[De~Haan, 1975]{deHaan:70}
-De~Haan, L. (1975).
-\newblock On regular variation and its application to the weak convergence of
-  sample extremes.
-\newblock {\em MC Tracts}, 32:1--124.
-
-\bibitem[De~Haan and Ferreira, 2007]{deHF:06}
-De~Haan, L. and Ferreira, A. (2007).
-\newblock {\em Extreme value theory: an introduction}.
-\newblock Springer Science \& Business Media.
-
 \bibitem[Douglas et~al., 1998]{douglas98}
 Douglas, A.~P., Breipohl, A.~M., Lee, F.~N., and Adapa, R. (1998).
 \newblock The impacts of temperature forecast uncertainty on bayesian load
@@ -48,6 +38,13 @@ Einmahl, J.~H., Haan, L., and Zhou, C. (2016).
 \newblock Statistics of heteroscedastic extremes.
 \newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
   Methodology)}, 78(1):31--51.
+
+\bibitem[ELEXON, 2015]{elexon}
+ELEXON, L. (2015).
+\newblock \emph{Profiling}.
+\newblock
+  \url{https://www.elexon.co.uk/reference/technical-operations/profiling/}
+  [Accessed: 26-06-2017].
 
 \bibitem[Embrechts et~al., 2013]{embrechts}
 Embrechts, P., Kl{\"u}ppelberg, C., and Mikosch, T. (2013).
@@ -76,6 +73,17 @@ Frey, B.~J. and Dueck, D. (2007).
 Gnedenko, B. (1943).
 \newblock Sur la distribution limite du terme maximum d'une serie aleatoire.
 \newblock {\em Annals of mathematics}, pages 423--453.
+
+\bibitem[{\noopsort{Haan}}{de Haan}, 1975]{deHaan:70}
+{\noopsort{Haan}}{de Haan} (1975).
+\newblock On regular variation and its application to the weak convergence of
+  sample extremes.
+\newblock {\em MC Tracts}, 32:1--124.
+
+\bibitem[{\noopsort{Haan}}{de Haan} and Ferreira, 2007]{deHF:06}
+{\noopsort{Haan}}{de Haan}, L. and Ferreira, A. (2007).
+\newblock {\em Extreme value theory: an introduction}.
+\newblock Springer Science \& Business Media.
 
 \bibitem[Haben et~al., 2014]{dan14}
 Haben, S., Ward, J., Greetham, D.~V., Singleton, C., and Grindrod, P. (2014).

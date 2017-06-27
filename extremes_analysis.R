@@ -14,7 +14,6 @@ acf(data[,5], plot=TRUE, main= "Title")
 #data[1,2] #specific element
 
 #Removing na
-data <- data[-c(which(is.na(data[1,])))]
 MEAN<-rowMeans(data[,5:507], na.rm = FALSE, dims = 1)
 acf(MEAN,lag.max = 48, plot=TRUE,main="Mean Electric Usage (Day)")
 acf(MEAN,lag.max = 336, plot=TRUE,main="Mean Electric Usage (Week)")

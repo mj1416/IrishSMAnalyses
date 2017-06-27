@@ -5,11 +5,8 @@ from munkres import Munkres
 
 from mj_hungarian import mj_AA
 
-filename = "~/Documents/MPECDT/MRes/Danica/Irish SM data/16_22_weeks.xlsx"
-DATA=pd.read_excel(filename,sheetname=1,header=0,parse_cols="A:UA")
-
-#clean data
-data=DATA.dropna(axis=1)
+filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/full_data.csv"
+data = pd.read_csv(filename1,index_col=0)
 
 def mj_adj_err(data,C=1,d=1):
     x,f1,f,d,cust = mj_AA(data,C,d)

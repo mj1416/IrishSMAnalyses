@@ -6,7 +6,7 @@
 
 %% Language and font encodings
 \usepackage[english]{babel}
-\usepackage{natbib}
+\usepackage[authoryear]{natbib}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[mathscr]{euscript}
@@ -51,6 +51,9 @@
 \newcommand{\minarg}[1]{\ensuremath{\displaystyle {\min_{#1}}}}
 \newcommand{\argmax}[1]{\ensuremath{\displaystyle {\arg\max_{#1}}}}
 \newcommand{\conv}[1]{\ensuremath{\, \displaystyle {\mathop {\longrightarrow}_{n \rightarrow \infty} ^{#1}}}\, }
+
+
+%\newcommand{\noopsort}[2]{#2}
 
 \title{MRes Report}
 \author{Maria Jacob}
@@ -345,18 +348,20 @@ In this way it is possible to think of the SD forecast as a special case of the 
 \subsubsection{Adusted error}
 \label{subsubsec:Adj_err} While the above error measure provides a good benchmark for an error measure, another error measure that is worth considering is the one introduced in \cite{dan14}. The mathematical set up for this error measure is as follows:
 \begin{itemize}
-\item $E_p^\omega = \displaystyle{\min_{P \in \mathscr{P}}||P\textbf{f}-\textbf{x}||_p}$, where \textbf{f} is the forecast and \textbf{x} are the observations and where $\mathscr{P}$ represents the set of restricted permutations i.e. we allow the forecast to be matched to an observation within some window. The window was chosen to be 2 and a half hours, i.e. $\omega = 2$, although $\omega$ was chosen to be 3 in \cite{dan14}.
+\item $E_p^\omega = \displaystyle{\min_{P \in \mathscr{P}}||P\textbf{f}-\textbf{x}||_p}$, where \textbf{f} is the forecast and \textbf{x} are the observations and where $\mathscr{P}$ represents the set of restricted permutations i.e. we allow the forecast to be matched to an observation within some window. The window was chosen to be 2 and a half hours, i.e. $\omega = 3$, although $\omega$ was chosen to be 3 in \cite{dan14}.
 \item The solution to above minimisation problem can be found using optimisation. One way to do is to come up with some sort of cost matrix and to choose a path through that matrix such that the cost is minimised. One way to do this is to use the Hungarian algorithm
 \end{itemize}
 The cost matrix used in the implementation is: \newline
 
 \centerline{$\begin{bmatrix}
-    |f_1 - x_1| & |f_2 - x_1| & |f_3 - x_1| & \infty  & \infty& \infty & \infty & \dots & \infty \\
-    |f_1 - x_2| & |f_2 - x_2| & |f_3 - x_2| &  |f_4 - x_2| & \infty & \infty &\infty & \dots & \infty\\
-    |f_1 - x_3| & |f_2 - x_3| & |f_3 - x_3| &  |f_4 - x_3|& |f_5- x_3|& \infty & \infty & \dots  & \infty\\
-    \infty & |f_2 - x_4| & |f_3 - x_4| & |f_4 - x_4| &  |f_5 - x_4|& |f_6- x_4|& \infty &\dots & \infty\\
-     &  & \dots &  &  & &  & \\
+    |f_1 - x_1| & |f_2 - x_1| & |f_3 - x_1| & |f_4 - x_1|  & \infty& \infty& \infty &\infty & \dots & \infty \\
+    |f_1 - x_2| & |f_2 - x_2| & |f_3 - x_2| &  |f_4 - x_2| & |f_5 - x_2| & \infty  &\infty & \infty & \dots & \infty\\
+    |f_1 - x_3| & |f_2 - x_3| & |f_3 - x_3| &  |f_4 - x_3|& |f_5- x_3|& |f_6 - x_3| & \infty&\infty & \dots  & \infty\\
+    |f_1 - x_4 & |f_2 - x_4| & |f_3 - x_4| & |f_4 - x_4| &  |f_5 - x_4|& |f_6- x_4|& |f_7 - x_4| & \infty&\dots & \infty\\
+    \infty & |f_2 - x_5| & |f_3 - x_5| & |f_4 - x_5| &  |f_5 - x_5|& |f_6- x_5|& |f_7 - x_5| & |f_8 -x_5|&\dots & \infty\\
+   &&&& \dots &&&&& \\
 \end{bmatrix}$}
+
 \noindent where we have chosen these values because the cost is the absolute difference between the forecast and observations. The choice of $\omega$ comes into play because we set to cost to be large for those values are outside the window. For example for HH 4, all cost outside of 2 and 6 are set to be infinitely large (or some sufficiently large number).
 %===================================================
 %					Clustering
@@ -591,12 +596,12 @@ The theory is developed for positive EVI, $\gamma > 0 $ which means that the est
 \end{equation}
 where $k=k(n)$ is a suitable intermediate sequence such that 
 
-\begin{align*} 
+\begin{align} \label{eq:k_cond}
 \begin{split}
 \lim_{n \rightarrow \infty} k &= \infty \\
 \lim_{n \rightarrow \infty} \frac{k}{n} &= 0
 \end{split}
-\end{align*}
+\end{align}
 
 \cite{einmahl16} splits their study into three main sections that are of significance to this report. In the first of these section, some properties of $c$ are deduced and $\gamma$ is estimated. In this section, two test statistics, $T_1$ and $T_2$, are used to reject the presence of homoscedastic extremes ($H_0: c \equiv 1$). In the second section, test statistics, $T_3$ and $T_4$ are used to test whether $\gamma$ is constant. The test statistics are given in equation \ref{eq:test_stat}.
 
@@ -624,9 +629,8 @@ While equation \ref{eq:C_hat_est} estimates the integral of the scedasis functio
 
 \noindent where $G$ is a continuous, symmetric kernel on $[-1,1]$ s.t. $\int_{-1}^{1} G(s)ds = 1$ and $G(s) = 0 \quad \forall s \notin [-1,1]$ , $h := h_n$ is known as the bandwidth s.t. $h \rightarrow 0$ and $kh \rightarrow \infty$ as $n \rightarrow \infty$. In the simulations using the data generating process (described below) in \cite{einmahl16}, $h$ was chosen to be 0.1, the kernel was chosen to be $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$ and for $n=5000$, $k$ was chosen to be 400.
 
-The final section of \cite{einmahl16} then applies these results and models firstly to four different type of data-generating processes, with the parameters and the kernel as specified above, all of which confirm the presence of heteroscedastic extremes in financial losses. Nothing could be inferred when the data included the financial crisis which erupted in 2008 but when the preceding 20 years of data were considered, then it shown that the null hypothesis that $\gamma$ was constant could not be rejected but that the frequency of extremes was invariant was rejected. Thus it was concluded that $\gamma$ was constant whereas the frequency of extremes changed. It was also noted that the scedasis function showed a sharp increase at the end of 2007 even before the financial crisis occurred.
+The final section of \cite{einmahl16} that is of importance to us is the application of the above estimators and tests to financial data. To be specific the authors started with daily loss returns of the SP500 index from 1988 to 2012. This sample had 6302 observations with 2926 days of losses and tests were conducted using a $k=160$. This data included the financial crisis that erupted in 2008 which may have to lead to no significant results. Thus the authors used a subsample, from 1988 to 2007 which included 5043 observations and 2348 days with losses. In this case, $k$ was chosen to be 130 and it was shown that null hypthesis ($\gamma$ constant) could not be rejected whereas the frequency of extremes being invariant was rejected.  It was also noted that the scedasis function, generated using the subsample, showed a sharp increase at the end of 2007 even before the financial crisis occurred. This final analysis is relevant to our work since much like electric load data (as we'll see later) financial data are light tailed. However, financial returns (such as loss returns as used here) are heavy tailed. Moreover, this data set is also a time series much like ours and we too will consider returns and the heteroscedaticity of returns. Much like what the authors have done here, we too will eventually consider quantifying changes, if any, in the frequency of extremes. Understanding how the behaviour of extremes, specifically their frequency, changes allows DNOs to infer new installations of appliances in homes or of PV cells and purchases of electric vehicles thereby allow DNOs to personalise electricity plans and customer care.
 
-While the results of this paper will need to adjusted a little bit and other estimators will need to be considered, this is a valuable direction to proceed to gain more insight into the extremes in electricity load profiles.
  
 \clearpage
 
@@ -796,7 +800,7 @@ Unlike what was expected, the linear regression does not give much better result
 %===================================================
 
 \subsection{Clustering} \label{subsec:clus_res}
-We discussed some of the theoretical background of clustering and clustering algorithms in section \ref{subsec:clustering}. In this section we will show the results of clustering households by their electric load. Before we proceed, it is valuable to note that electric load is what is used to quantify clusters rather than other aspects of social and geographical demographic details. This is because often households had been clustered by the location however it was found \todo{will need references} that it was more accurate and beneficial to electricity providers to cluster by load instead. This is why it is reasonable to assume independence in the sample.
+We discussed some of the theoretical background of clustering and clustering algorithms in section \ref{subsec:clustering}. In this section we will show the results of clustering households by their electric load. Before we proceed, it is valuable to note that electric load is what is used to quantify clusters rather than other aspects of social and geographical demographic details. This is because often households had been clustered by the location however it was found that it was more accurate and beneficial to electricity providers to cluster by load instead \citet{elexon}. This is why it is reasonable to assume independence in the sample.
 
 The data set was firstly split into three time of days: the first starting at 00:00 and ending at 07:30 i.e. just after breakfast on most weekdays, the second starting from 08:00 to about 16.30 and the last being the evening which is from 17:00 onwards., referred to as breakfast, daytime and evening respectively. Each of these were split further into weekdays and weekends. Recall the household in figure \ref{fig:totes} where the same house was observed to have consistently high usage. For each of the clustering procedures this household was removed from the analyses thus that presented in this section is clustering 502 households.
 \subsubsection{$K$-Means} \label{subsubsec:kmeans_res} 
@@ -996,8 +1000,7 @@ Unlike with Affinity Propagation, the number of clusters are chosen by the user.
 \label{subsec:EVres}
 Now that we've done some forecasting of averages, it is apt to delve into analyses of the extremes. The results from these are presented and discussed briefly.
 
-In section \ref{subsec:EVT}, quantile-quantile (QQ) plots were discussed. After much fitting, it was found that the standard beta distribution provides a good enough basis, at least for some part of the data. In fact a lot of distribution with light tail behaviour such as uniform distribution also fitted the data very well. As will be shown later the plots showing extreme value index (EVI) estimates also confirm this idea that the data are light tailed. The QQ plot for the whole of the data set (fig. \ref{fig:beta}).
-
+We discussed the theory behind quantile-quantile (QQ) plots in section \ref{subsec:EVT} and thus we begin here. Figure \ref{fig:beta} shows what the QQ plot looks like when we take the underlying distribution to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, we have no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it tells us if a certain distribution is correct, not which one is correct. However we can still glean some information from figure \ref{fig:beta} which is that the data are likely to have light tailed distributions since both the uniform and beta distributions are light tailed. This will explain why other distributions such as the log-normal and Weibull distributions didn't fit the data well anywhere (not shown). 
 
 \begin{figure}
 \centering
@@ -1005,13 +1008,13 @@ In section \ref{subsec:EVT}, quantile-quantile (QQ) plots were discussed. After 
 \caption{\label{fig:beta} QQ plot.}
 \end{figure}
 
+So the QQ plot told us that the data are likely to be light tailed. We can venture further to extract more information about the distribution by considering the mean excess plot, shown figure \ref{fig:r_me}. Comparing this image and figure \ref{fig:beir}, there is not any obvious distribution we can pick out however we can gain information for appropriate choice for the upper order statistic. This choice is also linked to the light-tailedness of the distribution. Looking back at figure \ref{fig:beir}, we can see that light tailed distributions such as the uniform distribution has decreasing mean excess function for high threshold whereas for heavy tailed distributions such as log-normal and Weibull ($\tau<1$) have increasing mean excess functions. Likewise, notice that the mean excess plot in figure \ref{fig:r_me} is also decreasing when the threshold is chosen appropriately (here considered to be 6 kWh). This can seem to be an arbitrary or convenient choice especially when we see increasing behaviour for threshold greater than 9 kWh however choosing such high threshold also has very high variance and thus decreases our confidence in the result. Choosing our threshold to be 6 kWh gives us roughly 370 extreme observations which is large enough on its own but negligible with respect to the total number of observations available (over of 1 million for just the 7 weeks of data). Thus when we use $n=2352 \times 503$ observations (i.e. for the 7 weeks), we chose $k=369$ (369 because the $n-k^{th}$ observations for $k=370$ is greater than 6 kWh). For more data clearly $k$ will be larger meaning that this choice of $k$ meets the conditions specified by equation \ref{eq:k_cond}. As we proceed, we will deduce the ``correct'' choice of $k$ for using the mean excess plot where feasible. Some other method will have to be devised for when there are too few data points for the mean excess plot to be feasible.
+
 %\begin{figure}
 %\centering
 %\includegraphics[width=\textwidth]{qq_plot_beta_100k-500k.png}
 %\caption{\label{fig:beta_sub} QQ plot using the first 100,000 to 500,000 data points.}
 %\end{figure}
-
-As discussed the mean excess plot allows us to find the underlying distribution when it is not known. The mean excess is plotted against the threshold in figure \ref{fig:r_me}. It is not useful to interpret based on trends at thresholds that are too high. For the data shown in figure \ref{fig:r_me}, it is not useful to infer the trend for thresholds higher than 9 kWh as there are too few data points and large variability. Thus we look at the trend between 6 kWh and 9 kWh which is decreasing. This is again indicative of the light tails.
 
 \begin{figure}
 \centering
@@ -1019,9 +1022,11 @@ As discussed the mean excess plot allows us to find the underlying distribution 
 \caption{\label{fig:r_me} Mean excess plot plotted against threshold.}
 \end{figure}
 
-Moving on to the block maxima (BM) method, we are going to apply both estimation methods (MLqE and MSP) to the available sample of weekly maxima. There are 7 weeks of available data, which we assume as independent observations, but this amounts to only a few extreme (max-)data points if we assign one block to one week. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings.
+Moving on to the block maxima (BM) method, we are going to apply both estimation methods (MLqE and MSP) to the available sample (7 weeks) of weekly maxima. We choose weekly maxima so that assumption of independence may hold however this leads to very few extreme (max-) data. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings, thus we will have $7 \times 503$ extreme data points.
 
-Figure \ref{fig:gammaEst} displays the estimates for the extreme value index $\gamma$ (or shape parameter) using both Lq-likelihood and MSP estimation procedures upon the Block Maxima method. Figure \ref{fig:POTEst} in contrast uses a Peak Over Threshold (POT) method using the $k$ upper order statistics. These were obtained using weekly maxima for the 7 week period, hence using $7\times 503= 3521$ maxima. Using both MLqE and MSP estimation methods, $\gamma$ is seen to be negative and also for the POT method where $k$ is not so low. This further validates the light tailed nature however this rigorousness holds for weekly maxima not necessarily maxima for other blocks. 
+Figure \ref{fig:gammaEst} displays the estimates for the EVI $\gamma$ (or shape parameter) using both Lq-likelihood and MSP estimation procedures upon the Block Maxima method. Figure \ref{fig:POTEst} in contrast uses a Peak Over Threshold (POT) method using the $k$ upper order statistics. Notice again in this image observations are chosen to be above the 6 kWh threshold.
+
+The above mentioned were obtained using weekly maxima for the 7 week period, hence using $7 \times 503= 3521$ maxima. Using both MLqE and MSP estimation methods, $\gamma$ is seen to be negative and also for the POT method where $k$ is not so low. This further validates the light tailed nature however this rigorousness holds for weekly maxima not necessarily maxima for other blocks. 
 
 Figure \ref{fig:EndPointEst}  shows two estimates of the right endpoint. This is the upper limit of HH usage. Method 1 of the MLqEP (red) are more conservative estimates and the downfall, as observed, is that it can return values that are less than sample maxima. However, method 2 gives a more realistic estimate.
 
@@ -1074,52 +1079,62 @@ Figure \ref{fig:POTEst} displays the semi-parametric estimation results while ad
 
 The analyses of heteroscedastic extremes presented in \cite{einmahl16} can be applied to electric load data in the following way.
 
-Recall the scedasis function as defined in equation \ref{eq:scedasisfn} which can be estimated using the $\hat{c}$ given in equation \ref{eq:c_hat_est}. The parameters which were used for estimating the scedasis function for electric load are specified in equation \ref{eq:myscedparams}. Note that in these equations, $s$ can be interpreted as time units which have been normalised.
+%Recall the scedasis function as defined in equation \ref{eq:scedasisfn} which can be estimated using the $\hat{c}$ given in equation \ref{eq:c_hat_est}. The parameters which were used for estimating the scedasis function for electric load are specified in equation \ref{eq:myscedparams}. Note that in these equations, $s$ can be interpreted as time units which have been normalised.
 
-\begin{equation} \label{eq:myscedparams}
-\begin{split}
-G(s) = \frac{15(1-s^2)^2}{16}, \quad s \in [-1,1] \\
-h = 0.1 \\
-k = 200
-\end{split}
-\end{equation}
+%\begin{equation} \label{eq:myscedparams}
+%\begin{split}
+%G(s) = \frac{15(1-s^2)^2}{16}, \quad s \in [-1,1] \\
+%h = 0.1 \\
+%k = 200
+%\end{split}
+%\end{equation}
 
 In \cite{einmahl16}, $k$ was taken to be 400 but they had a sample size of $n=5000$. In the case of 7 weeks of electric load data, $n=2352$ so scaling roughly, $k$ is taken to be 200.
 
 The load data is selected in the following manner:
 \begin{enumerate}
 \item Data is at half hourly resolution which means that for each of 503 households, there are 2352 measurements.
-\item At each half hour, the maximum from any household is taken.
-\item This is used in place of the data generating process in \cite{einmahl16}.
+\item At each half hour, the maximum from any household is taken. In this way we get a single time series, as in \cite{einmahl16}.
+\item A mean excess function for these half hourly maxima were plotted to find a suitable choice of $k$. \todo{put in the image later}This was found to be 130.
+\item As a initial step into kernel estimation, the scedasis was estimated using both the Biweight kernel (suggested in \cite{einmahl16}) and the popular Epanechnikov kernel.
 \item The resulting image is given in figure \ref{fig:mysced_hh_max}.
 \end{enumerate}
-
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{hh_max_sced.pdf}
-\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks.}
+\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks using $k=130$ and $h=0.1$.}
 \end{figure}
 
-For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}.
+Both estimations of the scedasis function are reasonably consistent with each other; peaks occur roughly at the same time and as do the troughs. We can delve further and ask when each of the peaks occur to see if there are any patterns. The first and biggest peak occurs between days 597 and 601 which correspond to Friday and the following Tuesday i.e. the peak is occurring over the weekend which comes as no surprise since we saw that weekends have high electric load overall (fig. \ref{fig:sums}). Likewise, the second peak lies between days numbered 617 (Thursday) and 621 (Monday) again occurring in the weekend although maybe as early as Friday. Looking at the third and the smallest of the peaks, we see that it occurs between 625 (Friday) and 629 (Tuesday) meaning again it occurs over the weekend. The final peak, occurring between 633 (Saturday) and 637 (Wednesday), is again seen happening over the weekend as it is closer to the 633 mark. Thus we have evidence that extremes in half hourly maximum are more likely to occur on the weekends. Notably however, we don't a peak at each weekend though it is encouraging that there are more peaks later in the time series as we did see an increase in usage towards the end of the weekly total demand.
+
+Scedasis is not necessarily a measure of where the most extreme event is likely to occur rather an indication of where extremes are more likely to be frequent and it's a somewhat relative scale in that just because one customer (we'll see this later) has high scedasis at one point and not the another doesn't mean that the first customer has higher load but that the first customer is using more than usual.
+
+Further more we can look at a moving average of the half hourly maxima and for large windows, say 100 or 200 half hours, we notice a somewhat similar pattern. \todo{include image later} All the peaks occur at roughly the same time as they do in the estimated scedasis function though the magnitudes are not represented; the first peak in the moving average is smaller than the others and it is the peaks in the middle that are highest. However, for what is rudimentary comparison it is supportive of what we've discussed above.
+
+For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}. \todo{needs interpretation/ discussion}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{hh_max_int_sced.pdf}
-\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks.}
+\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=130$.}
 \end{figure}
 
-As with most cases in extremes analyses, \cite{einmahl16} also developed these results with financial applications in mind and they considered daily (and weekly) losses from a particular index (SP500). This can also be done for electric load data. Instead of considering the maximum at each half hour, we can consider the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household and again aggregate them in some way to have one ``time-series''. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
+We can continue and consider analogies for the daily losses considered in \cite{einmahl16}; we can consider the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household and again aggregate them in some way to have one time-series. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
 
-Before the estimated scedasis function for the positive differences are presented, it is useful to review what aggregating statistics were used. The following were thought to be relevant either from an electric load perspective or an extremes perspective: \begin{enumerate*}[label=\roman*)] \item maximum and \item sum. \end{enumerate*} Using these, 4 different positive differences data sets were created in the following way:
+Before scedasis function is estimated for various positive differences, it is useful to review what aggregating statistics have been used. The following were thought to be relevant either from an electric load perspective or an extremes perspective: \begin{enumerate*}[label=\roman*)] \item maximum, \item mean, and \item sum. \end{enumerate*} Using these, 4 different positive differences data sets were created in the following way:
 \begin{enumerate}
 \item The data, which contains measurements at half hourly resolution for 503 customers, was grouped by day.
 \item Three groupings, using mean, max or sum, were made meaning that for each house the mean, maximum or total electric load was recorded for each day.
 \item Then to get one time series as before, a maximum or a sum over all households were recorded.
-\item Thus 4 positive differences were recorded. The naming that is present in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``Max of mean'' indicates the for each day and each household the average was used and then the maximum electric load over all households is recorded where ``max of max'' reflects that the daily max for each household is then maxxed over all households.
+\item Thus 4 positive differences were recorded. The naming that is present in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``max of Daily mean'' indicates the for for each household, the average load was recorded for each day and then the maximum  over all households is recorded where ``max of daily max'' indicates a maximum over all households is acquired from daily maxima.
+\item What these look like in terms of measurements is shown in figure \ref{fig:pos_diff}.
+\item The corresponding estimated scedasis function is given in figure \ref{fig:pos_diff_sced.pdf}.
 \end{enumerate}
 
-While the estimation of the scedasis function is not exactly as in \cite{einmahl16} (see discussion below), we some very large peaks around day 7 - 8 and again 42-43 where extreme usage is more likely. This sort of makes sense, since days 7 and 42 occur on the weekend traditionally have higher load than weekdays.
+As we did above, we can look at where the peaks occur for positive differences. Since the time resolution is courser for these, we can pick out more accurately the day of the peak. Thus looking at ``Max of Daily Mean'' in figure \ref{fig:pos_diff_sced}, we can see that the peaks occur on days numbered 598 (Saturday) and 625 (Friday). For ``Max of Daily Max'', the peaks occur around days numbered 605 (Satuday) and 633 (Friday). Likewise peaks of ``Total of Daily Total'' are both first on a Saturday and then on a Friday whereas both peaks of ``Max of Daily Total'' occurs on a Friday. Recall how positive differences are cancelled (the negative difference are set to zero), thus the scedasis function is not showing relative high usage but relative high increase with respect to the previous day. Thus it makes sense that more often than not, the day where we have high usage is a Friday since from figure \ref{fig:sums} we saw that Thursdays had the lowest some usage. \todo{still have to add about how one is ahead of the other and what that might mean}.
+
+%While the estimation of the scedasis function is not exactly as in \cite{einmahl16} (see discussion below), we some very large peaks around day 7 - 8 and again 42-43 where extreme usage is more likely. This sort of makes sense, since days 7 and 42 occur on the weekend traditionally have higher load than weekdays.
 
 \begin{figure}
 \centering
@@ -1128,9 +1143,8 @@ While the estimation of the scedasis function is not exactly as in \cite{einmahl
 \end{figure}
 
 \begin{figure}
-\centering
 \includegraphics[scale=0.8]{pos_diff_sced.pdf}
-\caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences.}
+\caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=3$ (rough scaling), $h=0.1$ and using the biweight kernel.}
 \end{figure}
 
 We also acquired value at close for each day of the SP500 index, which is the data set that was used by \cite{einmahl16}. We can check how correct the implementation of $\hat{c}$ is by using the subset of data that was considered in the study. The result for daily losses, which is defined as $|\frac{X_t - X_{t-1}}{X_{t-1}}|$, from $1^{st}$ of January 1988 to the $31^{st}$ of December 2007, inclusive, is shown in figure \ref{fig:SP500_sced_daily}
@@ -1138,7 +1152,7 @@ We also acquired value at close for each day of the SP500 index, which is the da
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{SP500_sced_qwe.pdf}
-\caption{\label{fig:SP500_sced_daily} Estimated scedasis functions, $\hat{c}$ for daily returns of the Standard and Poor 500 Index.}
+\caption{\label{fig:SP500_sced_daily} Estimated scedasis functions, $\hat{c}$ for daily returns of the Standard and Poor 500 Index with $k=400$, $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 When comparing this to the estimated scedasis function shown in \cite{einmahl16}, it is clear the results are not exactly the same. While most of it is as expected, the diagram varies slightly at the boundaries. The sharp increase at the end of 2007 shown and discussed in \cite{einmahl16} is not recreated as much in figure \ref{fig:SP500_sced_daily}, whose magnitude at the end does not even exceed 1. Similarly, in the start of the image, the function does not start as high it did in the function shown in \cite{einmahl16}. The rest of the image also is not exactly the same though the general shape is there. For example around the 1992, figure \ref{fig:SP500_sced_daily} is much smoother than that shown in \cite{einmahl16}.
@@ -1148,7 +1162,7 @@ However, this means that we can now proceed with this implementation and explore
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{22_household_max_sced.pdf}
-\caption{\label{fig:mysced_hh_max_22} Estimated scedasis function, $\hat{c}$ at half hourly resolution with maxima over each household.}
+\caption{\label{fig:mysced_hh_max_22} Estimated scedasis function, $\hat{c}$ at half hourly resolution with maxima over each household for 22 weeks with $k=591$(rough scaling), $h=0.1$ and biweight kernel.}
 \end{figure}
 
 Next we can do the same with the positive differences as in figure \ref{fig:pos_diff_sced}, the results of which are given in figure \ref{fig:pos_diff_sced_22}.
@@ -1156,7 +1170,7 @@ Next we can do the same with the positive differences as in figure \ref{fig:pos_
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{pos_diff_sced_22.pdf}
-\caption{\label{fig:pos_diff_sced_22} Estimated scedasis function, $\hat{c}$ for various positive differences for 22 weeks.}
+\caption{\label{fig:pos_diff_sced_22} Estimated scedasis function, $\hat{c}$ for various positive differences for 22 weeks with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 It is also beneficial to follow \cite{einmahl16} by using returns instead of actual measurements or positive differences. Returns are defined as $\frac{\left|X_t - X_{t-1}\right|}{X_{t-1}}$.  The following is presented for the 22 weeks of data. Since each day has 48 measurements $X_t$ is taken to be the maximum for the day and $X_{t-1}$ is taken to be the maximum of the day before.
@@ -1166,7 +1180,7 @@ Thus the maximum return for each household was computed and an average was used 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{avg_max_ret_sced.pdf}
-\caption{\label{fig:avg_max_ret_sced} Estimated scedasis function, $\hat{c}$ of the average of maximum returns.}
+\caption{\label{fig:avg_max_ret_sced} Estimated scedasis function, $\hat{c}$ of the average of maximum returns with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 
@@ -1175,37 +1189,37 @@ However instead of aggregating the data into one time series, we can compute a s
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{max_ret_sced_P1.pdf}
-\caption{\label{fig:max_ret_sced_P1} Estimated scedasis function, $\hat{c}$ for maximum returns of household 1.}
+\caption{\label{fig:max_ret_sced_P1} Estimated scedasis function, $\hat{c}$ for maximum returns of household 1 with $k=12$  (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{max_ret_sced_P2.pdf}
-\caption{\label{fig:max_ret_sced_P2} Estimated scedasis function, $\hat{c}$ for maximum returns of household 2.}
+\caption{\label{fig:max_ret_sced_P2} Estimated scedasis function, $\hat{c}$ for maximum returns of household 2 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{max_ret_sced_P3.pdf}
-\caption{\label{fig:max_ret_sced_P3} Estimated scedasis function, $\hat{c}$ for maximum returns of household 3.}
+\caption{\label{fig:max_ret_sced_P3} Estimated scedasis function, $\hat{c}$ for maximum returns of household 3 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{max_ret_sced_P4.pdf}
-\caption{\label{fig:max_ret_sced_P4} Estimated scedasis function, $\hat{c}$ for maximum returns of household 4.}
+\caption{\label{fig:max_ret_sced_P4} Estimated scedasis function, $\hat{c}$ for maximum returns of household 4 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{max_ret_95_median.pdf}
-\caption{\label{fig:max_ret_sced_95_50} Median (red) and $95^{th}$ percentile of the estimated scedasis function, $\hat{c}$ for maximum returns.}
+\caption{\label{fig:max_ret_sced_95_50} Median (red) and $95^{th}$ percentile of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{box_plot_max_ret_sced.pdf}
-\caption{\label{fig:max_ret_sced_boxplot} Boxplot image of the estimated scedasis function, $\hat{c}$ for maximum returns.}
+\caption{\label{fig:max_ret_sced_boxplot} Boxplot image of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
 \end{figure}
 
 
@@ -1230,7 +1244,7 @@ Implementing this in R for the 7 weeks of data at the half hourly time resolutio
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{hh_sced_prop.pdf}
-\caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks.}
+\caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks with $k=94832$ (rough scaling).}
 \end{figure}
 
 %===================================================
@@ -1282,6 +1296,6 @@ $7^{th}$ August $-1^{st}$ September  & Thesis Write up & MRes Thesis Submission:
 
 \clearpage
 \bibliographystyle{apalike}
-\bibliography{sample}
+\bibliography{sample1}
 
 \end{document}

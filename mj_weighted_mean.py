@@ -2,11 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-filename = "~/Documents/MPECDT/MRes/Danica/Irish SM data/16_22_weeks.xlsx"
-DATA=pd.read_excel(filename,sheetname=1,header=0,parse_cols="A:UA")
-
-#clean data
-data=DATA.dropna(axis=1)
+filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/full_data.csv"
+data = pd.read_csv(filename1,index_col=0)
 
 
 p1 = data[[0,1,2,3,4]]

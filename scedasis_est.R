@@ -1,16 +1,4 @@
-setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
-
-data <- read.csv(file = "short_data.csv",dec='.',header = TRUE)
-pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
-
-data <- data[-c(which(is.na(data[1,])))]
-
-simple <- data[-c(1,2,3,4)]
-
-#data_vec <- unlist(simple,use.names = FALSE)
-#data_ord <- sort(x=data_vec)
-
-#define kernel
+#########################       Biweight Kernel     ##########################
 G_kernel <- function(u){
   if (abs(u)<=1){
     G <- 15*((1-u**2)**2)/16
@@ -20,12 +8,39 @@ G_kernel <- function(u){
   return(G)
 }
 
+#########################       Epanechnikov Kernel     ##########################
+K_kernel <- function(u){
+  if (abs(u)<=1){
+    K <- 3*(1-u**2)/4
+  }else {
+    K <- 0.0
+  }
+  return(K)
+}
+
+#########################       Set Directory    ##########################
+setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
+
+#########################       Load & Correct Data     ##########################
+
+data <- read.csv(file = "short_data.csv",dec='.',header = TRUE)
+pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
+
+simple <- data[-c(1,2,3,4)]
+
 #########################       for actual measurements     ##########################
 # define k
-data_max <- apply(simple,1,max) 
+data_max <- apply(simple,1,max)
+library(evir)
+require(graphics)
+
+filename <- "hh_max_meplot.pdf"
+pdf(file=filename,width = 12,paper = "a4r")
+meplot(data_max,type="l")
+dev.off()
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 130
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
@@ -35,28 +50,33 @@ ss <- seq(0,1,length=n)
 #define bandwidth
 h <- 0.1
 
-#scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+#scedasis estimator with Biweight Kernel
+c_estG <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+#scedasis estimator with Epanechnikov Kernel
+c_estK <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
 }
 
 #generate and save an image in landscape pdf
-require(graphics)
 filename <- "hh_max_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x = n*ss,y = c_est,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",ylab=expression(hat(c)),xlab='Day')
+legend("topright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
 axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
 dev.off()
 
 
-#########################           Daily returns          ##########################
-
-
-
+#########################           Positive Differences          ##########################
 
 pdf(file = "pos_diff_sced.pdf",paper="a4")
 par(mfrow=c(3,2))
@@ -83,7 +103,7 @@ for (s in ss){
   c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Mean")
+plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Mean")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
 axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 
@@ -112,7 +132,7 @@ for (s in ss){
 }
 
 
-plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Max")
+plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Max")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
 axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 
@@ -141,7 +161,7 @@ for (s in ss){
 }
 
 
-plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Total")
+plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Total")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
 axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 #dev.off()
@@ -170,7 +190,7 @@ for (s in ss){
 }
 
 
-plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Total")
+plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Total")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
 axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 dev.off()
