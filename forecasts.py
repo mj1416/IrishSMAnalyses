@@ -283,3 +283,44 @@ def myWeekRidge(data):
     forecast.columns = data.columns
 
     return forecast
+
+def myAAcust(past,C):
+    "produces a weekly AA forecast for customer C."
+    "input is past data."
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    #
+    from munkres import Munkres
+    from mj_hungariandvg1 import mj_AA
+    #
+    AA1 = pd.DataFrame(mj_AA(past,C,1))
+    AA2 = pd.DataFrame(mj_AA(past,C,2))
+    AA3 = pd.DataFrame(mj_AA(past,C,3))
+    AA4 = pd.DataFrame(mj_AA(past,C,4))
+    AA5 = pd.DataFrame(mj_AA(past,C,5))
+    AA6 = pd.DataFrame(mj_AA(past,C,6))
+    AA7 = pd.DataFrame(mj_AA(past,C,7))
+    #
+    AAC = pd.concat([AA1,AA2,AA3,AA4,AA5,AA6,AA7])
+    AAC.index = range(past.index.max()+1,past.index.max()+336+1)
+    return AAC
+
+def myAAweek(past):
+    "produces a weekly AA forecast."
+    "input data is past data."
+    #
+    AA = pd.DataFrame()
+    AA["Week"] = past[past.Week == past.Week.max()].Week + 1
+    AA["DayN"] = past[past.Week == past.Week.max()].DayN + 7
+    AA["HH"] = past[past.Week == past.Week.max()].HH
+    AA["Day"] = past[past.Week == past.Week.max()].Day
+    AA.index = range(past.index.max()+1,past.index.max()+336+1)
+    #
+    for i in range(1,504):
+        AAC = myAAcust(past,i)
+        AA = pd.concat([AA,AAC],axis=1)
+
+    AA.columns = past.columns
+
+    return AA
