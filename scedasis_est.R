@@ -24,9 +24,8 @@ setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
 #########################       Load & Correct Data     ##########################
 
 data <- read.csv(file = "short_data.csv",dec='.',header = TRUE)
-pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
 
-simple <- data[-c(1,2,3,4)]
+simple <- data[-c(1,2,3,4,5)]
 
 #########################       for actual measurements     ##########################
 # define k
@@ -34,18 +33,18 @@ data_max <- apply(simple,1,max)
 library(evir)
 require(graphics)
 
-filename <- "hh_max_meplot.pdf"
-pdf(file=filename,width = 12,paper = "a4r")
-meplot(data_max,type="l")
-dev.off()
+#filename <- "hh_max_meplot.pdf"
+#pdf(file=filename,width = 12,paper = "a4r")
+#meplot(data_max,type="l")
+#dev.off()
 
 n <- length(data_max)
-k <- 130
+k <- 400
 data_ord <- sort(data_max)
-k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
+k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
 
 #define time vectors
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 
 #define bandwidth
 h <- 0.1
@@ -70,7 +69,7 @@ for (s in ss){
 filename <- "hh_max_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
 matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",ylab=expression(hat(c)),xlab='Day')
-legend("topright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+legend("bottom", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
 axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
 dev.off()
@@ -82,6 +81,7 @@ pdf(file = "pos_diff_sced.pdf",paper="a4")
 par(mfrow=c(3,2))
 #########################       Postive differences Mm     ##########################
 
+pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
 data_max <- data.matrix(frame = pos_diff["Mm"],rownames.force = NA)
 
 n <- length(data_max)
@@ -90,7 +90,7 @@ data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
 #define time vectors
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 
 #define bandwidth
 h <- 0.1
@@ -118,7 +118,7 @@ data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
 #define time vectors
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 
 #define bandwidth
 h <- 0.1
@@ -147,7 +147,7 @@ data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
 #define time vectors
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 
 #define bandwidth
 h <- 0.1
@@ -176,7 +176,7 @@ data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
 #define time vectors
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 
 #define bandwidth
 h <- 0.1

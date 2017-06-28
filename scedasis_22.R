@@ -1,5 +1,6 @@
 setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
 
+#########################       Biweight Kernel     ##########################
 G_kernel <- function(u){
   if (abs(u)<=1){
     G <- 15*((1-u**2)**2)/16
@@ -7,6 +8,16 @@ G_kernel <- function(u){
     G <- 0.0
   }
   return(G)
+}
+
+#########################       Epanechnikov Kernel     ##########################
+K_kernel <- function(u){
+  if (abs(u)<=1){
+    K <- 3*(1-u**2)/4
+  }else {
+    K <- 0.0
+  }
+  return(K)
 }
 
 #########################      Actual measurement (22 weeks)     ##########################
@@ -18,9 +29,9 @@ simple <- full[-c(1,2,3,4)]
 data_max <- apply(simple,1,max) 
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 1200
 data_ord <- sort(data_max)
-k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
+k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
 
 #define time vectors
 ss <- seq(1/n,1,1/n)
@@ -29,17 +40,25 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+c_estG <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+c_estK <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
 }
 
 require(graphics)
 filename <- "22_household_max_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x = n*ss,y = c_est,type="l",col="blue",ylab=expression(hat(c)),xlab='Day',xaxt="n",yaxt="n")
+matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",ylab=expression(hat(c)),xlab='Day')
+legend("topright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(1,n,by=48*10),labels = seq(488,488+154,by=10))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
 dev.off()
@@ -50,6 +69,7 @@ pos_diff <- read.csv(file = "22_pos_diff.csv",dec='.',header=TRUE)
 
 pdf(file = "pos_diff_sced_22.pdf",paper="a4")
 par(mfrow=c(2,2))
+
 #########################       Postive differences Mm     ##########################
 
 data_max <- data.matrix(frame = pos_diff["Mm"],rownames.force = NA)

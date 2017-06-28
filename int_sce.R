@@ -6,7 +6,7 @@ simple <- data[-c(1,2,3,4)]
 
 # define k
 data_max <- apply(simple,1,max)
-k <- 130
+k <- 400
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
