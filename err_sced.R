@@ -1,0 +1,151 @@
+setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
+
+#########################       Biweight Kernel     ##########################
+G_kernel <- function(u){
+  if (abs(u)<=1){
+    G <- 15*((1-u**2)**2)/16
+  }else {
+    G <- 0.0
+  }
+  return(G)
+}
+
+#########################       Epanechnikov Kernel     ##########################
+K_kernel <- function(u){
+  if (abs(u)<=1){
+    K <- 3*(1-u**2)/4
+  }else {
+    K <- 0.0
+  }
+  return(K)
+}
+
+#########################       Data and ME plots     ##########################
+AA_err1 <- read.csv(file = "AA_err.csv",dec='.',header = TRUE)
+SD_err1 <- read.csv(file = "SD_err.csv",dec='.',header = TRUE)
+LR_err1 <- read.csv(file = "LR_err.csv",dec='.',header = TRUE)
+
+AA_err <- AA_err1[-c(1,2,3,4,5)]
+SD_err <- SD_err1[-c(1,2,3,4,5)]
+LR_err <- LR_err1[-c(1,2,3,4,5)]
+
+meplot(unlist(AA_err,use.names = FALSE),main="AA_err")
+meplot(unlist(SD_err,use.names = FALSE),main="SD_err")
+meplot(unlist(LR_err,use.names = FALSE),main="LR_err")
+
+#########################       AA scedasis     ##########################
+
+data_max <- apply(AA_err,1,max)
+
+n <- length(data_max)
+k <- 200
+data_ord <- sort(data_max)
+k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
+
+#define time vectors
+ss <- seq(1/n,1,1/n)
+
+#define bandwidth
+h <- 0.1
+
+#scedasis estimator
+c_estG <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+#c_estK <- vector(mode = "numeric",length = length(ss))
+#for (s in ss){
+#  i <- 1:n
+#  u <- (s-i/n)/h
+#  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
+#}
+
+require(graphics)
+filename <- "AA_err_sced.pdf"
+pdf(file=filename,width = 12,paper = "a4r")
+plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+#legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
+dev.off()
+
+#########################       LR scedasis     ##########################
+
+data_max <- apply(LR_err,1,max)
+
+n <- length(data_max)
+k <- 200
+data_ord <- sort(data_max)
+k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
+
+#define time vectors
+ss <- seq(1/n,1,1/n)
+
+#define bandwidth
+h <- 0.1
+
+#scedasis estimator
+c_estG <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+#c_estK <- vector(mode = "numeric",length = length(ss))
+#for (s in ss){
+#  i <- 1:n
+#  u <- (s-i/n)/h
+#  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
+#}
+
+require(graphics)
+filename <- "LR_err_sced.pdf"
+pdf(file=filename,width = 12,paper = "a4r")
+plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+#legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
+dev.off()
+
+#########################       SD scedasis     ##########################
+
+data_max <- apply(SD_err,1,max)
+
+n <- length(data_max)
+k <- 200
+data_ord <- sort(data_max)
+k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
+
+#define time vectors
+ss <- seq(1/n,1,1/n)
+
+#define bandwidth
+h <- 0.1
+
+#scedasis estimator
+c_estG <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+#c_estK <- vector(mode = "numeric",length = length(ss))
+#for (s in ss){
+#  i <- 1:n
+#  u <- (s-i/n)/h
+#  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
+#}
+
+require(graphics)
+filename <- "SD_err_sced.pdf"
+pdf(file=filename,width = 12,paper = "a4r")
+plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+#legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
+dev.off()

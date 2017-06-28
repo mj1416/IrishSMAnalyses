@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/full_data.csv"
-data = pd.read_csv(filename1,index_col=0)
+data = pd.read_csv(filename1)#,index_col=0)
 
 
 data_max = data.groupby("DayN").max()
@@ -88,4 +88,4 @@ pos_diff["MM"] = max_pos_diff_max
 pos_diff["mS"] = mean_pos_diff_sum
 pos_diff["MS"] = max_pos_diff_sum
 pos_diff["SS"] = sum_pos_diff_sum
-pos_diff.to_csv("pos_diff.csv")
+pos_diff.to_csv("22_pos_diff.csv")

@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/full_data.csv"
+filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
 data = pd.read_csv(filename1,index_col=0)
 
 #extract weekly maxima

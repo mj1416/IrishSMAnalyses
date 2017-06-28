@@ -317,10 +317,12 @@ def myAAweek(past):
     AA["Day"] = past[past.Week == past.Week.max()].Day
     AA.index = range(past.index.max()+1,past.index.max()+336+1)
     #
-    for i in range(1,504):
+    for i in range(1,5):
         AAC = myAAcust(past,i)
         AA = pd.concat([AA,AAC],axis=1)
-
+        print i
+        #
     AA.columns = past.columns
-
+    #
+    AA.to_csv("AA_forecast.csv")
     return AA
