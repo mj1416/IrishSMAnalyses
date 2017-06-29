@@ -1159,7 +1159,7 @@ We also acquired value at close for each day of the SP500 index, which is the da
 
 When comparing this to the estimated scedasis function shown in \cite{einmahl16}, it is clear the results are not exactly the same. While most of it is as expected, the diagram varies slightly at the boundaries. The sharp increase at the end of 2007 shown and discussed in \cite{einmahl16} is not recreated as much in figure \ref{fig:SP500_sced_daily}, whose magnitude at the end does not even exceed 1. Similarly, in the start of the image, the function does not start as high it did in the function shown in \cite{einmahl16}. The rest of the image also is not exactly the same, for example, around the 1992, the figure we get is much smoother than that shown in the paper. The general shape is there and in the future some boundary corrections will need to be made but for the moment our implementation is taken to be satisfactory.
 
-Thus we may now proceed and explore other scedasis functions. Let's first look at where the above have just been extended to use the full data set (22 weeks). To clarify, figure \ref{fig:mysced_hh_max_22} shows the same scedasis as shown in figure \ref{fig:mysced_hh_max}, except that it is for 22 weeks. Recall that the image here is obtained by using the using the maximum over all the households at each half hour. As before two kernels were used. Both have peaks and troughs in similar enough places. Looking at the first and dominant peak, we can see that it occurs around day numbered 498 which is a Friday. This is too early in the data set to be included in figure \ref{fig:sums} however we can generate the same image again for the full 22 weeks (fig. \ref{fig:sums22}). From this image we can see that week profiles are similar in pattern (obviously not in magnitude) as they were in the 7 week case and we are expecting a Fridays to not have peak behaviour but be the point at which the shift towards cumulative peak behaviour happens. Looking at bottom right image of figure \ref{fig:sums22} also doesn't give us any reason why that Friday should be particularly high
+Thus we may now proceed and explore other scedasis functions. Let's first look at where the above have just been extended to use the full data set (22 weeks). To clarify, figure \ref{fig:mysced_hh_max_22} shows the same scedasis as shown in figure \ref{fig:mysced_hh_max}, except that it is for 22 weeks. Recall that the image here is obtained by using the using the maximum over all the households at each half hour. As before two kernels were used. Both have peaks and troughs in similar enough places. Looking at the first and dominant peak, we can see that it occurs around day numbered 498 which is a Friday. This is too early in the data set to be included in figure \ref{fig:sums} however we can generate the same image again for the full 22 weeks (fig. \ref{fig:sums22}). From this image we can see that week profiles are similar in pattern (obviously not in magnitude) as they were in the 7 week case and we are expecting a Fridays to not have peak behaviour but be the point at which the shift towards cumulative peak behaviour happens. Looking at bottom right image of figure \ref{fig:sums22} also doesn't give us any reason why that Friday should be particularly high. \todo{check when actual max is}.
 
 
 \begin{figure}
@@ -1255,6 +1255,47 @@ Implementing this in R for the 7 weeks of data at the half hourly time resolutio
 \includegraphics[scale=0.6]{hh_sced_prop.pdf}
 \caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks with $k=94832$ (rough scaling).}
 \end{figure}
+
+We have yet to connect forecasts and forecast errors with scedasis functions so let's do this now. Picking the Adjusted Average (AA) forecast, the Same Day forecast and the linear regressions (LR) forecast, we can estimate the scedasis function of absolute errors (absolute value of difference between each forecast and observation for week 22). As before weeks 16 to 21 (inclusive) have been used to calculate the forecast for 503 customers for week 22. Thus we have $336 \times 503 = 169008$ measurements. For each error an mean excess plot (figs. \ref{fig:AA_err_me} - \ref{fig:LR_err_me}) has been created so we may choose an appropriate value of $k$. Looking at these images, an error of 5kWh was chosen as appropriately extreme error in each case. This threshold had 58, 46 and 48 exceedance for the AA, SD and LR errors, respectively. Thus our choice of $k$, by rounding up is 100. Intuitively we know this is a very high threshold to have since the median observation of electric load is around the 5 kWh however using 4kWh means then that $k=200$ which would no longer satisfy the second condition of equation \ref{eq:k_cond}. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{AA_err_meplot.pdf}
+\caption{\label{fig:AA_err_me} Mean excess plot of the absolute difference between the AA forecast and observation for week 22.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{SD_err_meplot.pdf}
+\caption{\label{fig:SD_err_me} Mean excess plot of the absolute difference between the AA forecast and observation for week 22.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{LR_err_meplot.pdf}
+\caption{\label{fig:LR_err_me} Mean excess plot of the absolute difference between the AA forecast and observation for week 22.}
+\end{figure}
+
+Let's then look at the scedasis functions of these errors (figs. \ref{fig:AA_err_sced}- \ref{fig:LR_err_sced}). All three of these estimated scedasis functions are interesting because they all contain 7 peaks (though admittedly some are not as strong as the others). Recall that there are seven days worth of data at half hourly resolution. The labels of the x-axis have been placed so that it indicates the noon of that day. Thus each of these images is telling us that we're most unsure of what is happening around from noon to night time or that errors are particularly high for these times of the day. Moreover, the last two peaks are particularly pronounced meaning that it there relatively large errors for Saturday. All of this is particularly worrying because most of the high cumulative usage is exactly in these hours (figs. \ref{fig:sums} and \ref{fig:days}). However we can take comfort from knowing that this is not because of any one forecasting method. Perhaps because of the varied usage and peak hours of usage, these periods of the day will always be susceptible to higher errors that other periods of the day. Not only, perhaps this may further establish the benefits of usage as it may help us to better predict usage at precisely these periods of the day. As such this will be our next port of enquiry.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{AA_err_sced.pdf}
+\caption{\label{fig:AA_err_sced} Estimated scedasis function of AA forecast errors.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{SD_err_sced.pdf}
+\caption{\label{fig:SD_err_sced} Estimated scedasis function of SD forecast errors.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{LR_err_sced.pdf}
+\caption{\label{fig:LR_err_sced} Estimated scedasis function of LR forecast errors.}
+\end{figure}
+
 
 %===================================================
 %					Project Goals

@@ -29,16 +29,26 @@ AA_err <- AA_err1[-c(1,2,3,4,5)]
 SD_err <- SD_err1[-c(1,2,3,4,5)]
 LR_err <- LR_err1[-c(1,2,3,4,5)]
 
+require(evir)
+require(graphics)
+filename <- 'AA_err_meplot.pdf'
+pdf(file=filename,width=12,paper="a4r")
 meplot(unlist(AA_err,use.names = FALSE),main="AA_err")
+dev.off()
+filename <- 'SD_err_meplot.pdf'
+pdf(file=filename,width=12,paper="a4r")
 meplot(unlist(SD_err,use.names = FALSE),main="SD_err")
+dev.off()
+filename <- 'LR_err_meplot.pdf'
+pdf(file=filename,width=12,paper="a4r")
 meplot(unlist(LR_err,use.names = FALSE),main="LR_err")
-
+dev.off()
 #########################       AA scedasis     ##########################
 
 data_max <- apply(AA_err,1,max)
 
 n <- length(data_max)
-k <- 200
+k <- 100
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
 
@@ -63,12 +73,11 @@ for (s in ss){
 #  c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
 #}
 
-require(graphics)
 filename <- "AA_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
 plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
-axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
 dev.off()
 
@@ -77,7 +86,7 @@ dev.off()
 data_max <- apply(LR_err,1,max)
 
 n <- length(data_max)
-k <- 200
+k <- 100
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
 
@@ -107,7 +116,7 @@ filename <- "LR_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
 plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
-axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
 dev.off()
 
@@ -116,7 +125,7 @@ dev.off()
 data_max <- apply(SD_err,1,max)
 
 n <- length(data_max)
-k <- 200
+k <- 100
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k)]#:length(data_ord)]
 
@@ -146,6 +155,6 @@ filename <- "SD_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
 plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
-axis(side = 1,at=seq(1,n,by=48),labels = seq(635,641))
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
 dev.off()
