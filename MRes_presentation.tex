@@ -1,112 +1,103 @@
-\documentclass{beamer}
-%
-% Choose how your presentation looks.
-%
-% For more themes, color themes and font themes, see:
-% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
-%
+\documentclass[notes]{beamer}
 \mode<presentation>
+%\setbeameroption{show notes on second screen}
+%=====================================
+%			Set up
+%=====================================
 {
-  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
-  \usecolortheme{crane} % or try albatross, beaver, crane, ...
-  \usefonttheme{default}  % or try serif, structurebold, ...
+  \usetheme{AnnArbor}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{structurebold}  % or try serif, structurebold, ...
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{caption}[numbered]
-} 
+}
+
 
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{hhline}
 \usepackage[font=small,labelfont=bf]{caption}
+\usepackage{textpos}
+\usepackage[colorinlistoftodos]{todonotes}
 
-\title[Your Short Title]{Forecasting Energy Peaks Efficiently}
-\author[Jacob]{Maria Jacob\\ {\small Supervisors: Danica Greetham, Claudia Neves}}
+\title[Electric Load Profiles]{Forecasting Peaks of household Electric Load Profiles}
+\author[Jacob]{Maria Jacob \\ {\small Supervisors: Danica Greetham, Claudia Neves}}
 
-
-\institute{Mathematics of Planet Earth}
-\date{24th May 2017}
+\institute[University of Reading]{Mathematics of Planet Earth\\ University of Reading and Imperial College London\\ \textcolor{white}{word} \\ \includegraphics[height=1cm,width=2.5cm]{mpecdt_logo.png}}
+\date{13th July 2017}
 
 \begin{document}
-
+%=====================================
+%			Title Slide
+%=====================================
 \begin{frame}
   \titlepage
 \end{frame}
 
+
+\addtobeamertemplate{frametitle}{}{\begin{textblock*}{100mm}(0.825\textwidth,-1cm) \includegraphics[height=1cm,width=2.5cm]{mpecdt_logo.png} \end{textblock*}}{}{}
+
+%=====================================
+%			New Slide 1
+%=====================================
+
+\begin{frame}{Motivation}
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{end_motivation.png}
+\caption{Source: Marinescu et al (2013). Accessed: $30{\text{th}}$ June 2017 from \url{https://www.tcd.ie/futurecities/research/energy/demand-forecasting.php}}
+\label{fig:motivation} 
+\end{figure}
+\note{talk about the following \begin{itemize}
+\item General Forecasting in Literature: that there is plenty of forecasts that work on averages, however they have smoothing effects which are undesirable in this context
+\item Unexplored Extreme behaviour: in the context of electricity load have not been studied
+\item Industrial applications: to look at both of the above has huge significance in industry as both an accumulation of modest and extreme and individual extreme behaviour will inform customer care, tailor products, plan infrastructure, also important for electricity trading, etc.
+\item Goals: thus we wish to improve upon what has been done and combine it with the well established theory of extremes to improve electric load forecasting
+\end{itemize}}
+\end{frame}
+
 % Uncomment these lines for an automatically generated outline.
-%\begin{frame}{Outline}
-%  \tableofcontents
-%\end{frame}
+% \begin{frame}{Outline}
+  % \tableofcontents
+% \end{frame}
 
-
-\begin{frame}{Introduction}
-
-\begin{itemize}
-%\item Motivation
-\item Data and Methodology \begin{itemize} \item Forecasting Techniques
-\item Validation
-\item Extreme Value Theory \end{itemize}
-\item Results
-\item Future Plans
-\end{itemize}
-
-%\vskip 1cm
-
-\end{frame}
-
-\begin{frame}[plain,c]
-%\frametitle{A first slide}
-
-\begin{center}
-\Huge Data and Methodology
-\end{center}
-
-\end{frame}
+%=====================================
+%			New Slide 2
+%=====================================
 
 \begin{frame}{Data}
-\begin{itemize}
-\item Domestic Smart Meter Data (controlled)
-\item Half hourly resolution
-\item 503 households
-\item 7 weeks (22 weeks)
-\end{itemize}
+\begin{figure}
+\centering
+\includegraphics[scale=0.33]{data_desc.pdf}
+\caption{Various electric load profiles.}
+\label{fig:sums} 
+\end{figure}
+%\note{Mention: \begin{itemize} \item Irish smart meter data, half hourly resolution, peaky profiles for individuals but clear trends in average and in general. \item obvious differences between weekends and weekdays. Will form the principle behind most point load forecasts: for normal days, future will be similar to historically similar days. \item we are currently working with 7 weeks of data or 49 days as shown in the bottom left plot and obviously there are some days when people use more and others days where they use less and on average these are periodic with weekly cycles. The days where they have least is Friday and where they have most are weekend days. \item this similarity and periodicity is something that we will (as it has been in the literature and in practice) exploit as we'll see now. \end{itemize}}
 \end{frame}
 
-\begin{frame}{Forecasting}
-\begin{itemize}
-\item Last Week Forecast (LW)
+%=====================================
+%			New Slide 3
+%=====================================
 
-\begin{center} $\hat{x_n} = x_{n-1}$ \end{center}
+\begin{frame}{Forecasts}
+\begin{figure}
+\centering
+\includegraphics[scale=0.33]{forecast_Mon_P1.pdf}
+\caption{Simple point forecasts.}
+\label{fig:forecasts} 
+%\note{ \tiny Say: \begin{itemize} \item here I have shown you three different forecasts, each with an additional complexity. \item The first one, known as the Same Day forecast or ``Ess Dee'' forecast for short is the simplest forecast one here. It says that the forecast for next Monday at 9 is an average of what it was for the all past Mondays (obviously if you have long historical data) you may use the past 5 or 6 weeks of data. \item The second, linear regression forecast, is along the same lines but gets a window, meaning that next Monday at 9 is some weighted average of all the load between 7 and 11 of all past Mondays. \item we can see with both of these, that we will have lots of smooths as we average which is contextually undesirable and unrealistics \item Thus we come to the last forecast which iteratively updates a base profile which is much like the SD and LR forecast but optimises an error norm. We can see clearly then that we now do have a peakier forecasts whose magnitudes are better aligned and more accurate. \item While more improvements have been made they are not novel in the area of electricity load forecasting and thus let's move on to what is: Extremes behaviour. \end{itemize}}
+\end{figure}\end{frame}
 
-\item Same Day Forecast (SD)
-
-\begin{center} $\hat{x}_n = \frac{1}{n-1} \displaystyle \sum_{i=1}^{n-1} x_i$ \end{center}
-
-\item Linear Regression Forecast (LR)
-
-\begin{center} $\hat{x}_n = \displaystyle \sum_{i=1}^{n-1} \beta_i x_i + \epsilon_i$ \end{center}
-
-\item Bayesian Regression Forecast (BR)
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Error Measures}
-\begin{itemize}
-\item Mean Absolute Percentage Error (MAPE)
-
-\begin{center} $MAPE^j = \frac{100}{n} \displaystyle \sum_{i=1}^n \left|\frac{x^j_i - \hat{x}^j_i}{x_i}\right|$ \end{center}
-
-\item $p^{th}-$norm error
-
-\begin{center} $E_p^j = \left(\displaystyle \sum_{i=1}^n |\hat{x}^j_i - x^j_i|^p\right)^{\frac{1}{p}}$ \end{center}
-
-where $E_p^j$ is the $p^{th}-$ norm error for household $j$, $\hat{x}^j_i$, $x^j_i$ are the forecast and actual observations for household $j=1, ... , 503$, respectively at time $i = 1, ... , n$.
-
-\end{itemize}
-\end{frame}
+%=====================================
+%			New Slide 4
+%=====================================
 
 \begin{frame}{Extreme Value Theory}
 \begin{itemize}
-\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$. The \textbf{sample/block maximum} is defined to be:
+\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$. 
+\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}.
+
+\item The \textbf{sample/block maximum} is defined to be:
 
 \begin{center} $ X_{n,n} = \max\{X_1, ... , X_n\}$ \end{center}
 
@@ -114,184 +105,253 @@ where $E_p^j$ is the $p^{th}-$ norm error for household $j$, $\hat{x}^j_i$, $x^j
 
 \begin{center} $x^F := \sup\{x | F(x) < 1\}$ \end{center}
 
-\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}.
+\item $\gamma$, the shape parameter.
 
 \end{itemize}
+%\note{\tiny This will be the first of two mathematical and wordy slides so bare with me. Here are some basic definitions \begin{itemize} \item First we're looking the block maxima. the idea behind is that in reality you may not be able to guaranteed independence in your data. Thus you split your data into finite subsamples where you would expect results to be independence. these finite subsamples can be ordered and we can chose $k$ of the most extreme ones, conventional the largest k. Then these become the $k$ upper order statistics. \item When we take k as large as the length of the subsample, we are now choosing the most extreme observation, typically the maxima and we call it block maxima. \item Those methods which analyse occurrences over the $k$ upper order statistics are known as POT methods where those uses block maxima are known as block maxima method. \item The right endpoint can be thought of as the last point on a CDF that is still less than 1. If you think of a normal distribution, and think of the cdf which tends to one, you will realise that the right endpoint in that case is infinity.\item the last definition to know is the shape parameter also known as the EVI. gamma describes the tail heavy-ness of the distribution of sample maxima. distributions which have are light tails have negligible probability of extreme behaviour. Again think of the normal distribution where once we usually ignore anything outside of 3 standard deviations. As a result, light tailed distributions have an ultimate upper bound. \end{itemize}}
 \end{frame}
 
-\begin{frame}{Extreme Value Theorem}
-
-If there exist constants $a_n >0$ and $b_n \in \mathbb{R}$ s.t. \newline
-
-\begin{center}$\displaystyle \lim_{n \rightarrow \infty} \mathbb{P}\left(\frac{X_{n,n} - b_n}{a_n} \le x\right) =  \lim_{n \rightarrow \infty} F^n (a_n x + b_n) = G(x)$ \end{center}
-
-for every continuity of $G$, then $G(x) = G_\gamma(x)$ is given by
-
-\begin{center} $G_\gamma(x) = \exp\{-(1+\gamma x)^{-\frac{1}{\gamma}}\} $ \end{center}
-
-for $1 + \gamma x >0$. $G$ is known as a Generalised Extreme Value (GEV) distribution and $F$ is said to be in the (maximum) domain of attraction of $G_\gamma$, $F \in MDA(G_\gamma)$. \newline
-
-
-$\gamma$ is known as the \textit{Extreme Value Index} (EVI) or shape parameter.
-
-\end{frame}
-
-\begin{frame}[plain,c]
-%\frametitle{A first slide}
-
-\begin{center}
-\Huge Results
-\end{center}
-
-\end{frame}
-
-
-\begin{frame}{Patterns}
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{16_22_sums.png}
-%\setbeamerfont{caption}{series=\normalfont,size=\fontsize{20}{24}}
-\caption{Cumulative demand profiles in kilo Watt hours (kWh) for various time horizons.}
-\label{fig:sums} 
-\end{figure}
-\end{frame}
-
-\begin{frame}{Profiles}
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{days_sum.png}
-\caption{Cumulative daily profiles for each day of the week.}
-\label{fig:days} 
-\end{figure}
-\end{frame}
-
-\begin{frame}{Forecasting}
-\begin{figure}
-\centering
-\includegraphics[scale=0.35]{Forecasts_P3.pdf}
-\caption{Daily forecast for one customer for each day of the week.}
-\label{fig:days} 
-\end{figure}
-\end{frame}
-
-\begin{center}
-\begin{frame}{Validation}
-\begin{tabular}{|c|c|c|}
-\hline
-Forecast & MAPE (\%) & $E_4$ (kWh) \\ 
-\hhline{|=|=|=|}
-LW & 84.027 & 4.765 \\
-\hline
-SD & 81.505 & 3.829\\
-\hline
-LR & 97.138 & 3.866\\
-\hline
-BR & 97. 021 & 3.805 \\
-\hline
-\end{tabular}
-\end{frame}
-\end{center}
-
-\begin{frame}{EVI using estimators}
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.45]{GammaEstimates.pdf}
-\caption{Estimates for the shape parameter based on the weekly maxima.} \label{fig:gammaEst}
-\end{center}
-\end{figure}
-\end{frame}
+%=====================================
+%			New Slide 5
+%=====================================
 
 \begin{frame}{EVI with Order Statistics }
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.45]{EVIestimation.pdf}
+\includegraphics[scale=0.4]{EVIestimation.pdf}
 \caption{Extreme value index estimation using the $k$th largest order statistics.} \label{fig:POTEst}
 \end{center}
 \end{figure}
 \end{frame}
 
+%=====================================
+%			New Slide 6
+%=====================================
+
 \begin{frame}{Right endpoint}
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.5]{EndpointEst.pdf}
+\includegraphics[scale=0.4]{EndpointEst.pdf}
 \caption{Estimates for the right endpoint, based on the weekly maxima.} \label{fig:EndPointEst}
 \end{center}
 \end{figure}
 \end{frame}
 
-\begin{frame}[plain,c]
+%=====================================
+%			New Slide 7
+%=====================================
+
+\begin{frame}{Scedasticity}
+
+\end{frame}
+
+%=====================================
+%			New Slide 8
+%=====================================
+
+\begin{frame}{Half hourly Maxima}
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{hh_max_sced.pdf}
+\caption{Estimated scedasis of half hourly maxima.}
+\label{fig:hh_max_sced} 
+\end{figure}
+\end{frame}
+
+%=====================================
+%			New Slide 9
+%=====================================
+
+\begin{frame}{Positive Difference}
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{pos_diff_sced.pdf}
+\caption{Estimated scedasis of Daily positive differences.}
+\label{fig:pos_diff_sced} 
+\end{figure}
+\end{frame}
+
+%=====================================
+%			New Slide 10
+%=====================================
+
+\begin{frame}{Forecast Errors}
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{err_sced_together.pdf}
+\caption{Estimated Scedasis of point forecast errors.}
+\label{fig:err_sced} 
+\end{figure}
+\end{frame}
+
+%=====================================
+%			New Slide 11
+%=====================================
+
+\begin{frame}{In Conclusion}
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{end_motivation.png}
+\caption{Source: Marinescu et al (2013). Accessed: $30{\text{th}}$ June 2017 from \url{https://www.tcd.ie/futurecities/research/energy/demand-forecasting.php}}
+\label{fig:motivation} 
+\end{figure}
+\note{ \tiny Coming back to this image, we know \begin{itemize}
+\item We know the data are light tailed (which has been shown rigorously for weekly maxima). This means that there exists an absoluted upper limit. We have already found this. We can now move on ask what physical and perhaps meteorological limitations/dependencies to put on it so that it's contextually meaningful and robust.
+\item we can use scedasis for each customer to monitor huge changes, even predict an imminent change. This is great for electricity distributors so that they can respond appropriately and act before a power failure occurs.
+\item by using scedasis functions for individual customers, DNOs can also infer if customers have recently purchased any huge appliances or electric vehicles, installed PV cells, and tailor future electricity contracts accordingly.
+\item We can even look at it from societal point of view, we can form models societal behaviours and dynamics with respect to low carbon technologies and the uptake of these technologies into this study so that we can study how the temperature change might impact load in the future, how much PV cell electricity generation may offset electric vehicle charging, plan and strategise major infrastructure changes. \end{itemize}}
+\end{frame}
+
+%=====================================
+%			New Slide 12
+%=====================================
+
+\begin{frame}{Thank you!}
+\centering Questions?
+\end{frame}
+
+%=====================================
+%			End of Slide
+%=====================================
+
+%\begin{frame}{Introduction}
+%\begin{itemize}
+%\item Data and Methodology \begin{itemize} \item Forecasting Techniques
+%\item Validation
+%\item Extreme Value Theory \end{itemize}
+%\item Results
+%\item Future Plans
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[plain,c]
 %\frametitle{A first slide}
 
-\begin{center}
-\Huge Conclusion
-\end{center}
+%\begin{center}
+%\Huge Data and Methodology
+%\end{center}
 
-\end{frame}
+%\end{frame}
 
-\begin{frame}{So far}
-\begin{enumerate}
-\item Regression techniques performed better.
-\item Weekly maxima of electric load are Light tailed.
-\item Right Endpoint: 12-13.5 kWh.
-\end{enumerate}
-\end{frame}
+%\begin{frame}{Data}
+%\begin{itemize}
+%\item Domestic Smart Meter Data (controlled)
+%\item Half hourly resolution
+%\item 503 households
+%\item 7 weeks (22 weeks)
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}{What's Next?}
-\begin{enumerate}
-\item Probabilistic and early biased forecasts
-\item Confidence bounds for right endpoint
-\item Clustering
-\item Heteroscedasticity in the tail observations
-\item New estimators for scedasis function
-\end{enumerate}
-\end{frame}
+%\begin{frame}{Forecasting}
+%\begin{itemize}
+%\item Last Week Forecast (LW)
 
-\begin{frame}[plain,c]
+%\begin{center} $\hat{x_n} = x_{n-1}$ \end{center}
+
+%\item Same Day Forecast (SD)
+
+%\begin{center} $\hat{x}_n = \frac{1}{n-1} \displaystyle \sum_{i=1}^{n-1} x_i$ \end{center}
+
+%\item Linear Regression Forecast (LR)
+
+%\begin{center} $\hat{x}_n = \displaystyle \sum_{i=1}^{n-1} \beta_i x_i + \epsilon_i$ \end{center}
+
+%\item Bayesian Regression Forecast (BR)
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Error Measures}
+%\begin{itemize}
+%\item Mean Absolute Percentage Error (MAPE)
+
+%\begin{center} $MAPE^j = \frac{100}{n} \displaystyle \sum_{i=1}^n \left|\frac{x^j_i - \hat{x}^j_i}{x_i}\right|$ \end{center}
+
+%\item $p^{th}-$norm error
+
+%\begin{center} $E_p^j = \left(\displaystyle \sum_{i=1}^n |\hat{x}^j_i - x^j_i|^p\right)^{\frac{1}{p}}$ \end{center}
+
+%where $E_p^j$ is the $p^{th}-$ norm error for household $j$, $\hat{x}^j_i$, $x^j_i$ are the forecast and actual observations for household $j=1, ... , 503$, respectively at time $i = 1, ... , n$.
+
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Extreme Value Theory}
+%\begin{itemize}
+%\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$. The \textbf{sample/block maximum} is defined to be:
+
+%\begin{center} $ X_{n,n} = \max\{X_1, ... , X_n\}$ \end{center}
+
+%\item The \textbf{right endpoint} is defined as
+
+%\begin{center} $x^F := \sup\{x | F(x) < 1\}$ \end{center}
+
+%\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}.
+
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Extreme Value Theorem}
+
+%If there exist constants $a_n >0$ and $b_n \in \mathbb{R}$ s.t. \newline
+
+%\begin{center}$\displaystyle \lim_{n \rightarrow \infty} \mathbb{P}\left(\frac{X_{n,n} - b_n}{a_n} \le x\right) =  \lim_{n \rightarrow \infty} F^n (a_n x + b_n) = G(x)$ \end{center}
+
+%for every continuity of $G$, then $G(x) = G_\gamma(x)$ is given by
+
+%\begin{center} $G_\gamma(x) = \exp\{-(1+\gamma x)^{-\frac{1}{\gamma}}\} $ \end{center}
+
+%for $1 + \gamma x >0$. $G$ is known as a Generalised Extreme Value (GEV) distribution and $F$ is said to be in the (maximum) domain of attraction of $G_\gamma$, $F \in MDA(G_\gamma)$. \newline
+
+
+%$\gamma$ is known as the \textit{Extreme Value Index} (EVI) or shape parameter.
+
+%\end{frame}
+
+%\begin{frame}[plain,c]
 %\frametitle{A first slide}
 
-\begin{center}
+%\begin{center}
+%\Huge Results
+%\end{center}
 
-\Huge Thank you!
-
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Estimators for $\gamma$}
-
-\begin{itemize} 
-\item Maximum Lq-likelihood Estimator (MLq):
-
-\begin{center} $\hat{\gamma} = \arg \displaystyle \max_{\gamma \in \Theta} \sum_{i=1}^n L_q (f(X_i; \gamma)), \quad q >0$ \end{center}
-where
-\begin{center} $L_q(u) =  \begin{cases} \log u, & \text{if } q= 1 \\ \frac{u^{1-q} -1}{1-q}, & \text{o/w} \end{cases}$ 
-\end{center}
-
-and $f$ is the density function of $G$. $q$ is the distortion parameter.
-
-\item Maximum spacing product (MSP)
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Estimators for $x_F$}
-
-\begin{itemize} 
-\item Moment Estimator (M):
-\begin{center} $ \hat{\gamma} = 1+ H_n^{(1)} + \frac{1}{2} \left(\frac{\left(H_n^{(1)}\right)^2}{H_n^{(2)}}-1\right)^{-1} $ 
-where $ H_n^{(p)} = \frac{1}{k} \displaystyle \sum_{j=1}^k \left(\log(X_{n-j+1,n}) - \log(X_{n-k,n}) \right)^p$
-\end{center}
-\item Mixed Moment Estimator (MM):
-
-\begin{center} $\hat{\gamma} = \frac{\hat{\phi}_n^k -1}{1+ 2\min(\hat{\phi}_n^k -1, 0)}$  \end{center}
-
-where
-
-\begin{center} $\hat{\phi}_n^k := \frac{M_n^{(1)}(k) - L_n^{(1)}(k)}{\left(L_n^{(1)}(k)\right)^2}, L_n^{(p)} := \frac{1}{k} \displaystyle \sum_{i=1}^k \left( 1- \frac{X_{n-k,n}}{X_{n-i+1,n}}\right)^p\newline M_n^{(p)} := \frac{1}{k} \sum_{i=1}^k \left(1 - \frac{X_{n-i+1,n}}{X_{n-k,n}} \right)^p $ \end{center}
+%\end{frame}
 
 
-\end{itemize}
-\end{frame}
+%\begin{frame}{Estimators for $\gamma$}
+
+%\begin{itemize} 
+%\item Maximum Lq-likelihood Estimator (MLq):
+
+%\begin{center} $\hat{\gamma} = \arg \displaystyle \max_{\gamma \in \Theta} \sum_{i=1}^n L_q (f(X_i; \gamma)), \quad q >0$ \end{center}
+%where
+%\begin{center} $L_q(u) =  \begin{cases} \log u, & \text{if } q= 1 \\ \frac{u^{1-q} -1}{1-q}, & \text{o/w} \end{cases}$ 
+%\end{center}
+
+%and $f$ is the density function of $G$. $q$ is the distortion parameter.
+
+%\item Maximum spacing product (MSP)
+
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Estimators for $x_F$}
+
+%\begin{itemize} 
+%\item Moment Estimator (M):
+%\begin{center} $ \hat{\gamma} = 1+ H_n^{(1)} + \frac{1}{2} \left(\frac{\left(H_n^{(1)}\right)^2}{H_n^{(2)}}-1\right)^{-1} $ 
+%where $ H_n^{(p)} = \frac{1}{k} \displaystyle \sum_{j=1}^k \left(\log(X_{n-j+1,n}) - \log(X_{n-k,n}) \right)^p$
+%\end{center}
+%\item Mixed Moment Estimator (MM):
+
+%\begin{center} $\hat{\gamma} = \frac{\hat{\phi}_n^k -1}{1+ 2\min(\hat{\phi}_n^k -1, 0)}$  \end{center}
+
+%where
+
+%\begin{center} $\hat{\phi}_n^k := \frac{M_n^{(1)}(k) - L_n^{(1)}(k)}{\left(L_n^{(1)}(k)\right)^2}, L_n^{(p)} := \frac{1}{k} \displaystyle \sum_{i=1}^k \left( 1- \frac{X_{n-k,n}}{X_{n-i+1,n}}\right)^p\newline M_n^{(p)} := \frac{1}{k} \sum_{i=1}^k \left(1 - \frac{X_{n-i+1,n}}{X_{n-k,n}} \right)^p $ \end{center}
+
+
+%\end{itemize}
+%\end{frame}
 
 
 

@@ -96,14 +96,6 @@ def need_to_clean():
     plt.figlegend((l1,l2,l3,l4,l6,l5),("LW","SD","LR","BR","AA","Obs."),loc="best")
     plt.show()
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
-# data = pd.read_csv(filename1,index_col=0)
-
-obs = data[data.Week==22]
 
 def forecast_SD_plot(data):
     import numpy as np
@@ -273,4 +265,41 @@ def blueprint():
     plt.xticks([1,7,13,19,25,31,37,43,48],['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23:30'])
 
     plt.figlegend((l1,l5),("AA","Observations"),loc="upper left")
+    plt.show()
+
+def forecasts(data):
+    filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
+    data = pd.read_csv(filename1,index_col=0)
+    #
+    filename="~/Documents/MPECDT/MRes/Danica/Irish SM data/AA_forecast.csv"
+    AA = pd.read_csv(filename,index_col=0)
+    #
+    past = data[data.Week!=22]
+    obs = data[data.Week==22]
+    #
+    from forecasts import *
+
+    SD = mySD(past)
+    LR = myRegWeek(data)
+
+    plt.subplot(3,1,1)
+    plt.plot(SD[SD.Day==1].P1, color="blue",label="SD")
+    plt.plot(obs[obs.Day==1].P1,color="black",label="obs")
+    plt.xticks((np.array(np.ones(9)*2016 + (0,6,12,18,24,30,36,42,47),int)),())
+    plt.ylabel("kWh")
+    plt.legend()
+
+    plt.subplot(3,1,2)
+    plt.plot(LR[LR.Day==1].P1, color="green",label="LR")
+    plt.plot(obs[obs.Day==1].P1,color="black",label="obs")
+    plt.xticks((np.array(np.ones(9)*2016 + (0,6,12,18,24,30,36,42,47),int)),())
+    plt.ylabel("kWh")
+    plt.legend()
+
+    plt.subplot(3,1,3)
+    plt.plot(AA[AA.Day==1].P1, color="orange",label="AA")
+    plt.plot(obs[obs.Day==1].P1,color="black",label="obs")
+    plt.xticks((np.array(np.ones(9)*2016 + (0,6,12,18,24,30,36,42,47),int)),('00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23.30'))
+    plt.ylabel("kWh")
+    plt.legend()
     plt.show()

@@ -77,8 +77,8 @@ dev.off()
 
 #########################           Positive Differences          ##########################
 
-pdf(file = "pos_diff_sced.pdf",paper="a4")
-par(mfrow=c(3,2))
+pdf(file = "pos_diff_sced.pdf",width=12,paper="a4r")
+par(mfrow=c(2,2))
 #########################       Postive differences Mm     ##########################
 
 pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)

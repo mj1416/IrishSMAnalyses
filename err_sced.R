@@ -59,11 +59,11 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_estG <- vector(mode = "numeric",length = length(ss))
+AAc_estG <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  AAc_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
 #c_estK <- vector(mode = "numeric",length = length(ss))
@@ -75,7 +75,7 @@ for (s in ss){
 
 filename <- "AA_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+plot(x = n*ss,y =AAc_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
@@ -97,11 +97,11 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_estG <- vector(mode = "numeric",length = length(ss))
+LRc_estG <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  LRc_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
 #c_estK <- vector(mode = "numeric",length = length(ss))
@@ -114,7 +114,7 @@ for (s in ss){
 require(graphics)
 filename <- "LR_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+plot(x = n*ss,y =LRc_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
@@ -136,11 +136,11 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_estG <- vector(mode = "numeric",length = length(ss))
+SDc_estG <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  SDc_estG[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
 #c_estK <- vector(mode = "numeric",length = length(ss))
@@ -153,7 +153,7 @@ for (s in ss){
 require(graphics)
 filename <- "SD_err_sced.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x = n*ss,y =c_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
+plot(x = n*ss,y =SDc_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),xlab='Day')
 #legend("bottomright", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
