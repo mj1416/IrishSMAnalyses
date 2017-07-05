@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/full_data.csv"
-data = pd.read_csv(filename1)#,index_col=0)
+filename1="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
+data = pd.read_csv(filename1,index_col=0)
 
 
 data_max = data.groupby("DayN").max()
@@ -15,7 +15,7 @@ ret = abs(today - yesterday)/yesterday
 ret.to_csv("max_ret_6.csv")
 
 
-day_mean = data.groupby("DayN").mean()
+day_mean = data.groupby("DayN").max()
 day_mean = day_mean.drop(["Week","HH","Day"],axis=1)
 # mean_day_mean = day_mean.mean(axis=1)
 # t1 = mean_day_mean[1:]
@@ -24,7 +24,7 @@ day_mean = day_mean.drop(["Week","HH","Day"],axis=1)
 # mean_pos_diff_mean = t1-t0
 # mean_pos_diff_mean[mean_pos_diff_mean<0]=0
 
-max_day_mean = day_mean.max(axis=1)
+max_day_mean = day_mean.sum(axis=1)
 t1 = max_day_mean[1:]
 t0 = max_day_mean[:-1]
 t0.index = t1.index
@@ -63,29 +63,30 @@ t0.index = t1.index
 max_pos_diff_sum = t1-t0
 max_pos_diff_sum[max_pos_diff_sum<0]=0
 
-#save image
-f, axarr = plt.subplots(2, 2)
-axarr[0, 0].plot(max_pos_diff_mean.index,max_pos_diff_mean,'r')
-axarr[0, 0].set_title('Max of Mean')
-axarr[0, 1].plot(max_pos_diff_max.index,max_pos_diff_max,'g')
-axarr[0, 1].set_title('Max of Max')
-axarr[1, 0].plot(max_pos_diff_sum.index, max_pos_diff_sum,'c')
-axarr[1, 0].set_title('Max of Total')
-axarr[1, 0].set_xlabel("Day")
-axarr[1, 1].plot(sum_pos_diff_sum.index, sum_pos_diff_sum,'m')
-axarr[1, 1].set_title('Total of Total')
-axarr[1, 1].set_xlabel("Day")
-plt.tight_layout()
-plt.savefig('pos_diffs.pdf')
-plt.close()
 
 #save as an excel file
 pos_diff = pd.DataFrame()
 #pos_diff["mm"] = mean_pos_diff_mean
-pos_diff["Mm"] = max_pos_diff_mean
+pos_diff["SM"] = max_pos_diff_mean
 #pos_diff["mM"] = mean_pos_diff_max
 pos_diff["MM"] = max_pos_diff_max
 pos_diff["mS"] = mean_pos_diff_sum
 pos_diff["MS"] = max_pos_diff_sum
 pos_diff["SS"] = sum_pos_diff_sum
-pos_diff.to_csv("22_pos_diff.csv")
+pos_diff.to_csv("pos_diff.csv")
+
+#save image
+f, axarr = plt.subplots(2, 2)
+axarr[0, 0].plot(max_pos_diff_mean.index,max_pos_diff_mean,'r')
+axarr[0, 0].set_title('Total of Daily Max')
+axarr[0, 1].plot(max_pos_diff_max.index,max_pos_diff_max,'g')
+axarr[0, 1].set_title('Max of Daily Max')
+axarr[1, 0].plot(max_pos_diff_sum.index, max_pos_diff_sum,'c')
+axarr[1, 0].set_title('Max of Daily Total')
+axarr[1, 0].set_xlabel("Day")
+axarr[1, 1].plot(sum_pos_diff_sum.index, sum_pos_diff_sum,'m')
+axarr[1, 1].set_title('Total of Daily Total')
+axarr[1, 1].set_xlabel("Day")
+plt.tight_layout()
+plt.savefig('pos_diffs.pdf')
+plt.close()

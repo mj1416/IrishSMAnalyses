@@ -158,3 +158,22 @@ plot(x = n*ss,y =SDc_estG,type="l",col="blue",xaxt="n",ylab=expression(hat(c)),x
 axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
 axis(side=2,at=c(0.4,0.8,1.2,1.6),labels = c(0.4,0.8,1.2,1.6))
 dev.off()
+
+
+filename <- "err_sced_together.pdf"
+pdf(file=filename,width = 12,paper = "a4r")
+par(mfrow=c(3,1),mai=c(0.6,1,0.1,0.5))
+plot(x = n*ss,y =AAc_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
+legend("bottom", inset=0.5, legend=c("AA"), lty=c(1), col=c("blue"), horiz=FALSE)
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,1.0,1.5),labels = c(0.4,1.0,1.5))
+plot(x = n*ss,y =LRc_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
+legend("bottom", inset=0.5, legend=c("LR"), lty=c(1), col=c("blue"), horiz=FALSE)
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,1.0,1.6),labels = c(0.4,1.0,1.6))
+plot(x = n*ss,y =SDc_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
+legend("bottom", inset=0.5, legend=c("SD"), lty=c(1), col=c("blue"), horiz=FALSE)
+axis(side = 1,at=seq(24,n,by=48),labels = seq(635,641))
+axis(side=2,at=c(0.4,1.0,1.6),labels = c(0.4,1.0,1.6))
+dev.off()
+

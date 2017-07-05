@@ -66,10 +66,11 @@ for (s in ss){
 }
 
 #generate and save an image in landscape pdf
-filename <- "hh_max_sced.pdf"
+filename <- "hh_max_sced_pres.pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",ylab=expression(hat(c)),xlab='Day')
-legend("bottom", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+plot(x=n*ss,y=c_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab="Day")
+#matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
+#legend("bottom", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
 axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
 axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
 dev.off()
@@ -85,7 +86,7 @@ pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
 data_max <- data.matrix(frame = pos_diff["Mm"],rownames.force = NA)
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 20#floor(n*0.08)
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
@@ -103,7 +104,7 @@ for (s in ss){
   c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Mean")
+plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Max")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
 axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 
@@ -113,7 +114,7 @@ axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 data_max <- data.matrix(frame = pos_diff["MM"],rownames.force = NA)
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 20#floor(n*0.08)
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
@@ -142,7 +143,7 @@ axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 data_max <- data.matrix(frame = pos_diff["MS"],rownames.force = NA)
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 20#floor(n*0.08)
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
@@ -171,7 +172,7 @@ axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
 data_max <- data.matrix(frame = pos_diff["SS"],rownames.force = NA)
 
 n <- length(data_max)
-k <- floor(n*0.08)
+k <- 20#lofloor(n*0.08)
 data_ord <- sort(data_max)
 k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
