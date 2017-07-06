@@ -152,7 +152,7 @@ def mj_AAold_plot():
     plt.savefig("AA_forecast_P1.pdf")
 
 def mj_AA(data,C,d):
-    #
+    "data is past data"
     #test for one person
     p1 = data[[0,1,2,3,C+3]]
     P = str(data.columns[C+3])

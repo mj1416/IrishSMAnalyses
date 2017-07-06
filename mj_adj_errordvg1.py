@@ -1,13 +1,7 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from munkres import Munkres
-
-from mj_hungariandvg1 import mj_AA
-
-
 def mj_adj_err(data,C,d):
-    x,f1,f,d,cust = mj_AA(data,C,d)
+    from mj_hungariandvg1 import mj_AAold
+    "data is past data"
+    x,f1,f,d,cust = mj_AAold(data,C,d)
 
     n = len(x)
     bigM=14
@@ -54,58 +48,65 @@ def mj_adj_err(data,C,d):
     #print(p_norm_err_aa, p_norm_err_mean)
     return p_norm_err_aa, p_norm_err_mean
 
+def main(data):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from munkres import Munkres
+    #
+    from mj_hungariandvg1 import mj_AA
+    #
+    AA_err_vec = np.zeros((7,503))
+    mean_err_vec = np.zeros((7,503))
+    for d in [1,2,3,4,5,6,7]:
+        for i in range(1,504):
+            AA_err_vec[d-1,i-1],mean_err_vec[d-1,i-1]=mj_adj_err(data,i,d)
+        print(d)
+        #print(d-1, AA_err_vec[d-1,:], mean_err_vec[d-1,:])
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
 
-AA_err_vec = np.zeros((7,503))
-mean_err_vec = np.zeros((7,503))
-for d in [1,2,3,4,5,6,7]:
-    for i in range(1,504):
-        AA_err_vec[d-1,i-1],mean_err_vec[d-1,i-1]=mj_adj_err(data,i,d)
-    print(d)
-    #print(d-1, AA_err_vec[d-1,:], mean_err_vec[d-1,:])
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-ax1 = fig.add_subplot(711)
-ax2 = fig.add_subplot(712)
-ax3 = fig.add_subplot(713)
-ax4 = fig.add_subplot(714)
-ax5 = fig.add_subplot(715)
-ax6 = fig.add_subplot(716)
-ax7 = fig.add_subplot(717)
+    ax1 = fig.add_subplot(711)
+    ax2 = fig.add_subplot(712)
+    ax3 = fig.add_subplot(713)
+    ax4 = fig.add_subplot(714)
+    ax5 = fig.add_subplot(715)
+    ax6 = fig.add_subplot(716)
+    ax7 = fig.add_subplot(717)
 
 
-ax1.plot(AA_err_vec[0,:]-mean_err_vec[0,:],'-k',label='AA')
-ax1.plot(mean_err_vec[0,:]-mean_err_vec[0,:],'-b', label="Mean")
-ax1.set_xticks([])
+    ax1.plot(AA_err_vec[0,:]-mean_err_vec[0,:],'-k',label='AA')
+    ax1.plot(mean_err_vec[0,:]-mean_err_vec[0,:],'-b', label="Mean")
+    ax1.set_xticks([])
 
 
-ax2.plot(AA_err_vec[1,:]-mean_err_vec[1,:],'-k',label='AA')
-ax2.plot(mean_err_vec[1,:]-mean_err_vec[1,:],'-b',label="Mean")
-ax2.set_xticks([])
+    ax2.plot(AA_err_vec[1,:]-mean_err_vec[1,:],'-k',label='AA')
+    ax2.plot(mean_err_vec[1,:]-mean_err_vec[1,:],'-b',label="Mean")
+    ax2.set_xticks([])
 
-ax3.plot(AA_err_vec[2,]-mean_err_vec[2,:],'-k',label='AA')
-ax3.plot(mean_err_vec[2,:]-mean_err_vec[2,:],'-b',label="Mean")
-ax3.set_xticks([])
+    ax3.plot(AA_err_vec[2,]-mean_err_vec[2,:],'-k',label='AA')
+    ax3.plot(mean_err_vec[2,:]-mean_err_vec[2,:],'-b',label="Mean")
+    ax3.set_xticks([])
 
-ax4.plot(AA_err_vec[3,:]-mean_err_vec[3,:],'-k',label='AA')
-ax4.plot(mean_err_vec[3,:]-mean_err_vec[3,:],'-b',label="Mean")
-ax4.set_xticks([])
+    ax4.plot(AA_err_vec[3,:]-mean_err_vec[3,:],'-k',label='AA')
+    ax4.plot(mean_err_vec[3,:]-mean_err_vec[3,:],'-b',label="Mean")
+    ax4.set_xticks([])
 
-ax5.plot(AA_err_vec[4,:]-mean_err_vec[4,:],'-k',label='AA')
-ax5.plot(mean_err_vec[4,:]-mean_err_vec[4,:], '-b',label="Mean")
-ax5.set_xticks([])
+    ax5.plot(AA_err_vec[4,:]-mean_err_vec[4,:],'-k',label='AA')
+    ax5.plot(mean_err_vec[4,:]-mean_err_vec[4,:], '-b',label="Mean")
+    ax5.set_xticks([])
 
-ax6.plot(AA_err_vec[5,:]-mean_err_vec[5,:],'-k',label='AA')
-ax6.plot(mean_err_vec[5,:]-mean_err_vec[5,:],'-b', label="Mean")
-ax6.set_xticks([])
+    ax6.plot(AA_err_vec[5,:]-mean_err_vec[5,:],'-k',label='AA')
+    ax6.plot(mean_err_vec[5,:]-mean_err_vec[5,:],'-b', label="Mean")
+    ax6.set_xticks([])
 
-ax7.plot(AA_err_vec[6,:]-mean_err_vec[6,:],'-k',label='AA')
-ax7.plot(mean_err_vec[6,:]-mean_err_vec[6,:], '-b',label="Mean")
+    ax7.plot(AA_err_vec[6,:]-mean_err_vec[6,:],'-k',label='AA')
+    ax7.plot(mean_err_vec[6,:]-mean_err_vec[6,:], '-b',label="Mean")
 
-ax.tick_params(labelcolor='w', top='off', bottom='on', left='on', right='off')
-ax.set_xlabel('Customers')
-ax.set_ylabel('Adjusted p-Norm Error (P=4)')
-#plt.legend(['-k','-b'],["AA","Mean"])
-plt.show()
-for i in range(0, 7):
-    print(i, sum(AA_err_vec[i,:]-mean_err_vec[i,:]) )
+    ax.tick_params(labelcolor='w', top='off', bottom='on', left='on', right='off')
+    ax.set_xlabel('Customers')
+    ax.set_ylabel('Adjusted p-Norm Error (P=4)')
+    #plt.legend(['-k','-b'],["AA","Mean"])
+    plt.show()
+    for i in range(0, 7):
+        print(i, sum(AA_err_vec[i,:]-mean_err_vec[i,:]) )
