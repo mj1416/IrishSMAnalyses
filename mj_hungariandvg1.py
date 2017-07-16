@@ -1,9 +1,9 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from munkres import Munkres
-
 def mj_AAold(data,C,d):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from munkres import Munkres
+    "data is full data"
 
     #test for one person
     p1 = data[[0,1,2,3,C+3]]
@@ -152,6 +152,10 @@ def mj_AAold_plot():
     plt.savefig("AA_forecast_P1.pdf")
 
 def mj_AA(data,C,d):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from munkres import Munkres
     "data is past data"
     #test for one person
     p1 = data[[0,1,2,3,C+3]]

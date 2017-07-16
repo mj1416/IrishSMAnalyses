@@ -1,6 +1,10 @@
 def mj_adj_err(data,C,d):
     from mj_hungariandvg1 import mj_AAold
-    "data is past data"
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from munkres import Munkres
+    "data is full data"
     x,f1,f,d,cust = mj_AAold(data,C,d)
 
     n = len(x)
@@ -58,8 +62,8 @@ def main(data):
     #
     AA_err_vec = np.zeros((7,503))
     mean_err_vec = np.zeros((7,503))
-    for d in [1,2,3,4,5,6,7]:
-        for i in range(1,504):
+    for d in [1]:#,2,3,4,5,6,7]:
+        for i in range(1,2):
             AA_err_vec[d-1,i-1],mean_err_vec[d-1,i-1]=mj_adj_err(data,i,d)
         print(d)
         #print(d-1, AA_err_vec[d-1,:], mean_err_vec[d-1,:])

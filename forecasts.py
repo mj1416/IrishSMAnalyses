@@ -1,9 +1,11 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
 
-#Same Day Method
 def mySD(past):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a weekly forecasting"
     "input should be past data"
     #isolate by Day of the Weekday
@@ -56,6 +58,9 @@ def mySD(past):
     return forecast
 
 def myLW(past):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a weekly forecast."
     "Input should be past data"
     lw = past.Week.max()
@@ -69,6 +74,9 @@ def myLW(past):
     return forecast
 
 def myRegWeek(data):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces weekly forecast. want it to return pd.df"
     from forecasts import myOneDayRegression
     reg1 = myOneDayRegression(data,1)
@@ -106,6 +114,9 @@ def myRegWeek(data):
     return forecast
 
 def myOneDayRegression(data,dd=1):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     #from sklearn.linear_model import LinearRegression
     "produces a one day forecast (for the dd'th day)"
     forecast = np.zeros((data.shape[1]-4,48))
@@ -115,6 +126,9 @@ def myOneDayRegression(data,dd=1):
     return forecast
 
 def myRegression(data,hh=1,d=1):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a forecast for HH=hh (the second input)"
     "on the d'th day of week (d=third input). Default"
     "is 1st HH and day 1 (mondays)"
@@ -157,6 +171,9 @@ def myRegression(data,hh=1,d=1):
     return forecast_hh_d
 
 def myForecastCompare(data):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     import time
     past = data[data.Week!=data.Week.max()]
     data_new = data[data.Week<=19]
@@ -197,6 +214,9 @@ def myForecastCompare(data):
     return reg_err, SD_err, LW_err
 
 def myRidgeHH(data,hh=1,dd=1):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a forecast for half hour hh on day dd"
     "format is numpy array of shape (n_households,)"
     from sklearn.linear_model import BayesianRidge
@@ -235,6 +255,9 @@ def myRidgeHH(data,hh=1,dd=1):
     return forecast_hh_dd
 
 def myDayRidge(data,d=1):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a day foreast for day dd"
     "format is numpy array of shape (n_households,48)"
     from forecasts import myRidgeHH
@@ -245,6 +268,9 @@ def myDayRidge(data,d=1):
     return forecast_dd
 
 def myWeekRidge(data):
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     "produces a weekly forecast. format"
     "is pandas dataframe with the same"
     "indices and column names as obs"
@@ -309,6 +335,9 @@ def myAAcust(past,C):
 def myAAweek(past):
     "produces a weekly AA forecast."
     "input data is past data."
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
     #
     AA = pd.DataFrame()
     AA["Week"] = past[past.Week == past.Week.max()].Week + 1
@@ -326,3 +355,63 @@ def myAAweek(past):
     #
     AA.to_csv("AA_forecast.csv")
     return AA
+
+def plot_forecast_sample():
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    #
+    SD = pd.read_csv("SD_forecast.csv",index_col=0)
+    LW = pd.read_csv("LW_forecast.csv",index_col=0)
+    AA = pd.read_csv("AA_forecast.csv",index_col=0)
+    LR = pd.read_csv("LR_forecast.csv",index_col=0)
+    BR = pd.read_csv("BR_forecast.csv",index_col=0)
+    data = pd.read_csv("short_data.csv",index_col=0)
+    obs = data[data.Week==22]
+    #
+    plt.subplot(5,1,1)
+    plt.plot(SD[SD.Day==1].HH,SD[SD.Day==1].P1,"b",label="SD")
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.legend()
+    plt.ylabel("kWh")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    plt.legend(loc="upper left")
+
+    plt.subplot(5,1,2)
+    plt.plot(LW[LW.Day==1].HH,LW[LW.Day==1].P1,"b",label="LW")
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.legend()
+    plt.ylabel("kWh")
+    plt.xlim((0,49))
+    plt.legend(loc="upper left")
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+
+    plt.subplot(5,1,3)
+    plt.plot(AA[AA.Day==1].HH,AA[AA.Day==1].P1,"b",label="AA")
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.legend()
+    plt.ylabel("kWh")
+    plt.xlim((0,49))
+    plt.legend(loc="upper left")
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+
+    plt.subplot(5,1,4)
+    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1].P1,"b",label="LR")
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.legend()
+    plt.ylabel("kWh")
+    plt.xlim((0,49))
+    plt.legend(loc="upper left")
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+
+    plt.subplot(5,1,5)
+    plt.plot(BR[BR.Day==1].HH,BR[BR.Day==1].P1,"b",label="BR")
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.legend()
+    plt.ylabel("kWh")
+    plt.xlim((0,49))
+    plt.legend(loc="upper left")
+    plt.xticks([1,7,13,19,25,31,37,43,48],["00:00","03:00","06:00","09:00","12:00","15:00","18:00","21:00","23:30"])
+    #plt.savefig("Forecasts_P1.pdf")
+    plt.show()
