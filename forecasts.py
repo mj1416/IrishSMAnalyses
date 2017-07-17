@@ -1,7 +1,3 @@
-# import numpy as np
-# import pandas as pd
-# import matplotlib.pyplot as plt
-
 def mySD(past):
     import numpy as np
     import pandas as pd
@@ -370,43 +366,43 @@ def plot_forecast_sample():
     obs = data[data.Week==22]
     #
     plt.subplot(5,1,1)
-    plt.plot(SD[SD.Day==1].HH,SD[SD.Day==1].P1,"b",label="SD")
+    plt.plot(SD[SD.Day==1].HH,SD[SD.Day==1].P1,"r",label="SD")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
     plt.xlim((0,49))
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
     plt.legend(loc="upper left")
-
+    #
     plt.subplot(5,1,2)
-    plt.plot(LW[LW.Day==1].HH,LW[LW.Day==1].P1,"b",label="LW")
+    plt.plot(LW[LW.Day==1].HH,LW[LW.Day==1].P1,"r",label="LW")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
     plt.xlim((0,49))
     plt.legend(loc="upper left")
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
-
+    #
     plt.subplot(5,1,3)
-    plt.plot(AA[AA.Day==1].HH,AA[AA.Day==1].P1,"b",label="AA")
+    plt.plot(AA[AA.Day==1].HH,AA[AA.Day==1].P1,"r",label="AA")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
     plt.xlim((0,49))
     plt.legend(loc="upper left")
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
-
+    #
     plt.subplot(5,1,4)
-    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1].P1,"b",label="LR")
+    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1].P1,"r",label="LR")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
     plt.xlim((0,49))
     plt.legend(loc="upper left")
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
-
+    #
     plt.subplot(5,1,5)
-    plt.plot(BR[BR.Day==1].HH,BR[BR.Day==1].P1,"b",label="BR")
+    plt.plot(BR[BR.Day==1].HH,BR[BR.Day==1].P1,"r",label="BR")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
@@ -414,4 +410,58 @@ def plot_forecast_sample():
     plt.legend(loc="upper left")
     plt.xticks([1,7,13,19,25,31,37,43,48],["00:00","03:00","06:00","09:00","12:00","15:00","18:00","21:00","23:30"])
     #plt.savefig("Forecasts_P1.pdf")
+    plt.show()
+
+def plot_forecast(forecast,obs,name):
+    import matplotlib.pyplot as plt
+    #
+    plt.subplot(7,1,1)
+    plt.plot(forecast[forecast.Day==1].HH,forecast[forecast.Day==1].P1,"r",label=name)
+    plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
+    plt.ylabel("Mon")
+    plt.xlim((0,49))
+    plt.legend(loc="upper left")
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,2)
+    plt.plot(forecast[forecast.Day==2].HH,forecast[forecast.Day==2].P1,"r",label=name)
+    plt.plot(obs[obs.Day==2].HH,obs[obs.Day==2].P1,'k',label="obs")
+    plt.ylabel("Tue")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,3)
+    plt.plot(forecast[forecast.Day==3].HH,forecast[forecast.Day==3].P1,"r",label=name)
+    plt.plot(obs[obs.Day==3].HH,obs[obs.Day==3].P1,'k',label="obs")
+    plt.ylabel("Wed")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,4)
+    plt.plot(forecast[forecast.Day==4].HH,forecast[forecast.Day==4].P1,"r",label=name)
+    plt.plot(obs[obs.Day==4].HH,obs[obs.Day==4].P1,'k',label="obs")
+    plt.ylabel("Thu")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,5)
+    plt.plot(forecast[forecast.Day==5].HH,forecast[forecast.Day==5].P1,"r",label=name)
+    plt.plot(obs[obs.Day==5].HH,obs[obs.Day==5].P1,'k',label="obs")
+    plt.ylabel("Fri")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,6)
+    plt.plot(forecast[forecast.Day==6].HH,forecast[forecast.Day==6].P1,"r",label=name)
+    plt.plot(obs[obs.Day==6].HH,obs[obs.Day==6].P1,'k',label="obs")
+    plt.ylabel("Sat")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
+    #
+    plt.subplot(7,1,7)
+    plt.plot(forecast[forecast.Day==7].HH,forecast[forecast.Day==7].P1,"r",label=name)
+    plt.plot(obs[obs.Day==7].HH,obs[obs.Day==7].P1,'k',label="obs")
+    plt.ylabel("Sun")
+    plt.xlim((0,49))
+    plt.xticks([1,7,13,19,25,31,37,43,48],["00:00","03:00","06:00","09:00","12:00","15:00","18:00","21:00","23:30"])
     plt.show()

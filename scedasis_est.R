@@ -83,7 +83,7 @@ par(mfrow=c(2,2))
 #########################       Postive differences Mm     ##########################
 
 pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
-data_max <- data.matrix(frame = pos_diff["Mm"],rownames.force = NA)
+data_max <- data.matrix(frame = pos_diff["SM"],rownames.force = NA)
 
 n <- length(data_max)
 k <- 20#floor(n*0.08)

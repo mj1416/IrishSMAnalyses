@@ -39,13 +39,6 @@ Einmahl, J.~H., Haan, L., and Zhou, C. (2016).
 \newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
   Methodology)}, 78(1):31--51.
 
-\bibitem[ELEXON, 2015]{elexon}
-ELEXON, L. (2015).
-\newblock \emph{Profiling}.
-\newblock
-  \url{https://www.elexon.co.uk/reference/technical-operations/profiling/}
-  [Accessed: 26-06-2017].
-
 \bibitem[Embrechts et~al., 2013]{embrechts}
 Embrechts, P., Kl{\"u}ppelberg, C., and Mikosch, T. (2013).
 \newblock {\em Modelling extremal events: for insurance and finance},
@@ -56,6 +49,12 @@ Embrechts, P., Kl{\"u}ppelberg, C., and Mikosch, T. (2013).
 Ferreira, A., de~Haan, L., et~al. (2015).
 \newblock On the block maxima method in extreme value theory: Pwm estimators.
 \newblock {\em The Annals of statistics}, 43(1):276--298.
+
+\bibitem[Ferreira et~al., 2017]{Ferreira17}
+Ferreira, A., Friederichs, P., de~Haan, L., Neves, C., and Schlather, M.
+  (2017).
+\newblock Estimating space-time trend and dependency of heavy rainfall.
+\newblock {\em Biometrika}, 103:1--23.
 
 \bibitem[Fisher and Tippett, 1928]{ft28}
 Fisher, R.~A. and Tippett, L. H.~C. (1928).
@@ -107,12 +106,5 @@ Ranneby, B. (1984).
 \newblock The maximum spacing method. an estimation method related to the
   maximum likelihood method.
 \newblock {\em Scandinavian Journal of Statistics}, pages 93--112.
-
-\bibitem[Wijaya et~al., 2015]{cbaf}
-Wijaya, T.~K., Vasirani, M., Humeau, S., and Aberer, K. (2015).
-\newblock Cluster-based aggregate forecasting for residential electricity
-  demand using smart meter data.
-\newblock In {\em Big Data (Big Data), 2015 IEEE International Conference on},
-  pages 879--887. IEEE.
 
 \end{thebibliography}

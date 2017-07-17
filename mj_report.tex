@@ -373,126 +373,126 @@ where $\boldsymbol{f}$ is the forecast that is $n$ half hours long and $\boldsym
 %===================================================
 
 %
-%\subsection{Clustering} \label{subsec:clustering}
-%Clustering is the task that groups a set of objects that are considered to be similar and separates them from other objects which are not. There are many notions of what it means to be similar, how to measure similarity and then how to effectively find the relevant clusters. There are two major branches of clustering: supervised and unsupervised. In the first branch, the analyst must specify the number of clusters before the clustering begins whereas in the latter, the number of clusters is also part of the results of the algorithm. Along with supervised and unsupervised clustering methods, other distinctions are also possible.
-%\begin{itemize}
-%\item Hard and soft clustering: \begin{enumerate} \item Hard clustering means that a data object either belongs to a cluster or it does not. \item Soft clustering on the other hand means that each object belongs to a cluster with some likelihood. This is also known as fuzzy clustering. \end{enumerate}
-%\item Strict partitioning clustering is where each object belongs to exactly one cluster. An extension of this type of clustering is where an object can belong to no cluster and is then considered an outlier.
-%\item Overlapping clustering is where objects may belong to more than one clustering.
-%\item Hierarchical clustering has the concept of parent and child cluster where the child cluster also belongs to the parent cluster. Within Hierarchical clustering, it is possible to have strong and weak clustering where the former identifies each entity (in our case, each household) to be its own cluster and the latter identifies exactly one cluster for all entities.
-%\end{itemize}
-%
-%Within various branchings, there are techniques which can be implemented using various algorithms. In this section we will review some of these techniques.
-%
-%\subsubsection{$K$-means}\label{subsubsec:kmeans}
-%One of the most commonly discussed clustering method is a centroid-based technique known as $K$-means clustering. This is a supervised clustering, the essence of which is to minimise the (Euclidean) distance from a centroid. As explained in \cite{bishop}, the exact variable being minimised is known as the \textit{distortion measure}, $J$, given by
-%
-%\begin{equation} \label{eq:distortion}
-%J =\sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \| \textbf{x}_n - \textbf{$\mu$}_k \|
-%\end{equation}
-%where $N$ is the number of households (or time series in the data), $K$ is the number of specified clusters, $\textbf{x}_n$ is ta data point, $\mu_k$ is the centroid of the $k^{th}$ cluster and $r_{nk}$ is an indicator function which is 1 when $x_n$ is in the $k^{th}$ cluster and 0 otherwise. The goal of the $K$-means algorithm is to find values for \{$r_{nk}$\} and \{$\boldsymbol \mu_k$\} which minimises the $J$ in equation \ref{eq:distortion}. The name $K$-means arises from the fact that centroid is defined to be equal to the mean of all the data points $\textbf{x}_n$ assigned to cluster k. Mathematically, $ \boldsymbol \mu_k = \frac{\sum_n r_{nk} \textbf{x}_n}{\sum_n r_{nk}}$. To visualise this process, consider the simplified case where the data set has mean zero and standard deviation 1, then clustering this data set into two clusters is equivalent to deciding which side of a perpendicular bisector each data point lies. Since the cost function $J$ is being minimised, convergence is guaranteed however solution may be a local minimum instead of a global one.
-%
-%There are other clustering methods that can be used however $K$-means is a good starting point especially because other methods, such as the Gaussian mixture model (section \ref{subsubsec:mixmodels}, use it to initialise parameters. Because convergence is guaranteed, it doesn't matter where the initial centroids are however a good start is to take randomly generated $K$ data points.
-%
-%%\subsubsection{Mean Shift}
-%%\label{subsussec:msclus}
-%
-%%Mean Shift clustering is also a centroid based algorithm which aims to find 'blobs' in data. It is a method of unsupervised clustering but a parameter which is known as the bandwidth must be user defined. The bandwidth can be loosely understood as the distance from the cluster centre that the algorithm can search through to find the data points in the cluster.
-%
-%\subsubsection{Affinity Propagation}
-%\label{subsubsec:afprop}
-%Affinity Propagation was first introduced by \cite{frey07}. It was proposed as a faster and more versatile clustering algorithm than the common clustering algorithm similar to the $K$-Means algorithm and has the added advantage of being unsupervised. \cite{frey07} applied it to various applications such as detecting clusters in images of faces, clusters clustering images of faces, detecting genes from arrays and sentences within a manuscript. Other than being unsupervised, the algorithm is much faster than $K$-centroid algorithms, is relatively simple to understand and can be applied to various applications without introducing added complexities. In this section, this algorithm as presented by \cite{frey07} is described and the inputs are discussed in section \ref{subsubsec:affprop_res}.
-%
-%Affinity propagation aims to find what are referred to as ``exemplars'', which are cluster centres that are selected from actual data points i.e. the cluster centres are a subset of the data. There are a few general similarities between $K$-Means and affinity propagation but it's more valuable to discuss the differences. Most notably, affinity propagation considers all data points as potential exemplars simultaneously. The name for the algorithm is inspired by the way in which messages are passed between pairs of data points regarding one's``affinity'' to choose another as its exemplar.
-%
-%Before discussing the actual algorithm let's discuss some of the variables that are required or used in the algorithm. These variable are called ``availability'', ``responsibility'' and ``similarity'', denoted by $a(i,k)$, $r(i,k)$ and $s(i,k)$ respectively. In this notation, $i$ and $k$ relate to the relationship between data point with index $i$ and data point with index $k$. In the case where $i=k$, the variables are called ``self-availability'', ``self-responsibility'' and ``preference''.  $s(i,k)$ can be understood as an indication of how well data point with index $k$ is suited to being the exemplar for data point with index $i$. As with $K$-means, the aim is to minimise an error, the similarity is set to be negative squared error i.e for points $x_i$ and $x_k$., $s(i,k) = -||x_i - x_k||^2$. Technically, other metrics can be used to make the algorithm more general however the python implementation of the algorithm currently only supports three metrics, one of which is the Euclidean distance presented here. 
-%
-%The algorithm uses $s(k,k)$, i.e. preference, as input for each data point $x_k$. Data points with larger values of preference are more likely to be chosen as exemplars than those with smaller values. Both the message passing part of the algorithm, discussed shortly and the choice of preference influences the number of clusters identified. As intuition would lead us to believe each data point $x_k$ is initially equally likely to be chosen as an exemplar if all $x_k$ have a shared preference. Using the minimum $s(i,k)$ as the shared preference will lead to a small number of exemplars.
-%
-%Thus similarity impacts the algorithm in the input but it also comes into play in the message passing phase. Two kinds of messages are passed, namely availability, $a(i,k)$, and responsibility, $r(i,k)$. $r(i,k)$ passed from data point with index $i$ to data point with index $k$, where $x_k$ is the candidate exemplar. $r(i,k)$ is a measure how well-suited $x_k$ is to serve as the exemplar for $x_i$, taking into account other potential exemplars $x_i$ has. The availability, $a(i,k)$ is the other message passed from $x_k$ to $x_i$ communicating the suitability for $x_i$ to chose $x_k$ as its exemplar taking into account ``the support from other points'' that point $k$ should be an exemplar \citep{frey07}. %$r(i,k)$ and $a(i,k)$ can be thought of as log-probability ratios.
-%
-%The algorithm is initialised with the availabilities being set to zeros and responsibility then is computed as
-%
-%\begin{equation}\label{eq:resp}
-%r(i,k) = s(i,k) - \max_{k' s.t. k' \ne k}\{a(i,k') + s(i,k')\}
-%\end{equation}
-%
-%According to \citet{frey07}, this update allows all candidate exemplars to ``compete for ownership of a data point''. A negative $r(k,k)$ indicates that $x_k$ is more suited to belonging to another exemplar than being an exemplar itself. The self-responsibility is thresholded by requiring that the total sum not exceed 0 and thus limit the influence of strong updated responsibilities. 
-%
-%The availability is then updated which gathesr evidence from data points as to whether each candidate exemplar would make a good exemplar:
-%
-%\begin{equation}\label{eq:avail}
-%a(i,k) = \min\{0, r(k,k) - \sum_{i' s.t. i \notin \{i,k\}}\max\{0,r(i',k)\}\}
-%\end{equation}
-%
-%The self-availability, $a(k,k)$, is updated differently according to the rule:
-%\begin{equation}\label{eq:avail2}
-%a(k,k) = \sum_{i' s.t. i' \ne k}\max\{0,r(i',k)\}
-%\end{equation}
-%
-%%This message sends the positive responsibilities to candidate exemplar $k$ from other points.
-%
-%%The method in its entirety follows these algorithmic steps:
-%%\begin{enumerate}
-%%\item
-%%\end{enumerate}
-%
-%Exemplars are identified by combining availabilities and responsibilities and can be done at any point. \citet{frey07} suggests three options when it comes to termination of the message passing procedure:
-%\begin{enumerate*}[label=\roman*)] \item after a fixed number of iterations, \item after changes in the message fall below a certain threshold, or \item local decisions remain unchanged for a certain number of constants. \end{enumerate*}. For data point $x_i$, the value of $k$ which maximises $a(i,k) + r(i,k)$ identifies the exemplar. If $i=k$, then $x_i$ identifies itself as an exemplar. In conclusion, each iteration of the affinity propagation algorithm has three steps: \begin{enumerate*}[label=\roman*)] \item updating all responsibilities given availabilities, \item updating all availabilities using the updated responsibilites, and \item combining availabilities and responsibilties to find exemplars \end{enumerate*}. \citet{frey07} chose to terminate the algorithm when the decision about the exemplars remain unchanged for 10 iterations.
-%
-%The algorithm may do well in terms of identifying which, and how many, of the data points are the exemplars however the paper makes no mention of the case where the cluster centres are not exactly actual data points. Additionally, the algorithm also does not deal with outliers i.e. cases where data points do not fall into one cluster and neither do the authors specify about what happens when there are two data points which are equally suitable to being exemplars, at the end of the algorithm, for one data point.
-%
-%\subsubsection{Mixture Models}
-%\label{subsubsec:mixmodels}
-%Mixture models refer to models that are superpositions of multiple, usually Gaussian, distributions. The idea is that while the Gaussian distribution has some very interesting and useful properties, it is not a good enough representation of all data sets, especially those data sets which are multi-modal (have multiple peaks in the distribution). However these, and in fact all continuous, distributions can be approximated to arbitrary accuracy by a linear combination of a sufficient number of Gaussian distributions with appropriately adjusted mean and covariance \citep{bk:mixmod} (see figure \ref{fig:mixgauss}).
-%
-%\begin{figure}
-%\centering
-%\includegraphics[width=\textwidth]{mixgauss.png}
-%\caption{Example of a Gaussian mixture distribution. Source: \cite{bishop}}
-%\label{fig:mixgauss} 
-%\end{figure}
-%
-%Mixture models can be thought of as generalisations of the $K$-means clustering. Decomposing a finite mixture of distributions is typically a very difficult task and though much work was done before, major breakthroughs occurred as high speed computers made likelihood estimation of the parameters of the mixture models more feasible \cite{bk:mixmod}. In most usage, including the one that will be used in this report, the implementation uses the Expectation-Maximisation (EM) algorithm to fit mixture models.
-%
-%Let's introduce some new \todo{note this may be overlapping with above terminology so check this before any official submission}terminology. Suppose the data is given by $\textbf{x}_1,...,\textbf{x}_n$, where each $\textbf{x}_j$ is a vector of $p$ dimensions i.e. $p$ attributes. In the context of this project, $n$ is the number of households that we're clustering and $p$ is the number of smart meter measurements we have for each household. Each $\textbf{x}_j$ can be viewed as arising from the super- population G which is a a mixture of a finite number of populations, $G_1, ... , G_g$. Here $g$ is the number of populations that create the super-population. The proportions $\pi_1, ... ,\pi_g$ adhere to the following rule:
-%
-%\begin{align}\label{eq:pi}
-%\sum_{i=1}^g \pi_i = 1, \quad & \pi_i \ge 0,  \quad (i = 1, ... , g)
-%\end{align}
-%
-%$\textbf{x}_1,...,\textbf{x}_n$ are assumed to be randomly sampled from $G$ i.e. that the data are realised values of n independently and identically distributed (i.i.d.) random variables with common distribution function $G$ which can be represented by the equation \ref{eq:data}.
-%
-%\begin{align}\label{eq:data}
-%\begin{split}
-%\textbf{x}_1, ... , \textbf{x}_n \displaystyle  \stackrel{iid}{\sim} \quad &G(\textbf{x}; \phi), \\
-%&\phi \in \Omega
-%\end{split}
-%\end{align}
-%
-%\begin{equation}\label{eq:log_likelihood}
-%\partial L(\phi)/ \partial \phi = 0
-%\end{equation}
-%where $L(\phi)$ is the log-likelihood, $\phi$ is a vector of all unknown parameters and $\Omega$ is the parameter space. Let $\hat{\phi}$ to be the solution of equation \ref{eq:log_likelihood}, however $\hat{\phi}$ may not be unique. Despite this, roughly speaking, the aim of likelihood estimation is to determine $\hat{\phi}$ for each $n$. \todo[inline]{should this not say $x_j$ for $j = 1, ... , n$ ?}
-%
-%The likelihood equation \ref{eq:log_likelihood} can be manipulated into
-%
-%\begin{equation}\label{eq:pi_mod}
-%\hat{\pi}_i = \sum_{j=1}^{n} \hat{\tau}_{ij} /n (i = 1, ... , g)
-%\end{equation}
-%
-%and 
-%
-%\begin{equation}\label{eq:log_mod}
-%\sum_{i=1}^g \sum_{j=1}^n \hat{\tau}_{ij} \partial log f_i(x_j;\hat{\theta}) / \partial \hat{\theta} = 0
-%\end{equation}
-%
-%where $\theta$ is the vector of all unknown parameters associated with the g component densities, and for $i = 1, ... , g$, $f_i(\textbf{x},\theta)$ is the probability density function (p.d.f) corresponding to $G_i$ and
-%
-%$$\hat{\tau}_{ij} \equiv \tau_i(\textbf{x}_j;\hat{\phi}) = \pi_i f_(\textbf{x}_j;\theta) / \sum_{t=1}^g \pi_t f_t(\textbf{x}_j;\theta)$$
-%
-%Equations \ref{eq:pi_mod} and \ref{eq:log_mod} can be solved with direct application of the EM algorithm.
-%
+\subsection{Clustering} \label{subsec:clustering}
+Clustering is the task that groups a set of objects that are considered to be similar and separates them from other objects which are not. There are many notions of what it means to be similar, how to measure similarity and then how to effectively find the relevant clusters. There are two major branches of clustering: supervised and unsupervised. In the first branch, the analyst must specify the number of clusters before the clustering begins whereas in the latter, the number of clusters is also part of the results of the algorithm. Along with supervised and unsupervised clustering methods, other distinctions are also possible.
+\begin{itemize}
+\item Hard and soft clustering: \begin{enumerate} \item Hard clustering means that a data object either belongs to a cluster or it does not. \item Soft clustering on the other hand means that each object belongs to a cluster with some likelihood. This is also known as fuzzy clustering. \end{enumerate}
+\item Strict partitioning clustering is where each object belongs to exactly one cluster. An extension of this type of clustering is where an object can belong to no cluster and is then considered an outlier.
+\item Overlapping clustering is where objects may belong to more than one clustering.
+\item Hierarchical clustering has the concept of parent and child cluster where the child cluster also belongs to the parent cluster. Within Hierarchical clustering, it is possible to have strong and weak clustering where the former identifies each entity (in our case, each household) to be its own cluster and the latter identifies exactly one cluster for all entities.
+\end{itemize}
+
+Within various branchings, there are techniques which can be implemented using various algorithms. In this section we will review some of these techniques.
+
+\subsubsection{$K$-means}\label{subsubsec:kmeans}
+One of the most commonly discussed clustering method is a centroid-based technique known as $K$-means clustering. This is a supervised clustering, the essence of which is to minimise the (Euclidean) distance from a centroid. As explained in \citet{bishop}, the exact variable being minimised is known as the \textit{distortion measure}, $J$, given by
+
+\begin{equation} \label{eq:distortion}
+J =\sum_{n=1}^{N} \sum_{k=1}^{K} \mathbb{1}_{nk} \| \textbf{x}_n - \textbf{$\mu$}_k \|
+\end{equation}
+where $N$ is the number of households (or time series in the data), $K$ is the number of specified clusters, $\textbf{x}_n$ is ta data point, $\mu_k$ is the centroid of the $k^{th}$ cluster and $\mathbb{1}_{nk}$ is an indicator function which is 1 when $x_n$ is in the $k^{th}$ cluster and 0 otherwise. The goal of the $K$-means algorithm is to find values for \{$\mathbb{1}_{nk}$\} and \{$\boldsymbol \mu_k$\} which minimises the $J$ in equation \ref{eq:distortion}. The name $K$-means arises from the fact that centroid is defined to be equal to the mean of all the data points $\textbf{x}_n$ assigned to cluster k. Mathematically, $ \boldsymbol \mu_k = \frac{\sum_n \mathbb{1}_{nk} \textbf{x}_n}{\sum_n \mathbb{1}_{nk}}$. To visualise this process, consider the simplified case where the data set has mean zero and standard deviation 1, then clustering this data set into two clusters is equivalent to deciding which side of a perpendicular bisector each data point lies. Since the cost function $J$ is being minimised, convergence is guaranteed however solution may be a local minimum instead of a global one.
+
+There are other clustering methods that can be used however $K$-means is a good starting point especially because other methods, such as the Gaussian mixture model (section \ref{subsubsec:mixmodels}, use it to initialise parameters. Because convergence is guaranteed, it doesn't matter where the initial centroids are however a good start is to take randomly generated $K$ data points.
+
+%\subsubsection{Mean Shift}
+%\label{subsussec:msclus}
+
+%Mean Shift clustering is also a centroid based algorithm which aims to find 'blobs' in data. It is a method of unsupervised clustering but a parameter which is known as the bandwidth must be user defined. The bandwidth can be loosely understood as the distance from the cluster centre that the algorithm can search through to find the data points in the cluster.
+
+\subsubsection{Affinity Propagation}
+\label{subsubsec:afprop}
+Affinity Propagation was first introduced by \cite{frey07}. It was proposed as a faster and more versatile clustering algorithm than the common clustering algorithm similar to the $K$-Means algorithm and has the added advantage of being unsupervised. \cite{frey07} applied it to various applications such as detecting clusters in images of faces, clusters clustering images of faces, detecting genes from arrays and sentences within a manuscript. Other than being unsupervised, the algorithm is much faster than $K$-centroid algorithms, is relatively simple to understand and can be applied to various applications without introducing added complexities. In this section, this algorithm as presented by \cite{frey07} is described and the inputs are discussed in section \ref{subsubsec:affprop_res}.
+
+Affinity propagation aims to find what are referred to as ``exemplars'', which are cluster centres that are selected from actual data points i.e. the cluster centres are a subset of the data. There are a few general similarities between $K$-Means and affinity propagation but it's more valuable to discuss the differences. Most notably, affinity propagation considers all data points as potential exemplars simultaneously. The name for the algorithm is inspired by the way in which messages are passed between pairs of data points regarding one's``affinity'' to choose another as its exemplar.
+
+Before discussing the actual algorithm let's discuss some of the variables that are required or used in the algorithm. These variable are called ``availability'', ``responsibility'' and ``similarity'', denoted by $a(i,k)$, $r(i,k)$ and $s(i,k)$ respectively. In this notation, $i$ and $k$ relate to the relationship between data point with index $i$ and data point with index $k$. In the case where $i=k$, the variables are called ``self-availability'', ``self-responsibility'' and ``preference''.  $s(i,k)$ can be understood as an indication of how well data point with index $k$ is suited to being the exemplar for data point with index $i$. As with $K$-means, the aim is to minimise an error, the similarity is set to be negative squared error i.e for points $x_i$ and $x_k$., $s(i,k) = -||x_i - x_k||^2$. Technically, other metrics can be used to make the algorithm more general however the python implementation of the algorithm currently only supports three metrics, one of which is the Euclidean distance presented here. 
+
+The algorithm uses $s(k,k)$, i.e. preference, as input for each data point $x_k$. Data points with larger values of preference are more likely to be chosen as exemplars than those with smaller values. Both the message passing part of the algorithm, discussed shortly and the choice of preference influences the number of clusters identified. As intuition would lead us to believe each data point $x_k$ is initially equally likely to be chosen as an exemplar if all $x_k$ have a shared preference. Using the minimum $s(i,k)$ as the shared preference will lead to a small number of exemplars.
+
+Thus similarity impacts the algorithm in the input but it also comes into play in the message passing phase. Two kinds of messages are passed, namely availability, $a(i,k)$, and responsibility, $r(i,k)$. $r(i,k)$ passed from data point with index $i$ to data point with index $k$, where $x_k$ is the candidate exemplar. $r(i,k)$ is a measure how well-suited $x_k$ is to serve as the exemplar for $x_i$, taking into account other potential exemplars $x_i$ has. The availability, $a(i,k)$ is the other message passed from $x_k$ to $x_i$ communicating the suitability for $x_i$ to chose $x_k$ as its exemplar taking into account ``the support from other points'' that point $k$ should be an exemplar \citep{frey07}. %$r(i,k)$ and $a(i,k)$ can be thought of as log-probability ratios.
+
+The algorithm is initialised with the availabilities being set to zeros and responsibility then is computed as
+
+\begin{equation}\label{eq:resp}
+r(i,k) = s(i,k) - \max_{k' s.t. k' \ne k}\{a(i,k') + s(i,k')\}
+\end{equation}
+
+According to \citet{frey07}, this update allows all candidate exemplars to ``compete for ownership of a data point''. A negative $r(k,k)$ indicates that $x_k$ is more suited to belonging to another exemplar than being an exemplar itself. The self-responsibility is thresholded by requiring that the total sum not exceed 0 and thus limit the influence of strong updated responsibilities. 
+
+The availability is then updated which gathesr evidence from data points as to whether each candidate exemplar would make a good exemplar:
+
+\begin{equation}\label{eq:avail}
+a(i,k) = \min\{0, r(k,k) - \sum_{i' s.t. i \notin \{i,k\}}\max\{0,r(i',k)\}\}
+\end{equation}
+
+The self-availability, $a(k,k)$, is updated differently according to the rule:
+\begin{equation}\label{eq:avail2}
+a(k,k) = \sum_{i' s.t. i' \ne k}\max\{0,r(i',k)\}
+\end{equation}
+
+%This message sends the positive responsibilities to candidate exemplar $k$ from other points.
+
+%The method in its entirety follows these algorithmic steps:
+%\begin{enumerate}
+%\item
+%\end{enumerate}
+
+Exemplars are identified by combining availabilities and responsibilities and can be done at any point. \citet{frey07} suggests three options when it comes to termination of the message passing procedure:
+\begin{enumerate*}[label=\roman*)] \item after a fixed number of iterations, \item after changes in the message fall below a certain threshold, or \item local decisions remain unchanged for a certain number of constants. \end{enumerate*}. For data point $x_i$, the value of $k$ which maximises $a(i,k) + r(i,k)$ identifies the exemplar. If $i=k$, then $x_i$ identifies itself as an exemplar. In conclusion, each iteration of the affinity propagation algorithm has three steps: \begin{enumerate*}[label=\roman*)] \item updating all responsibilities given availabilities, \item updating all availabilities using the updated responsibilites, and \item combining availabilities and responsibilties to find exemplars \end{enumerate*}. \citet{frey07} chose to terminate the algorithm when the decision about the exemplars remain unchanged for 10 iterations.
+
+The algorithm may do well in terms of identifying which, and how many, of the data points are the exemplars however the paper makes no mention of the case where the cluster centres are not exactly actual data points. Additionally, the algorithm also does not deal with outliers i.e. cases where data points do not fall into one cluster and neither do the authors specify about what happens when there are two data points which are equally suitable to being exemplars, at the end of the algorithm, for one data point.
+
+\subsubsection{Mixture Models}
+\label{subsubsec:mixmodels}
+Mixture models refer to models that are superpositions of multiple, usually Gaussian, distributions. The idea is that while the Gaussian distribution has some very interesting and useful properties, it is not a good enough representation of all data sets, especially those data sets which are multi-modal (have multiple peaks in the distribution). However these, and in fact all continuous, distributions can be approximated to arbitrary accuracy by a linear combination of a sufficient number of Gaussian distributions with appropriately adjusted mean and covariance \citep{bk:mixmod} (see figure \ref{fig:mixgauss}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{mixgauss.png}
+\caption{Example of a Gaussian mixture distribution. Source: \cite{bishop}}
+\label{fig:mixgauss} 
+\end{figure}
+
+Mixture models can be thought of as generalisations of the $K$-means clustering. Decomposing a finite mixture of distributions is typically a very difficult task and though much work was done before, major breakthroughs occurred as high speed computers made likelihood estimation of the parameters of the mixture models more feasible \cite{bk:mixmod}. In most usage, including the one that will be used in this report, the implementation uses the Expectation-Maximisation (EM) algorithm to fit mixture models.
+
+Let's introduce some new \todo{note this may be overlapping with above terminology so check this before any official submission}terminology. Suppose the data is given by $\textbf{x}_1,...,\textbf{x}_n$, where each $\textbf{x}_j$ is a vector of $p$ dimensions i.e. $p$ attributes. In the context of this project, $n$ is the number of households that we're clustering and $p$ is the number of smart meter measurements we have for each household. Each $\textbf{x}_j$ can be viewed as arising from the super- population G which is a a mixture of a finite number of populations, $G_1, ... , G_g$. Here $g$ is the number of populations that create the super-population. The proportions $\pi_1, ... ,\pi_g$ adhere to the following rule:
+
+\begin{align}\label{eq:pi}
+\sum_{i=1}^g \pi_i = 1, \quad & \pi_i \ge 0,  \quad (i = 1, ... , g)
+\end{align}
+
+$\textbf{x}_1,...,\textbf{x}_n$ are assumed to be randomly sampled from $G$ i.e. that the data are realised values of n independently and identically distributed (i.i.d.) random variables with common distribution function $G$ which can be represented by the equation \ref{eq:data}.
+
+\begin{align}\label{eq:data}
+\begin{split}
+\textbf{x}_1, ... , \textbf{x}_n \displaystyle  \stackrel{iid}{\sim} \quad &G(\textbf{x}; \phi), \\
+&\phi \in \Omega
+\end{split}
+\end{align}
+
+\begin{equation}\label{eq:log_likelihood}
+\partial L(\phi)/ \partial \phi = 0
+\end{equation}
+where $L(\phi)$ is the log-likelihood, $\phi$ is a vector of all unknown parameters and $\Omega$ is the parameter space. Let $\hat{\phi}$ to be the solution of equation \ref{eq:log_likelihood}, however $\hat{\phi}$ may not be unique. Despite this, roughly speaking, the aim of likelihood estimation is to determine $\hat{\phi}$ for each $n$. \todo[inline]{should this not say $x_j$ for $j = 1, ... , n$ ?}
+
+The likelihood equation \ref{eq:log_likelihood} can be manipulated into
+
+\begin{equation}\label{eq:pi_mod}
+\hat{\pi}_i = \sum_{j=1}^{n} \hat{\tau}_{ij} /n (i = 1, ... , g)
+\end{equation}
+
+and 
+
+\begin{equation}\label{eq:log_mod}
+\sum_{i=1}^g \sum_{j=1}^n \hat{\tau}_{ij} \partial log f_i(x_j;\theta) / \partial \theta = 0
+\end{equation}
+
+\noindent where $\theta$ is the vector of all unknown parameters associated with the g component densities, and for $i = 1, ... , g$ and $\hat{\theta}$ solves equation \ref{eq:log_mod}, $f_i(\textbf{x},\theta)$ is the probability density function (p.d.f) corresponding to $G_i$ and
+
+$$\hat{\tau}_{ij} \equiv \tau_i(\textbf{x}_j;\hat{\phi}) = \pi_i f_(\textbf{x}_j;\theta) / \sum_{t=1}^g \pi_t f_t(\textbf{x}_j;\theta)$$
+
+Equations \ref{eq:pi_mod} and \ref{eq:log_mod} can be solved with direct application of the EM algorithm.
+
 
 %===================================================
 %					Extreme Value Theory
@@ -581,7 +581,7 @@ This empirical mean excess function can be plotted against the threshold $t$ or 
 %\noindent where $x^F := sup\{x | F(x) < 1\}$.
 Lastly, what was referred to as the upper limits in the earlier section is known as the right endpoint in this framework and is defined as $x^F := \sup\{x | F(x) < 1\} \le \infty$.
 
-The above discussion describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case in reality. \cite{einmahl16} developed the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, the distribution function $F$ also shares this right endpoint then the \textit{scedasis function}, denoted by $c$ defined on $[0,1]$, and is indicative of the frequency of extremes. This scedasis function by equation \ref{eq:scedasisfn} and is uniquely defined $\forall n \in \mathbb{N}, 1 \le i \le n$ when the density condition (eq. \ref{eq:scedasis_cond}) is imposed.
+The above discussion describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case in reality. \cite{einmahl16} developed the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, if the distribution function $F$ also shares this right endpoint then the \textit{scedasis function}, denoted by $c$ defined on $[0,1]$, and is indicative of the frequency of extremes. This scedasis function by equation \ref{eq:scedasisfn} and is uniquely defined $\forall n \in \mathbb{N}, 1 \le i \le n$ when the density condition (eq. \ref{eq:scedasis_cond}) is imposed.
 
 % The condition presented in equation \ref{eq:scedasis_cond} ensures that the definition presented in equation \ref{eq:scedasisfn} is unique $\forall n \in \mathbb{N}$ and $\forall 1 \le i \le n$.
 
@@ -593,7 +593,7 @@ The above discussion describes ``classical'' extreme value theory, the foundatio
 \int_0^1 c(s)d(s) = 1
 \end{equation}
 
-\noindent The theory is developed for positive EVI, $\gamma > 0 $ which means that the Hill estimator was (eq. \ref{eq:hill_est}) to estimate the EVI. 
+The assumption required for this model is on $F  \in \mathcal{D}(G_{\gamma})$ belonging to the maximum domain of attraction of the GEV distribution and while it can be shown that $F_{n,i}  \in \mathcal{D}(G_{\gamma})$, this does not need to be assumed. The theory is developed for positive EVI, $\gamma > 0 $ in \citet{einmahl16} which means that the Hill estimator (eq. \ref{eq:hill_est}) was used to estimate the EVI. There are studies \citep{Ferreira17} which have developed estimators for $\gamma < 0$ albeit in the spatial-temporal scale but it can be adapted to just the temporal scale.
 
 \begin{equation} \label{eq:hill_est}
 \hat{\gamma}_H := \frac{1}{k} \sum_{j=1}^k log(X_{n,n-j+1}) - log(X_{n,n-k})
@@ -692,14 +692,14 @@ One last thing to be considered in this section is the auto-correlation. It is r
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{autocorr_t_t-1.png}
+\includegraphics[width=0.9\textwidth]{autocorr_t_t-1.png}
 \caption{Daily total electric load for day d against day d-1.}
 \label{fig:ty_colour} 
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{r_autocorr_day.png}
+\includegraphics[width=0.9\textwidth]{r_autocorr_day.png}
 \caption{Auto-correlation function for 1 day. Lag is in HH}
 \label{fig:acf_day} 
 \end{figure}
@@ -710,7 +710,7 @@ One last thing to be considered in this section is the auto-correlation. It is r
 %\caption{Auto-correlation function for 2 weeks. Lag is in HH.}
 %\label{fig:acf_2} 
 %\end{figure}
-
+\clearpage
 
 %===================================================
 %					Forecasting Results
@@ -721,11 +721,10 @@ In this section we will look at each of the forecasts and qualitatively discuss 
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.5]{Forecasts_P1.pdf}
+\includegraphics[scale=0.5]{forecasts_P1(1).pdf}
 \caption{Various forecasts of customer one for the day numbered 635.}
 \label{fig:forecasts_P1} 
 \end{figure}
-
 
 \subsubsection{Similar Day Forecast} \label{subsubsec:SD_res}
 Now that some basic properties of the data are known, a forecast based on the SD method described in section \ref{subsec:ForecastMethods} was generated. A sample comparison between this forecast and observations, i.e. forecasted load and observed load of one household, is provided in figure \ref{fig:SDforecast}. From this image, we can see that though the peaks are largely underestimated, they occur at roughly the right time, specifically the breakfast hours for the weekdays and in the evenings though this is more varied. The underestimation is most probably because of the shift in usage in the two weeks leading up to the forecasted week (fig. \ref{fig:sums}). Since the SD forecast weight all past data the forecast is in general lower than the observed.
@@ -736,7 +735,7 @@ There are improvements that can be made to this algorithm for example finding ap
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{same_day_forecast_cust1.png}
+\includegraphics[scale=0.55]{forecast_SD_P1.pdf}
 \caption{SD forecast (for each day of the week) and the observations for customer 1.}
 \label{fig:SDforecast} 
 \end{figure}
@@ -745,45 +744,47 @@ There are improvements that can be made to this algorithm for example finding ap
 Similarly, for customer 1, the LW forecast versus the observations are given shown in figure \ref{fig:LW_forecast_P1}. Much like the SD forecast, LW is also not very well suited to representing the peaks accurately and is particularly vulnerable due to the week to week volatility in load. However, it can be seen that there are cases where, even though the magnitude of the peak is not correct, the peaks are being forecasted at roughly the right time. With this in mind we can combine the ideas from the SD and LW forecasts to generate an adjusted average forecast (section \ref{subsubsec:AA_res}).
 
 \begin{figure}
-\includegraphics[scale=0.6]{LW_forecast_P1.pdf}
+\includegraphics[scale=0.55]{forecast_LW_P1.pdf}
 \caption{LW forecast (for each day of the week) for customer 1.}
 \label{fig:LW_forecast_P1} 
 \end{figure}
 
 \subsubsection{Adjusted Average Forecast} \label{subsubsec:AA_res}
-Again, we show the observation versus the adjusted average (AA) forecast for customer 1. In addition, so as to provide a comparison, a SD forecast is also laid. This is presented in figure \ref{fig:AA_forecast_P1}. Clearly, not all peaks are represented well however from looking at this one customer, it seems that more peaks are being forecasted and roughly the correct times. The magnitudes are still not correct however in many cases they are closer to the observed than the SD forecast. To quantify this further we can look at the $4^{\text{th}}$ of each household for each of those days. This is shown in figure \ref{fig:adj_err_diff}. This image shows the difference between the adjusted error of the SD forecast and that of the AA forecast. For all households where the black line is below the zero line (represented by the blue line) indicates the adjusted error (discussed in section \ref{subsubsec:Adj_err}) of the AA forecast was less than adjusted error of SD forecast. From figure \ref{fig:adj_err_diff}, it is clear that for most houses the AA forecast is a better forecast for all days.
+As for the other forecasts, figure \ref{fig:AA_forecast_P1} shows the AA forecast and the corresponding observation for one customer for each day of the week. We can compare this forecast with the the observation versus the adjusted average (AA) forecast for customer 1. This is presented in figure \ref{fig:AA_forecast_P1}. Clearly, not all peaks are represented well however from looking at this one customer, it seems that more peaks are being forecasted and roughly the correct times. The magnitudes are still not correct however in many cases they are closer to the observed than the SD forecast. We will quantify this further in section \ref{subsec:errs}. This should be the best forecast at least when the error measure used is the adjusted error measure.
 
 \begin{figure}
 \centering
-\includegraphics[scale=1]{AA_forecast_P1.pdf}
+\includegraphics[scale=0.55]{forecast_AA_P1.pdf}
 \caption{AA forecast (for each day of the week) for customer 1 where the solid black line is the observed load, the broken black line is the SD forecast and broken blue line is the AA forecast.}
 \label{fig:AA_forecast_P1} 
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{adj_err_fixed.png}
-\caption{The adjusted error of the AA forecast relative to the adjusted error of the SD forecast for all households.}
-\label{fig:adj_err_diff} 
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{adj_err_fixed.png}
+%\caption{The adjusted error of the AA forecast relative to the adjusted error of the SD forecast for all households.}
+%\label{fig:adj_err_diff} 
+%\end{figure}
 
-\subsubsection{Linear Regression} \label{subsubsec:lin_reg_res}
-As discussed above \todo{insert section ref}, the forecast of customer 1 along with the observations is shown in figure \ref{fig:LR_forecast_P1}. Given that many of the existing algorithms that were discussed earlier which were some based around regression tehcniques, it is reasonable to expect that this is better than the LW forecast and also potentially the SD forecast given that it uses more data and the weights have been calculated rather than just given equal weighting. However, since the load profile is irregular, the peaks are likely to get smoothed out in the process and may not be ideal for this context. This can be seen in figure in the sample forecasts given in figure \ref{fig:LR_forecast_P1} and \ref{fig:forecasts_P1}. 
+\subsubsection{Weighted Average Forecast} \label{subsubsec:lin_reg_res}
+As discussed in section \ref{subsubsec:linregforecast}, the weighted average (WA) forecast of customer 1 along with the observations is shown in figure \ref{fig:LR_forecast_P1}. Given that many of the existing algorithms that were discussed earlier which were some based around regression tehcniques, it is reasonable to expect that this is better than the LW forecast and also potentially the SD forecast given that it uses more data and the weights have been calculated rather than just given equal weighting. However, since the load profile is irregular, the peaks are likely to get smoothed out in the process and may not be ideal for this context. This can be seen in figure in the sample forecasts given in figure \ref{fig:LR_forecast_P1} and \ref{fig:forecasts_P1}. 
 \begin{figure}
 \centering
-\includegraphics[scale=0.6]{lin_reg_forecast_P1.pdf}
+\includegraphics[scale=0.55]{forecast_LR_P1.pdf}
 \caption{Linear Regression forecast (for each day of the week) for customer 1.}
 \label{fig:LR_forecast_P1} 
 \end{figure}
 
 \subsubsection{Bayesian Ridge Regression Forecast} \label{subsubsec:brr_res}
-Lastly we do a bayesian regression very much like the LR forecast and 
+Lastly we do a bayesian regression very much like the WA forecast and the forecast along with the observations for one customer is given in \ref{fig:BR_forecast_P1}. The forecast, at least for this customer, is qualitatively very similar to the WA forecast as we would expect and again very smooth and may thus be unsuitable for the context of load forecasts. It is also noteworthy that though this data set has no bank holidays and change of seasons, it does have a fundamental shift in behaviour due to schools opening. Perhaps these algorithms would be more successful if the forecasted week were also very similar to all the historical data being used to generate the forecast. We will quantitatively verify the forecast in the next section.
 
 \begin{figure}
-\includegraphics[scale=0.55]{Forecasts_P1.pdf}
-\caption{Sample forecast and observation for customer one for Monday.}
-\label{fig:forecasts_P1} 
+\centering
+\includegraphics[scale=0.55]{forecast_BR_P1.pdf}
+\caption{Bayesian Ridge Resgression forecast (for each day of the week) for customer 1.}
+\label{fig:BR_forecast_P1} 
 \end{figure}
+
 %===================================================
 %					Error Results
 %===================================================
@@ -792,24 +793,53 @@ Lastly we do a bayesian regression very much like the LR forecast and
 \label{subsec:errs}
 Some error measures were calculated for the various forecasts and are described below and the results are also discussed.
 
-\subsubsection{$4^{th}$ -Norm Errors} \label{subsubsec:4_err_res}
+%\subsubsection{$4^{th}$ -Norm Errors} \label{subsubsec:4_err_res}
 
-Using the $4^{th}$- norm error for the SD forecast for each of the 503 households is given in figure \ref{fig:m4e_all}. \newline
+Recall the $p-$norm error discussed in section \ref{subsubsec:4-norm}. In this section we will take $p=4$ in order to exaggerate the larger error. The $4^{\text{th}}-$norm error is calculated for each household and shown in figure \ref{m4e_all}. This image shows that error in the black line and the average of all the errors is the blue line. This is summarised in table \ref{tab:errs}.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{m4err_all.png}
-\caption{\label{fig:m4e_all} $4^{th}$-norm error between the SD forecast and the observations for all customers.}
+\includegraphics[scale=0.55]{Errors_E_4.pdf}
+\caption{\label{fig:m4e_all} $4^{th}$-norm error for each forecast.}
 \end{figure}
 
-Additionally we can also compare the $4^{th}$-norm errors of the SD forecast (above), LW forecast and linear regression forecast. This is presented in figure \ref{fig:forecasts_compare}. Note this image has removed one household (502 used in analyses) that had unusually high usage.
+Similarly, we can calculate the adjusted error, denoted by $\hat{E}$. Here however, it should be noted that the adjusted error is calculated using the specified algorithm at each half hour and then $4^{\text{th}}-$norm is calculated for each household, i.e. $\hat{E}_4 := \left( \sum_{i=1}^{n} \hat{E}^4\right)^{\frac{1}{4}}$. This is shown in figure \ref{fig:Adj_err_all}. As in the previous case, the black lines represent the error at each household whereas the blue line is the average of them all. Since the differences in the means are of the order of 0.1 kWh, the means are provided in \ref{tab:errs}.
 
 \begin{figure}
-\includegraphics[scale=0.6]{forecasts_compare.pdf}
-\caption{\label{fig:forecasts_compare} $4^{th}$-norm error between forecast and the observations for 502 customers.}
+\centering
+\includegraphics[scale=0.55]{Errors_Adj.pdf}
+\caption{\label{fig:Adj_err_alll} Adjusted error for each forecast.}
 \end{figure}
 
-Unlike what was expected, the linear regression does not give much better results than the SD although both are a significant improvement on the LW forecast. When one compares the mean $4^{th}-$ norm error among all households then for SD the error is 3.829 kWh whereas linear regression is 3.866 kWh. This error is quite high given that the $75^{th}$ percentile is around the 0.5 kWh. This further demonstrates that point errors such as $4^{th}$ -norm may not be ideal due to the double penalty discussed above. For the moment we will use this as the benchmark.
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+ & $E_4$ & $\hat{E}_e$ \\
+ \hline
+\textbf{SD} & 3.829 & 3.496 \\
+\textbf{LW} & 4.76 & 4.100 \\ 
+\textbf{AA} & 4.125 & 3.396 \\ 
+\textbf{WA} & 3.866 & 3.542 \\ 
+\textbf{BRR} & 3.805 & 3.575 \\
+\hline
+\end{tabular}
+\caption{Mean of $4^{\text{th}}-$norm error and adjusted error.}
+\label{tab:errs}
+\end{table}
+
+There are many disagreements but let's first discuss the similarities. In both cases, LW forecast is the worst method. This intuitively makes sense since we know LW forecast cannot take into account the the week to week variability. Unlike what was expected, the WA forecast does not give better results than the SD in either error measure. Note also that regardless of which error measure is used and which of the forecasts is being considered, the error is has a range of roughly 3 kWh and 4 kWh. This is quite considering that the $75^{th}$ percentile is around the 0.5 kWh.
+
+From table \ref{tab:errs}, it is clear that the choice of metric alters not only to the end error but also conclusion of which algorithm is the best of those presented. If the $4^{\text{th}}-$norm error metric is used, then the BRR forecast is the best and LW forecast is the worst with the AA forecast being judged the second worst but the same forecast is judged to be the best when the adjusted error measure is used. Based on the qualitative comparison in figures \ref{fig:forecasts_P1} - \ref{fig:BR_forecast_P1}, our understanding of forecasting electric load is better confirmed by the results from $\hat{E}_4$ and thus for the moment we will use the adjusted error measure to conclude which of the algorithms is better. 
+
+%
+%Additionally we can also compare the $4^{th}$-norm errors of the SD forecast (above), LW forecast and linear regression forecast. This is presented in figure \ref{fig:forecasts_compare}. Note this image has removed one household (502 used in analyses) that had unusually high usage.
+%
+%\begin{figure}
+%\includegraphics[scale=0.6]{forecasts_compare.pdf}
+%\caption{\label{fig:forecasts_compare} $4^{th}$-norm error between forecast and the observations for 502 customers.}
+%\end{figure}
+
 %To compare the AA forecast and the benchmark forecast, the adjusted error measure is used. Figure \ref{fig:adj_err} shows the error of the adjusted error of the AA forecast relative to the adjusted error of the benchmark for all 503 households for each of the seven days.
 
 
@@ -1013,12 +1043,12 @@ Unlike what was expected, the linear regression does not give much better result
 %===================================================
 %					EVT results
 %===================================================
-
+\clearpage
 \subsection{Extreme Value Analyses}
 \label{subsec:EVres}
 Now that we've done some forecasting of averages, it is apt to delve into analyses of the extremes. The results from these are presented and discussed briefly.
 
-We discussed the theory behind quantile-quantile (QQ) plots in section \ref{subsec:EVT} and thus we begin here. Figure \ref{fig:beta} shows what the QQ plot looks like when we take the underlying distribution to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, we have no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it tells us if a certain distribution is correct, not which one is correct. However we can still glean some information from figure \ref{fig:beta} which is that the data are likely to have light tailed distributions since both the uniform and beta distributions are light tailed. This will explain why other distributions such as the log-normal and Weibull distributions didn't fit the data well anywhere (not shown). 
+We begin with quantile-quantile (QQ) plots. Figure \ref{fig:beta} shows what the QQ plot looks like when the underlying distribution is taken to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, there is no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it only tells if a certain distribution is correct, not which one is correct. However we can still glean some information from figure \ref{fig:beta} which is that the data are likely to have light tailed distributions since both the uniform and beta distributions are light tailed. This will explain why other distributions such as the log-normal and Weibull distributions didn't fit the data well anywhere (not shown). 
 
 \begin{figure}
 \centering
@@ -1026,7 +1056,7 @@ We discussed the theory behind quantile-quantile (QQ) plots in section \ref{subs
 \caption{\label{fig:beta} QQ plot.}
 \end{figure}
 
-So the QQ plot told us that the data are likely to be light tailed. We can venture further to extract more information about the distribution by considering the mean excess plot, shown figure \ref{fig:r_me}. Comparing this image and figure \ref{fig:beir}, there is not any obvious distribution we can pick out however we can gain information for appropriate choice for the upper order statistic. This choice is also linked to the light-tailedness of the distribution. Looking back at figure \ref{fig:beir}, we can see that light tailed distributions, such as the uniform distribution, have decreasing mean excess functions for high threshold whereas for heavy tailed distributions, such as log-normal and Weibull ($\tau<1$), have increasing mean excess functions for high thresholds. Thus, notice that the mean excess plot in figure \ref{fig:r_me} is also decreasing when the threshold is chosen appropriately (here considered to be 6 kWh). This can seem to be an arbitrary or convenient choice especially when we see increasing behaviour for threshold greater than 9 kWh however choosing such high threshold also has high variance and thus decreases our confidence in the result. Choosing our threshold to be 6 kWh gives us roughly 370 extreme observations which is large enough on its own but negligible with respect to the total number of observations available (over of 1 million for just the 7 weeks of data). This would imply that $k=369$ (because the $n-k^{th}$ observations for $k=370$ is greater than 6 kWh) but typically we round up. Thus when we're dealing with electric load (as opposed to returns or positive differences), we chose $k$ such that $X_{N-k,N} = 6$.
+So the QQ plot told us that the data may be be light tailed. Furthermore, comparing the mean excess plot, shown in figure \ref{fig:r_me} with figure \ref{fig:beir}, there is not any obvious distribution that can be out however it is clear that for appropriately high threshold, the mean excess function is decreasing adding to the evidence of the light-tailedness of the distribution. Looking back at figure \ref{fig:beir}, notice that light tailed distributions, such as the uniform distribution, have decreasing mean excess functions for high threshold whereas for heavy tailed distributions, such as log-normal and Weibull ($\tau<1$), have increasing mean excess functions for high thresholds. In the same way the mean excess plot in figure \ref{fig:r_me} is also decreasing when the threshold is chosen appropriately (here considered to be 6 kWh). This can seem to be an arbitrary or convenient choice especially when we see increasing behaviour for a threshold of 9 kWh however choosing such high threshold also has high variance and thus decreases our confidence in the result. Choosing our threshold to be 6 kWh gives us roughly 370 ``extreme'' observations which is large enough on its own but negligible with respect to the total number of observations available (over of 1 million). This would imply that $k=369$ (because the $n-k^{th}$ observations for $k=370$ is greater than 6 kWh) but typically we round up. Thus when we're dealing with electric load (as opposed to returns or positive differences), we chose $k$ such that $X_{N-k,N} \approx 6$.
 
 %when we use $n=2352 \times 503$ observations (i.e. for the 7 weeks), we chose $k=369$ (369 because the $n-k^{th}$ observations for $k=370$ is greater than 6 kWh). For more data clearly $k$ will be larger meaning that this choice of $k$ meets the conditions specified by equation \ref{eq:k_cond}. As we proceed, we will deduce the ``correct'' choice of $k$ for using the mean excess plot where feasible. Some other method will have to be devised for when there are too few data points for the mean excess plot to be feasible.
 
@@ -1111,22 +1141,22 @@ We finally move on to analyses of heteroscedastic extremes:
 \item Data is at half hourly resolution which means that for each of 503 households, there are 2352 measurements.
 \item At each half hour, the maximum from any household is taken. In this way we get a single time series, as in \cite{einmahl16}, which has length 2352.
 \item Since we chose the global threshold to be roughly 5.9 kWh, we choose a $k$ for this data so that $X_{N-k,N} \approx 5.9$ which gives us $k=353$ however we end up using $k=400$ due to rounding up as before. 
-\item As a initial step into kernel estimation, the scedasis was estimated using both the Biweight kernel (suggested in \cite{einmahl16}) and the popular Epanechnikov kernel.
+\item As a initial step into kernel estimation, the scedasis was estimated using both the Biweight kernel (suggested in \cite{einmahl16}).
 \item The resulting image is given in figure \ref{fig:mysced_hh_max}.
 \end{enumerate}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{hh_max_sced_pres.pdf}
-\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$.}
+\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
 \end{figure}
 
-Both estimations of the scedasis function (\ref{fig:mysced_hh_max}) are reasonably consistent with each other except perhaps the middle peaks; the biweight kernel yields 5 peaks whereas the Epanechnikov kernel yields 4. For the most part peaks occur roughly at the same time and as do the troughs. We can delve further and ask when each of the peaks occur to see if there are any patterns. The first peak occurs roughly around day numbered 597 which we know to be a Friday. This is encouraging because we know already that collectively customers are using more on weekends that weekdays (\ref{fig:sums}). The other peaks found by the biweight kernel also follow the same pattern: the second peaks occurs around day numbered 605 (Saturday), the third occurs between days numbered 617 (Thursday) and 621 (Monday), the fourth between 625 (Friday) and 629 (Tuesday) and the last peak between 633 (Saturday) and 637 (Wednesday). The last two in these cases are admitted closer to their lower ranges than the higher ranges which confirms that it is not just overall high usage that occurs on weekends but individual peaks are also more likely to occur on weekdays. The Epanechnikov kernel is adheres to the above discussion almost entirely except for its third peak which falls between days numbered 621 (Monday) and 625 (Friday). This is not in keeping with what we expect and the reason for why this is the case may become clearer when we delve in kernel estimation.
-Also it is notable that although we observe peaks on weekends, we don't a peak at every weekend. Having said that, it is encouraging that there are more peaks later in the time series as we did see an increase in usage towards the end of the weekly total demand.
+%Both estimations of the scedasis function (\ref{fig:mysced_hh_max}) are reasonably consistent with each other except perhaps the middle peaks; the biweight kernel yields 5 peaks whereas the Epanechnikov kernel yields 4. For the most part peaks occur roughly at the same time and as do the troughs. 
+The scedasis of the half hourly maxima has 5 main peaks. It is valuable to see if there are any patterns about when this happens. The first peak occurs roughly around day numbered 597 which is a Friday. This is encouraging because we know already that collectively customers are using more on weekends that weekdays (\ref{fig:sums}). The other peaks also follow the same pattern: the second peaks occurs around day numbered 605 (Saturday), the third occurs between days numbered 617 (Thursday) and 621 (Monday), the fourth between 625 (Friday) and 629 (Tuesday) and the last peak between 633 (Saturday) and 637 (Wednesday). The last two in these cases are admitted closer to their lower ranges than the higher ranges which confirms that it is not just overall high usage that occurs on weekends but individual peaks are also more likely to occur on weekdays. Also it is notable that although we observe peaks on weekends, we don't have a peak at every weekend. Having said that, it is encouraging that there are more peaks later in the time series as we did see an increase in usage towards the end of the weekly total demand.
 
-Let's come back for a moment to the concept of scedasticity. Scedasis is not necessarily a measure of where the most extreme event is likely to occur rather an indication of where extremes are more likely to be frequent and it's a somewhat relative scale in that we may have two customers. For one of them the scedasis function at one point in time may be lower than the other customer at the same point. This does not mean that the second customer is using more energy but that they are using more than they are normally (we'll see this later).
+Let's come back for a moment to the concept of scedasticity. Scedasis is not necessarily a measure of where the most extreme event is likely to occur or has occured rather an indication of where extremes are more frequent and it's a somewhat relative scale. This means that we may have two households where household 1 has a larger scedasis at a certain time and household 2 has a smaller scedasis but the value of demand at the time may be larger for household 2. This is because household 1 is simply using more energy than is ``normal'' at that point in time where as the load from household 2 is relatively (to itself) is not as extreme (we'll see this later).
 
-Coming back to figure \ref{fig:mysced_hh_max}, we can look at a moving average of the half hourly maxima and for large windows, say 100 or 200 half hours, we notice a somewhat similar pattern. \todo{include image later} All the peaks occur at roughly the same time and roughly in similar magnitudes. While this may a rudimentary comparison it helps us to better see relative risk or excess that the scedasis tells us about.
+Coming back to figure \ref{fig:mysced_hh_max}, we can look at a moving average of the half hourly maxima and for large windows, say 100 or 200 half hours, we notice a somewhat similar pattern. \todo{include image later} All the peaks occur at roughly the same time and roughly in similar magnitudes. While this may a rudimentary comparison it helps to better conceptualise the relative risk or excess that the scedasis function describes.
 
 %For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}. \todo{needs interpretation/ discussion}
 
@@ -1136,12 +1166,12 @@ Coming back to figure \ref{fig:mysced_hh_max}, we can look at a moving average o
 %\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.}
 %\end{figure}
 
-We can continue and consider analogies for the daily losses considered in \cite{einmahl16}, For example, the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household which can be aggregated again in some way to get one time-series. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
+We can continue and consider analogies for the daily losses considered in \cite{einmahl16}. For example, the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household which can be aggregated again in some way to get one time-series. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
 
 Before scedasis function is estimated for various positive differences, it is useful to review what aggregating statistics have been used. The following were thought to be relevant either from an electric load perspective or an extremes perspective: \begin{enumerate*}[label=\roman*)] \item maximum, \item mean, and \item sum. \end{enumerate*} Using these, 4 different positive differences data sets were created in the following way:
 \begin{enumerate}
 \item The data, which contains measurements at half hourly resolution for 503 customers, was grouped by day.
-\item Three groupings, using mean, max or sum, were made meaning that for each house the mean, maximum or total electric load was recorded for each day.
+\item For each house the mean, maximum or total electric load was recorded for each day.
 \item Then to get one time series as before, a maximum or a sum over all households were recorded.
 \item Thus 4 positive differences were recorded. The naming that is present in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``max of Daily mean'' indicates the for for each household, the average load was recorded for each day and then the maximum  over all households is recorded where ``max of daily max'' indicates a maximum over all households is acquired from daily maxima.
 \item What these look like in terms of measurements is shown in figure \ref{fig:pos_diff}.
@@ -1150,16 +1180,58 @@ Before scedasis function is estimated for various positive differences, it is us
 
 \begin{figure}
 \centering
-\includegraphics[scale=1]{pos_diffs.pdf}
+\includegraphics[scale=0.55]{pos_diffs.pdf}
 \caption{\label{fig:pos_diff} Profiles of various positive differences.}
 \end{figure}
 
 \begin{figure}
 \includegraphics[scale=0.6]{pos_diff_sced.pdf}
-\caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=3$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.}
+\caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.}
 \end{figure}
 
-As we did above, we can look at where the peaks occur for positive differences. Since the time resolution is courser for these, we can pick out more accurately the day of the peak. Thus looking at ``Max of Daily Mean'' in figure \ref{fig:pos_diff_sced}, we can see that the two peaks occur on days numbered 598 (Saturday) and 625 (Friday). For ``Max of Daily Max'', the peaks occur around days numbered 605 (Satuday) and 633 (Friday). Likewise peaks of ``Total of Daily Total'' are both first on a Saturday and then on a Friday whereas both peaks of ``Max of Daily Total'' occurs on a Friday. Recall how positive differences are defined (any difference between subsequent days which are negative are set to zero), thus the scedasis function is not showing relative high usage but relative high increase with respect to the previous day. Thus it makes sense that more often than not, that we have high scedasis values on Fridays and Saturdays since we see the jump in cumulative behaviour from Fridays to Saturdays as the largest (fig. \ref{fig:sums}).
+As we did above, we can look at where the peaks occur for positive differences. Since the time resolution is courser for these, we can pick out more accurately the day of the peak. There are seven peaks for most of positive differences. It's only the scedasis of the ``Max of Daily Max'' that has 5 peaks and maybe another point of inflexion. For those that have 7 peaks, the $4^{\text{th}}$ and $5^{\text{th}}$ peaks are very close and could arguably be part of the same. First let's look at when each of the peaks occurs (table \ref{tab:pos_diff_sced}). Table \ref{tab:pos_diff_scedd} related the day numbering to the day of the week. Clearly some of these occur in the middle of the week but most occur over weekends and there is not a clear pattern. Given that cumulatively Saturdays and Sundays tend to be most intensive week and Thursdays and Fridays have the least usage thus we would expect a lot of positive differences to peak on Saturday but this would only be the case if we were considering averages. When we consider daily totals, a lot of the peaks do occur on the Saturdays as expected or at least on the weekend but some occur on weekdays too and indiscriminately so. This is because extreme behaviour need not follow peak behaviour and also individual peak behaviour need not follow cumulative peak behaviour. ``Max of Daily Max'' follows individual extreme behaviour as does ``Max of Daily Total''. In contrast the ``Total of Daily Total'' picks out collective peak behaviour along with ``Total of Daily Max''.
+
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & Total of Daily Total & Max of Daily Max & Max of Daily Total & Total of Daily Total \\
+ \hline
+1 & 595 & 596-597 & 594-595 & 595-596 \\
+2 & 605 & 606 & 603-604 & 605-606 \\
+3 & 612 & 614 & 612-614 & 611-612 \\ 
+4 & 622 & & 617-619 & 622 \\
+5 & 624 & & 624-625 & 624 \\
+6 & 634 & 630 & 633-635 & 633-635 \\
+7 & 639& 639-641 & 640 & 638 - 640 \\
+\hline
+\end{tabular}
+\caption{Peaks in the estimated scedasis functions of various positive difference.}
+\label{tab:pos_diff_sced}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & Total of Daily Total & Max of Daily Max & Max of Daily Total & Total of Daily Total \\
+ \hline
+1 & Wednesday & Thursday - Friday & Tuesday-Wednesday & Wednesday-Thursday \\
+2 & Saturday & Sunday & Thursday-Friday & Saturday - Sunday \\
+3 & Saturday & Monday & Saturday-Monday & Friday-Saturday \\ 
+4 & Tuesday & & Thursday-Saturday & Tuesday \\
+5 & Thursday & & Thursday-Friday & Thursday \\
+6 & Saturday & Wednesday & Friday-Sunday & Friday-Sunday \\
+7 & Friday & Friday-Sunday & Saturday & Thursday-Saturday \\
+\hline
+\end{tabular}
+\caption{Day of the week of the peaks of estimated scedasis functions for various positive difference.}
+\label{tab:pos_diff_scedd}
+\end{table}
+
+
+Thus looking at ``Max of Daily Mean'' in figure \ref{fig:pos_diff_sced}, we can see that the two peaks occur on days numbered 598 (Saturday) and 625 (Friday). For ``Max of Daily Max'', the peaks occur around days numbered 605 (Satuday) and 633 (Friday). Likewise peaks of ``Total of Daily Total'' are both first on a Saturday and then on a Friday whereas both peaks of ``Max of Daily Total'' occurs on a Friday. Recall how positive differences are defined (any difference between subsequent days which are negative are set to zero), thus the scedasis function is not showing relative high usage but relative high increase with respect to the previous day. Thus it makes sense that more often than not, that we have high scedasis values on Fridays and Saturdays since we see the jump in cumulative behaviour from Fridays to Saturdays as the largest (fig. \ref{fig:sums}).
 
 Another interesting feature to notice in figure \ref{fig:pos_diff_sced} is the difference in profile, specifically when the peaks occur, between the ``Max of Daily Max'' and the ``Max of Daily Total''. We will repeat this analyses for the 22 weeks (fig. \ref{fig:pos_diff_sced_22}) and notice a similar pattern which is that the peaks of daily totals occur before the peaks of daily maxima. At this point it is good to recall that ``Max of Daily Max'' picks up individual extremes whereas ``Max of Daily Total'' picks up extremes of daily totals. While we cannot say why it's after we can say that having individual extremes points don't add much burden on cumulative extreme behaviour.
 \todo[inline]{I was going to say here that it was that the shift indicates some individuals continue high usage after overall peak periods but this is in fact not what is shown since 1) here the resolution is daily and not half hourly as before and 2) because it is max of daily max and max of daily total instead of max of Daily max and total of Daily max. If we observed the same behaviour at resolutions of half hour then we might be able to say that it due some individual continuing in their unusually high usage after overall peak usage times.}
@@ -1261,7 +1333,7 @@ Thus, the scedasis is now modified as follows. Suppose we have $m$ household whi
 
 \begin{align} \label{eq:sced_prop}
 \begin{split}
-\hat{c}(s_j) =  \frac{k_j}{k} =& \quad \frac{\# \text{exceedances at } \frac{j}{n}}{k} \\
+\hat{p}(s_j) =  \frac{k_j}{k} =& \quad \frac{\# \text{exceedances at } \frac{j}{n}}{k} \\
 = & \quad \frac{\sum_{i=1}^m \mathbb{1}_{\{X_i(s_j) > X_{N-k,N}\}}}{k}\\
 \end{split}
 \end{align}
