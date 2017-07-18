@@ -1148,7 +1148,7 @@ We finally move on to analyses of heteroscedastic extremes:
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{hh_max_sced_pres.pdf}
-\caption{\label{fig:mysced_hh_max} $\hat{c}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
+\caption{\label{fig:mysced_hh_max} $\hat{p}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
 \end{figure}
 
 %Both estimations of the scedasis function (\ref{fig:mysced_hh_max}) are reasonably consistent with each other except perhaps the middle peaks; the biweight kernel yields 5 peaks whereas the Epanechnikov kernel yields 4. For the most part peaks occur roughly at the same time and as do the troughs. 
@@ -1189,7 +1189,7 @@ Before scedasis function is estimated for various positive differences, it is us
 \caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.}
 \end{figure}
 
-As we did above, we can look at where the peaks occur for positive differences. Since the time resolution is courser for these, we can pick out more accurately the day of the peak. There are seven peaks for most of positive differences. It's only the scedasis of the ``Max of Daily Max'' that has 5 peaks and maybe another point of inflexion. For those that have 7 peaks, the $4^{\text{th}}$ and $5^{\text{th}}$ peaks are very close and could arguably be part of the same. First let's look at when each of the peaks occurs (table \ref{tab:pos_diff_sced}). Table \ref{tab:pos_diff_scedd} related the day numbering to the day of the week. Clearly some of these occur in the middle of the week but most occur over weekends and there is not a clear pattern. Given that cumulatively Saturdays and Sundays tend to be most intensive week and Thursdays and Fridays have the least usage thus we would expect a lot of positive differences to peak on Saturday but this would only be the case if we were considering averages. When we consider daily totals, a lot of the peaks do occur on the Saturdays as expected or at least on the weekend but some occur on weekdays too and indiscriminately so. This is because extreme behaviour need not follow peak behaviour and also individual peak behaviour need not follow cumulative peak behaviour. ``Max of Daily Max'' follows individual extreme behaviour as does ``Max of Daily Total''. In contrast the ``Total of Daily Total'' picks out collective peak behaviour along with ``Total of Daily Max''.
+As we did above, we can look at where the peaks occur for positive differences. There are seven peaks for most of positive differences. It's only the scedasis of the ``Max of Daily Max'' that has 5 peaks and maybe another point of inflexion. For those that have 7 peaks, the $4^{\text{th}}$ and $5^{\text{th}}$ peaks are very close and could arguably be part of the same. First let's look at when each of the peaks occurs (table \ref{tab:pos_diff_sced}). Table \ref{tab:pos_diff_scedd} related the day numbering to the day of the week. Clearly some of these occur in the middle of the week but most occur over weekends and there is not a clear pattern. Given that cumulatively Saturdays and Sundays tend to be most intensive week and Thursdays and Fridays have the least usage (fig. \ref{fig:sums}) thus we would expect a lot of positive differences to peak on Saturday but this would only be strictly true if we were considering general behaviour, not necessarily peak behaviour. When we consider daily totals, a lot of the peaks do occur on the Saturdays as expected or at least on the weekend but some occur on weekdays too and indiscriminately so. This is because extreme behaviour need not follow average/general behaviour and also individual peak behaviour need not follow cumulative peak behaviour.  For example, ``Max of Daily Max'' follows individual extreme behaviour as does ``Max of Daily Total''. In contrast the ``Total of Daily Total'' picks out collective peak behaviour along with ``Total of Daily Max''. Most of the peaks of ``Max of Daily Max'' occur directly after the corresponding peaks in ``Total of Daily Total'' showing how the cumulative peak can differ from the individual peak. Qualitatively speaking it also shows that the peak individual load, in this case transformed load, carries on after the peak cumulative load but does not contribute to it. This makes sense; it's quite common that individuals use a lot of energy but outside of peak hours and unless enough households are also doing the same, it is of no concern.
 
 
 \begin{table}
@@ -1198,13 +1198,13 @@ As we did above, we can look at where the peaks occur for positive differences. 
 \hline
  & Total of Daily Total & Max of Daily Max & Max of Daily Total & Total of Daily Total \\
  \hline
-1 & 595 & 596-597 & 594-595 & 595-596 \\
-2 & 605 & 606 & 603-604 & 605-606 \\
-3 & 612 & 614 & 612-614 & 611-612 \\ 
-4 & 622 & & 617-619 & 622 \\
-5 & 624 & & 624-625 & 624 \\
-6 & 634 & 630 & 633-635 & 633-635 \\
-7 & 639& 639-641 & 640 & 638 - 640 \\
+1 & 595-596 & 596-597 & 594-595 & 595-596 \\
+2 & 604-605 & 606 & 603-604 & 605-606 \\
+3 & 611 & 614 & 612-614 & 611-612 \\ 
+4 & 620 & & 617-619 & 622 \\
+5 & 625 & & 624-625 & 624 \\
+6 & 633-635 & 630 & 633-635 & 633-635 \\
+7 & 639 & 639-641 & 640 & 638 - 640 \\
 \hline
 \end{tabular}
 \caption{Peaks in the estimated scedasis functions of various positive difference.}
@@ -1217,12 +1217,12 @@ As we did above, we can look at where the peaks occur for positive differences. 
 \hline
  & Total of Daily Total & Max of Daily Max & Max of Daily Total & Total of Daily Total \\
  \hline
-1 & Wednesday & Thursday - Friday & Tuesday-Wednesday & Wednesday-Thursday \\
-2 & Saturday & Sunday & Thursday-Friday & Saturday - Sunday \\
-3 & Saturday & Monday & Saturday-Monday & Friday-Saturday \\ 
-4 & Tuesday & & Thursday-Saturday & Tuesday \\
-5 & Thursday & & Thursday-Friday & Thursday \\
-6 & Saturday & Wednesday & Friday-Sunday & Friday-Sunday \\
+1 & Wednesday- Thursday & Thursday - Friday & Tuesday-Wednesday & Wednesday-Thursday \\
+2 & Friday-Saturday & Sunday & Thursday-Friday & Saturday - Sunday \\
+3 & Friday & Monday & Saturday-Monday & Friday-Saturday \\ 
+4 & Friday-Sunday & & Thursday-Saturday & Tuesday \\
+5 & Friday & & Thursday-Friday & Thursday \\
+6 & Friday-Sunday & Wednesday & Friday-Sunday & Friday-Sunday \\
 7 & Friday & Friday-Sunday & Saturday & Thursday-Saturday \\
 \hline
 \end{tabular}
@@ -1231,100 +1231,100 @@ As we did above, we can look at where the peaks occur for positive differences. 
 \end{table}
 
 
-Thus looking at ``Max of Daily Mean'' in figure \ref{fig:pos_diff_sced}, we can see that the two peaks occur on days numbered 598 (Saturday) and 625 (Friday). For ``Max of Daily Max'', the peaks occur around days numbered 605 (Satuday) and 633 (Friday). Likewise peaks of ``Total of Daily Total'' are both first on a Saturday and then on a Friday whereas both peaks of ``Max of Daily Total'' occurs on a Friday. Recall how positive differences are defined (any difference between subsequent days which are negative are set to zero), thus the scedasis function is not showing relative high usage but relative high increase with respect to the previous day. Thus it makes sense that more often than not, that we have high scedasis values on Fridays and Saturdays since we see the jump in cumulative behaviour from Fridays to Saturdays as the largest (fig. \ref{fig:sums}).
+%Thus looking at ``Max of Daily Mean'' in figure \ref{fig:pos_diff_sced}, we can see that the two peaks occur on days numbered 598 (Saturday) and 625 (Friday). For ``Max of Daily Max'', the peaks occur around days numbered 605 (Satuday) and 633 (Friday). Likewise peaks of ``Total of Daily Total'' are both first on a Saturday and then on a Friday whereas both peaks of ``Max of Daily Total'' occurs on a Friday. Recall how positive differences are defined (any difference between subsequent days which are negative are set to zero), thus the scedasis function is not showing relative high usage but relative high increase with respect to the previous day. Thus it makes sense that more often than not, that we have high scedasis values on Fridays and Saturdays since we see the jump in cumulative behaviour from Fridays to Saturdays as the largest (fig. \ref{fig:sums}).
 
-Another interesting feature to notice in figure \ref{fig:pos_diff_sced} is the difference in profile, specifically when the peaks occur, between the ``Max of Daily Max'' and the ``Max of Daily Total''. We will repeat this analyses for the 22 weeks (fig. \ref{fig:pos_diff_sced_22}) and notice a similar pattern which is that the peaks of daily totals occur before the peaks of daily maxima. At this point it is good to recall that ``Max of Daily Max'' picks up individual extremes whereas ``Max of Daily Total'' picks up extremes of daily totals. While we cannot say why it's after we can say that having individual extremes points don't add much burden on cumulative extreme behaviour.
-\todo[inline]{I was going to say here that it was that the shift indicates some individuals continue high usage after overall peak periods but this is in fact not what is shown since 1) here the resolution is daily and not half hourly as before and 2) because it is max of daily max and max of daily total instead of max of Daily max and total of Daily max. If we observed the same behaviour at resolutions of half hour then we might be able to say that it due some individual continuing in their unusually high usage after overall peak usage times.}
+%Another interesting feature to notice in figure \ref{fig:pos_diff_sced} is the difference in profile, specifically when the peaks occur, between the ``Max of Daily Max'' and the ``Max of Daily Total''. We will repeat this analyses for the 22 weeks (fig. \ref{fig:pos_diff_sced_22}) and notice a similar pattern which is that the peaks of daily totals occur before the peaks of daily maxima. At this point it is good to recall that ``Max of Daily Max'' picks up individual extremes whereas ``Max of Daily Total'' picks up extremes of daily totals. While we cannot say why it's after we can say that having individual extremes points don't add much burden on cumulative extreme behaviour.
+%\todo[inline]{I was going to say here that it was that the shift indicates some individuals continue high usage after overall peak periods but this is in fact not what is shown since 1) here the resolution is daily and not half hourly as before and 2) because it is max of daily max and max of daily total instead of max of Daily max and total of Daily max. If we observed the same behaviour at resolutions of half hour then we might be able to say that it due some individual continuing in their unusually high usage after overall peak usage times.}
 
 %While the estimation of the scedasis function is not exactly as in \cite{einmahl16} (see discussion below), we some very large peaks around day 7 - 8 and again 42-43 where extreme usage is more likely. This sort of makes sense, since days 7 and 42 occur on the weekend traditionally have higher load than weekdays.
 
 
-We also acquired value at close for each day of the SP500 index, which is the data set that was used by \cite{einmahl16}. We can check how correct the implementation of $\hat{c}$ is by using the subset of data that was considered in the study. The result for daily losses, which is defined as $|\frac{X_t - X_{t-1}}{X_{t-1}}|$, from $1^{st}$ of January 1988 to the $31^{st}$ of December 2007, inclusive, is shown in figure \ref{fig:SP500_sced_daily}.
+%We also acquired value at close for each day of the SP500 index, which is the data set that was used by \cite{einmahl16}. We can check how correct the implementation of $\hat{c}$ is by using the subset of data that was considered in the study. The result for daily losses, which is defined as $|\frac{X_t - X_{t-1}}{X_{t-1}}|$, from $1^{st}$ of January 1988 to the $31^{st}$ of December 2007, inclusive, is shown in figure \ref{fig:SP500_sced_daily}.
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{SP500_sced_qwe.pdf}
-\caption{\label{fig:SP500_sced_daily} Estimated scedasis functions, $\hat{c}$ for daily returns of the Standard and Poor 500 Index with $k=400$, $h=0.1$ and the biweight kernel.}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{SP500_sced_qwe.pdf}
+%\caption{\label{fig:SP500_sced_daily} Estimated scedasis functions, $\hat{c}$ for daily returns of the Standard and Poor 500 Index with $k=400$, $h=0.1$ and the biweight kernel.}
+%\end{figure}
 
-When comparing this to the estimated scedasis function shown in \cite{einmahl16}, it is clear the results are not exactly the same. While most of it is as expected, the diagram varies slightly at the boundaries. The sharp increase at the end of 2007 shown and discussed in \cite{einmahl16} is not recreated as much in figure \ref{fig:SP500_sced_daily}, whose magnitude at the end does not even exceed 1. Similarly, in the start of the image, the function does not start as high it did in the function shown in \cite{einmahl16}. The rest of the image also is not exactly the same, for example, around the 1992, the figure we get is much smoother than that shown in the paper. The general shape is there and in the future some boundary corrections will need to be made but for the moment our implementation is taken to be satisfactory.
+%When comparing this to the estimated scedasis function shown in \cite{einmahl16}, it is clear the results are not exactly the same. While most of it is as expected, the diagram varies slightly at the boundaries. The sharp increase at the end of 2007 shown and discussed in \cite{einmahl16} is not recreated as much in figure \ref{fig:SP500_sced_daily}, whose magnitude at the end does not even exceed 1. Similarly, in the start of the image, the function does not start as high it did in the function shown in \cite{einmahl16}. The rest of the image also is not exactly the same, for example, around the 1992, the figure we get is much smoother than that shown in the paper. The general shape is there and in the future some boundary corrections will need to be made but for the moment our implementation is taken to be satisfactory.
 
-Thus we may now proceed and explore other scedasis functions. Let's first look at where the above have just been extended to use the full data set (22 weeks). To clarify, figure \ref{fig:mysced_hh_max_22} shows the same scedasis as shown in figure \ref{fig:mysced_hh_max}, except that it is for 22 weeks. Recall that the image here is obtained by using the using the maximum over all the households at each half hour. As before two kernels were used. Both have peaks and troughs in similar enough places. Looking at the first and dominant peak, we can see that it occurs around day numbered 498 which is a Friday. This is too early in the data set to be included in figure \ref{fig:sums} however we can generate the same image again for the full 22 weeks (fig. \ref{fig:sums22}). From this image we can see that week profiles are similar in pattern (obviously not in magnitude) as they were in the 7 week case and we are expecting a Fridays to not have peak behaviour but be the point at which the shift towards cumulative peak behaviour happens. Looking at bottom right image of figure \ref{fig:sums22} also doesn't give us any reason why that Friday should be particularly high. \todo{check when actual max is}.
+%Thus we may now proceed and explore other scedasis functions. Let's first look at where the above have just been extended to use the full data set (22 weeks). To clarify, figure \ref{fig:mysced_hh_max_22} shows the same scedasis as shown in figure \ref{fig:mysced_hh_max}, except that it is for 22 weeks. Recall that the image here is obtained by using the using the maximum over all the households at each half hour. As before two kernels were used. Both have peaks and troughs in similar enough places. Looking at the first and dominant peak, we can see that it occurs around day numbered 498 which is a Friday. This is too early in the data set to be included in figure \ref{fig:sums} however we can generate the same image again for the full 22 weeks (fig. \ref{fig:sums22}). From this image we can see that week profiles are similar in pattern (obviously not in magnitude) as they were in the 7 week case and we are expecting a Fridays to not have peak behaviour but be the point at which the shift towards cumulative peak behaviour happens. Looking at bottom right image of figure \ref{fig:sums22} also doesn't give us any reason why that Friday should be particularly high. \todo{check when actual max is}.
+%
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{22_household_max_sced.pdf}
+%\caption{\label{fig:mysced_hh_max_22} Estimated scedasis function, $\hat{c}$ at half hourly resolution with maxima over each household for 22 weeks with $k=1200$, $h=0.1$ and biweight kernel.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.5]{sums22.pdf}
+%\caption{\label{fig:sums22} Cumulative electric load profiles at various time resolutions.}
+%\end{figure}
+%
+%Next we can do the same with the positive differences as in figure \ref{fig:pos_diff_sced}, the results of which are given in figure \ref{fig:pos_diff_sced_22}.
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{pos_diff_sced_22.pdf}
+%\caption{\label{fig:pos_diff_sced_22} Estimated scedasis function, $\hat{c}$ for various positive differences for 22 weeks with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%It is also beneficial to follow \cite{einmahl16} by using returns instead of actual measurements or positive differences. Returns are defined as $\frac{\left|X_t - X_{t-1}\right|}{X_{t-1}}$.  The following is presented for the 22 weeks of data. Since each day has 48 measurements $X_t$ is taken to be the maximum for the day and $X_{t-1}$ is taken to be the maximum of the day before.
+%
+%Thus the maximum return for each household was computed and an average was used to create one time series. Then the scedasis function was estimated and is shown in figure \ref{fig:avg_max_ret_sced}.
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{avg_max_ret_sced.pdf}
+%\caption{\label{fig:avg_max_ret_sced} Estimated scedasis function, $\hat{c}$ of the average of maximum returns with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%
+%However instead of aggregating the data into one time series, we can compute a scedasis function for each household and aggregate the scedasis function. proceeding again with maximum returns, we can have a look at 4 households individually (figs. \ref{fig:max_ret_sced_P1} - \ref{fig:max_ret_sced_P4}) and observe that the scedasis varies greatly from household to household. Thus we can average it or take some percentile (fig. \ref{fig:max_ret_sced_95_50}). However doing this looses much of the shape and thus information. It may be more beneficial to look at a box plot image (fig. \ref{fig:max_ret_sced_boxplot}) though this is quite messy and a better representation will have to be found.
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{max_ret_sced_P1.pdf}
+%\caption{\label{fig:max_ret_sced_P1} Estimated scedasis function, $\hat{c}$ for maximum returns of household 1 with $k=12$  (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{max_ret_sced_P2.pdf}
+%\caption{\label{fig:max_ret_sced_P2} Estimated scedasis function, $\hat{c}$ for maximum returns of household 2 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{max_ret_sced_P3.pdf}
+%\caption{\label{fig:max_ret_sced_P3} Estimated scedasis function, $\hat{c}$ for maximum returns of household 3 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{max_ret_sced_P4.pdf}
+%\caption{\label{fig:max_ret_sced_P4} Estimated scedasis function, $\hat{c}$ for maximum returns of household 4 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{max_ret_95_median.pdf}
+%\caption{\label{fig:max_ret_sced_95_50} Median (red) and $95^{th}$ percentile of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.6]{box_plot_max_ret_sced.pdf}
+%\caption{\label{fig:max_ret_sced_boxplot} Boxplot image of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
+%\end{figure}
 
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{22_household_max_sced.pdf}
-\caption{\label{fig:mysced_hh_max_22} Estimated scedasis function, $\hat{c}$ at half hourly resolution with maxima over each household for 22 weeks with $k=1200$, $h=0.1$ and biweight kernel.}
-\end{figure}
+Thus far we have used a density scedasis however because we have more than one time series (one for each household) it is possible also to look at the proportion of houses which exceed a global threshold which can relate more easily to probability than the density scedasis estimator. The density scedasis does not directly translate to a probability since locally it may be more than one but it still tells us how frequent the extremes are at a time $j/n$ however using the frequency of exceedances and proportion scedasis, it is more straightforward to interpret as a probability.
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{sums22.pdf}
-\caption{\label{fig:sums22} Cumulative electric load profiles at various time resolutions.}
-\end{figure}
-
-Next we can do the same with the positive differences as in figure \ref{fig:pos_diff_sced}, the results of which are given in figure \ref{fig:pos_diff_sced_22}.
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{pos_diff_sced_22.pdf}
-\caption{\label{fig:pos_diff_sced_22} Estimated scedasis function, $\hat{c}$ for various positive differences for 22 weeks with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-It is also beneficial to follow \cite{einmahl16} by using returns instead of actual measurements or positive differences. Returns are defined as $\frac{\left|X_t - X_{t-1}\right|}{X_{t-1}}$.  The following is presented for the 22 weeks of data. Since each day has 48 measurements $X_t$ is taken to be the maximum for the day and $X_{t-1}$ is taken to be the maximum of the day before.
-
-Thus the maximum return for each household was computed and an average was used to create one time series. Then the scedasis function was estimated and is shown in figure \ref{fig:avg_max_ret_sced}.
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{avg_max_ret_sced.pdf}
-\caption{\label{fig:avg_max_ret_sced} Estimated scedasis function, $\hat{c}$ of the average of maximum returns with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-
-However instead of aggregating the data into one time series, we can compute a scedasis function for each household and aggregate the scedasis function. proceeding again with maximum returns, we can have a look at 4 households individually (figs. \ref{fig:max_ret_sced_P1} - \ref{fig:max_ret_sced_P4}) and observe that the scedasis varies greatly from household to household. Thus we can average it or take some percentile (fig. \ref{fig:max_ret_sced_95_50}). However doing this looses much of the shape and thus information. It may be more beneficial to look at a box plot image (fig. \ref{fig:max_ret_sced_boxplot}) though this is quite messy and a better representation will have to be found.
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{max_ret_sced_P1.pdf}
-\caption{\label{fig:max_ret_sced_P1} Estimated scedasis function, $\hat{c}$ for maximum returns of household 1 with $k=12$  (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{max_ret_sced_P2.pdf}
-\caption{\label{fig:max_ret_sced_P2} Estimated scedasis function, $\hat{c}$ for maximum returns of household 2 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{max_ret_sced_P3.pdf}
-\caption{\label{fig:max_ret_sced_P3} Estimated scedasis function, $\hat{c}$ for maximum returns of household 3 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{max_ret_sced_P4.pdf}
-\caption{\label{fig:max_ret_sced_P4} Estimated scedasis function, $\hat{c}$ for maximum returns of household 4 with $k=12$ (rough scaling), $h=0.1$ and the biweight kernel.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{max_ret_95_median.pdf}
-\caption{\label{fig:max_ret_sced_95_50} Median (red) and $95^{th}$ percentile of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{box_plot_max_ret_sced.pdf}
-\caption{\label{fig:max_ret_sced_boxplot} Boxplot image of the estimated scedasis function, $\hat{c}$ for maximum returns ($k=12$ (rough scaling), $h=0.1$ and the biweight kernel).}
-\end{figure}
-
-
-Whether we are using one time series or all of them, we have used a density scedasis however because we have more than one time series (one for each house it is possible also to look at the proportion of houses which exceed a global threshold which can relate more easily to probability than the density scedasis estimator. The scedasis density does not directly translate to a probability since locally it may be more than one but it still tells us how likely it is for the random variable to be near time $j/n$ however using the frequency of exceedances, it is more straightforward to interpret as a probability.
-
-Thus, the scedasis is now modified as follows. Suppose we have $m$ household which are measured a $n$ time points thus we have $N= n \times m$ observations. The scedasis assumption is
+Thus, a crude estimation of the number of households which exceed a global threshold can be calculated and this can be thought of as a crude estimation of the scedasis function based on proportion. Suppose we have $m$ household which are measured a $n$ time points thus we have $N= n \times m$ observations. The scedasis assumption is
 
 \begin{equation*}
 \frac{\mathbb{P}(X_i(j)>x)}{1-F(x)} \quad  \displaystyle{ \mathop{\rightarrow}^{x \uparrow x*}} \quad c\left(\frac{j}{n}\right)
@@ -1338,12 +1338,12 @@ Thus, the scedasis is now modified as follows. Suppose we have $m$ household whi
 \end{split}
 \end{align}
 
-Implementing this in R for the 7 weeks of data at the half hourly time resolution (i.e. $n = 2353$), the frequency scedasis obtained is presented in figure \ref{fig:hh_sced_prop}.
+Implementing this in R for the 7 weeks of data at the half hourly time resolution (i.e. $n = 1185498$), the frequency scedasis obtained is presented in figure \ref{fig:hh_sced_prop}. Here the $k$ was chosen heuristically to use about 20\% of the data. Not the a line plot is no longer presented. This is to represent the discrete nature of $\hat{p}$.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.6]{hh_sced_prop.pdf}
-\caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks with $k=94832$ (rough scaling).}
+\includegraphics[scale=0.6]{hh_sced_prop_full.pdf}
+\caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks with $k=24000$.}
 \end{figure}
 
 We have yet to connect forecasts and forecast errors with scedasis functions so let's do this now. Picking the Adjusted Average (AA) forecast, the Same Day forecast and the linear regressions (LR) forecast, we can estimate the scedasis function of absolute errors (absolute value of difference between each forecast and observation for week 22). As before weeks 16 to 21 (inclusive) have been used to calculate the forecast for 503 customers for week 22. Thus we have $336 \times 503 = 169008$ measurements. For each error an mean excess plot (figs. \ref{fig:AA_err_me} - \ref{fig:LR_err_me}) has been created so we may choose an appropriate value of $k$. Looking at these images, an error of 5kWh was chosen as appropriately extreme error in each case. This threshold had 58, 46 and 48 exceedance for the AA, SD and LR errors, respectively. Thus our choice of $k$, by rounding up is 100. Intuitively we know this is a very high threshold to have since the median observation of electric load is around the 5 kWh however using 4kWh means then that $k=200$ which would no longer satisfy the second condition of equation \ref{eq:k_cond}. 
