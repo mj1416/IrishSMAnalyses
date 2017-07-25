@@ -1,0 +1,117 @@
+\documentclass[10pt, a4paper, oneside]{article}
+\usepackage[body={15.5cm, 24.0cm},left=2cm,right=2cm]{geometry}
+\usepackage[authoryear]{natbib}
+\usepackage{amsmath, amssymb}
+\usepackage{amsfonts}
+
+\usepackage[usenames]{color}
+\usepackage{setspace}
+\usepackage{pifont}                  % Line spacing
+\setstretch{1.0}
+\usepackage{hyperref}
+
+
+% ==================================
+% Begin of Commands Used in Document
+% ==================================
+
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{ex}[thm]{Example}
+
+
+\newcommand{\id} {\ensuremath{\displaystyle{\mathop {=} ^d}}}
+
+
+\newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\real}{\ensuremath{{\field{R}}}}
+\newcommand{\mc}[1]{{\ensuremath{\mathcal{#1}}}}
+
+\newcommand{\sumab}[2]{\ensuremath{\sum\limits_{#1}^{#2}}}
+\newcommand{\intab}[2]{\ensuremath{\int_{#1}^{#2}}}
+\newcommand{\intinf}[1]{\ensuremath{\int_{#1}^{\infty}}}
+\newcommand{\intunit}{\ensuremath{\int_{0}^{1}}}
+
+\newcommand{\arrowf}[1]{\ensuremath{\displaystyle {\mathop {\longrightarrow}_{#1 \rightarrow \infty}\,}}}
+\newcommand{\limit}[1]{\ensuremath{\displaystyle {\lim_{#1 \rightarrow{\infty}}}}}
+\newcommand{\suprem}[1]{\ensuremath{\displaystyle {\sup_{#1}}}}
+\newcommand{\minarg}[1]{\ensuremath{\displaystyle {\min_{#1}}}}
+\newcommand{\argmax}[1]{\ensuremath{\displaystyle {\arg\max_{#1}}}}
+\newcommand{\conv}[1]{\ensuremath{\, \displaystyle {\mathop {\longrightarrow}_{n \rightarrow \infty} ^{#1}}}\, }
+
+% ================================
+% End of Commands Used in Document
+% ================================
+
+
+\title{Text on extreme values framework}
+
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+
+
+
+
+
+
+%\keywords{***}
+
+
+%===========================MAIN TEXT==============================
+
+%==================================================================
+%========== Section EVT =================
+\section{Extreme value framework}
+Let $(X_1,X_2, \ldots, X_n)$ be a sample of i.i.d. copies of $X$ with distribution function $F$. We shall denote the sample maximum by $X_{n,n}$, that is, $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$, and we shall always be concerned with sample maxima. Corresponding results for minima are readily accessible by using the device $X_{1,n} = -\max(-X_1,-X_2, \ldots, -X_n)$.
+
+The celebrated Fisher and Tippet theorem or Extreme Value theorem (Fisher and Tippett, 1928), with prominent unifying contributions by Gnedenko (1943) and de Haan (1970), establishes the GEV distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
+\begin{equation}\label{EVTheo}
+	\limit{n} P \Bigl( \frac{X_{n,n}-b_n}{a_n} \leq x\Bigr)= \limit{n} F^n (a_n x + b_n) = G(x),
+\end{equation}
+for every continuity point of $G$, then $G(x)= G_{\gamma}(x)$ is given by
+\begin{equation}\label{GEVd}
+	G_{\gamma}(x)= \exp \{ -(1+ \gamma\, x)^{-1/\gamma}\}, \quad 1+\gamma\,x >0.
+\end{equation}
+We then say that $F$ is in the (max-)domain of attraction of $G_\gamma$,  for some extreme value index (EVI) $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. The parameter $\gamma \in \real$ is the so-called extreme value index.
+By taking the logarithm in both hand-sides of he extreme value condition \eqref{EVTheo} and using Taylor's expansion we have that
+\begin{equation*}
+-n \log\bigl( F(a_n x + b_n)\bigr)\approx n\bigl(1-F(a_n x + b_n) \bigr) \arrowf{n} (1+ \gamma\, x)^{-1/\gamma},	
+\end{equation*}
+as $n\rightarrow \infty$, for those $x$ such that $1+\gamma x>0$. As a preparation to the statistical approach to extreme values, the above resonates as follows. We are interested in extrapolating beyond the available sample, which entails that the mean number of observations above the deterministic threshold $u_n=a_x+b_n$ (large enough), given by $n\bigl(1-F(u_n) \bigr)$, must be near zero. In addition, the threshold $u_n$ must not to be so large in order to enable tail inference, that is,  we assume an intermediate sequence $k=k_n$ such that $n\bigl(1-F(u_n) \bigr)=k$,  with $k\rightarrow \infty$ and $k=o(n)$. The latter condition means that $k$ vanishes with increasing sample size $n$.
+
+The theory of regular variation (see e.g. Appendix B in de Haan and Ferreira, 2006), provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalized inverse of $1/(1-F)$, i.e.
+$
+U(t):=   F^{\leftarrow} \bigl( 1-1/t\bigr),$ for $t>1$.
+Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurable function $a(\cdot)$ such that the condition of \emph{extended regular variation}
+\begin{equation}\label{ERVU}
+	\limit{n}\,\frac{U\bigl(\frac{n}{k}t\bigr)-U\bigl(\frac{n}{k}\bigr)}{a\bigl(\frac{n}{k}\bigr)}= \frac{t^{\gamma}-1}{\gamma},
+\end{equation}
+holds for all $t>0$ [notation: $U\in ERV_{\gamma}$].
+The limit  in  \eqref{ERVU} coincides with the $U$-function of the Generalized Pareto (GP) distribution, with distribution function $1+\log G_\gamma$, which suggests the commonly known improved inference attached to the Peaks over Threshold (POT) method. In fact, the extreme value condition \eqref{ERVU}  on the tail quantile function $U$ is the usual assumption in semi-parametric inference for extreme outcomes. However, we will not pursue this direction any further. Instead, we will use the equivalent extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold. To this effect, define the $k$th block maxima as
+\begin{equation}\label{BM}
+		M_i = \max_{(i-1)m < j \leq im} X_j, \qquad i=1,2,\ldots, k, \; m=1,2,\ldots
+\end{equation}
+The above states that we are dividing the sample size $n$ into $k$ blocks of equal length (time) $m$. In order that the EVT holds within each block, the block length must be sufficiently large, i.e. one needs the requirement that $m$ is tending to infinity. Now, let $V$ be the generalized inverse of $-1/\log F$, i.e. $V\bigl(-1/\log(1-t)\bigr)= F^{\leftarrow}(1-t)$, for $t>0$. Then, $F\in \mc{D}(G_{\gamma})$ if and only if
+\begin{equation}\label{ERVV}
+	\limit{m} \frac{V(mt)-V(m)}{a_m}= \frac{t^{\gamma}-1}{\gamma},
+\end{equation}
+for all $t>0$. The extreme value condition \eqref{ERVV} is the main condition in the paper, eventually. Furthermore, by letting $x=x_m$ such that $x_m \rightarrow \infty$, as $m \rightarrow \infty$, in case $\gamma<0$, it is possible to devise a class of estimators for the right endpoint of $F$ belonging to some max-domain of attraction $\mc{D}(G_{\gamma})$. Namely, condition \eqref{ERVV} gives rise to the approximate equality $V(\infty) \approx V(m) - a_m/\gamma$, as $m\rightarrow \infty$,
+where $V(\infty) = \lim_{t \rightarrow \infty} V(t) = F^{\leftarrow}(1) = x^F$, the latter being the right endpoint of $F$ which can be viewed as the ultimate extreme quantile.
+
+The density of the parametric fit to the extreme observations in a block maxima framework is the GEV density which we denote by $g_{\gamma}$. The above may well be different to the true unknown density underlying the sampled data which we denote by $f$. The less stringent assumption we make is that the corresponding distribution function belongs to some max-domain of attraction of $G_\gamma$, provided a suitable linear normalization with constants $a_m>0$ and $b_m\in \real$. We typically estimate these constants $a_m$ and $b_m$ although in the parametric limiting distribution these are absorbed by the scale and location parameters $\sigma>0$ and $\mu \in \real$ which can be regarded as fixed. As a result, traditional maximum likelihood estimators are not accurate as the block size or the number of extreme observations is small as these strongly on blocks of reasonable length so that the extreme value theorem works. The MLq estimators offer several advantages compared to the ordinary ML estimation.
+
+\bibliographystyle{apalike}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliography{sample1}
+
+\end{document}
+
+

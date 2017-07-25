@@ -1,0 +1,157 @@
+\lhead{\emph{Introduction}}  % Set the left side page header to "Abbreviations"
+
+\chapter{Introduction}
+
+Electric load forecasts are extremely important for both industry and society as they inform various decision making processes. For example in the utility industry, electric load forecasts can be used to make decisions about energy trading, pricing and generation. At the national and community level, these forecasts can inform if and by how much the infrastructure should be upgraded.
+
+As communities and businesses move towards a low carbon future, the demand on the grid will evolve. On the one hand, technologies such as solar panels reduce the demand on the grid but on the other hand the increasing number of technologies and facilities that rely on electricity such as electric vehicles and charging stations for electric vehicles increase the demand, especially at the low voltage level (households and substations) and may make the load and demand unstable. 
+
+To understand and meet demands effectively, particularly as low carbon technologies (LCT) become more common, smart grids are being developed in many countries, including the United Kingdom. One of the features of smart grids is the availability of high resolution data obtained from smart meters. This data allows for faster and better analysis of load, identification of issues and control of electric networks. Evaluating how LCT and renewable energy sources interact with each other to change and impact the demand at household and substation level will allow energy distributors and policy makers to manage infrastructure development and conduct timely maintenance works.
+
+Rarely though inevitably, businesses and even households may experience power outages. To reduce the impact of these outages, households and businesses may consider investing in generators or other storage facilities. However these technologies are currently very expensive and rigorous analyses need to be made to quantify the risk of these events, especially since reducing the uncertainty in the risk of a power outage, particularly for businesses, by as little as 10\% is valuable.
+
+There is a growing body of literature on point load forecasts and some on probabilistic load forecasts (see section \ref{subsec:litrev}) which use smart meter data. However, what has been largely ignored in the literature is analyses of the ``extreme values''  in electric demand. The bridging of this gap is the overarching aim of this project. We are particularly interested in the short term load forecasting (STLF) at the household level. Thus, this work will focus on producing more accurate forecasts across different demand profiles. To do this, data driven approaches will be combined with Extreme Value Theory (see section \ref{subsec:EVT}) to estimate the upper limits of electric demand. Further, we also want to produce confidence bounds on these limits which can result in financial savings for businesses and help policy makers in decisions regarding infrastructure development.
+
+\section{Electric Load Forecasting} \label{subsec:litrev}
+
+As mentioned above, most studies in electric load forecasting in the past century have focused on point load forecasting. However, in the most recent decade researchers have delved into providing probabilistic load forecasts (PLF) as business needs and electricity demand and generation evolve. Forecast horizons for electric load vary from minutes and hours to years and decades. Each forecast horizon has its own application, for example forecasts for up to a day ahead are generated for the purpose of responding to changing demands whereas daily to yearly forecasts may be produced for energy trading and yearly to decadal forecasts to allow for system planning and informing energy policy (figure \ref{fig:elecfor}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{elecfor.png}
+\caption{Various classifications for electric load forecasts and their applications. The abbreviations are Short Term Load Forecasting (STLF), Very Short Term Load Forecasting (VSTLF), Medium Term Load Forecasting (MTLF) and Long Term Load Forecasting (LTLF). Source: \citet{hong16}}
+\label{fig:elecfor} 
+\end{figure}
+
+The decision making process in the utility industry relies mostly on expected values so it is no surprise that point load forecasts have been the dominant tool in the past. However, market competition and requirements to integrate renewable technology mean that PLF are increasingly used for system planning and operations. PLF can come in the form of quantiles, intervals and density functions as noted by \citet{hong16} who provided an extensive review of various techniques and methodologies that are used in generating PLF. 
+
+\citet{hong16} referred to techniques as a group of models that fall in the same family. Some of the techniques that were reviewed from the literature included multiple linear regression (MLR), semi-parametric additive models, exponential smoothing models and autoregressive moving average models. To discuss some of these statistical models further, take MLR as an example. MLR uses the load as the dependent variable whereas weather and calendar variables are the independent variables. The algorithm used by \citet{char14} is one example where a MLR technique, specifically a refined semi-parametric model, was used to forecast electricity demand for a specific region in the United States. The initial code was unrefined and depended only on temperature. The relationship between electricity demand and temperature was found, to a good enough approximation, to be quadratic signifying the use heating in cooler weather and the use of air conditioning in warmer weather. Additional refinements were added one at a time and their impact on the overall performance of the algorithm and the rationale for why these refinements were introduced were provided. The refinements included:
+\begin{enumerate}
+\item Combining data from multiple weather stations.
+\item Removing outliers.
+\item Treating some national holidays as special cases.
+\end{enumerate}
+
+In contrast to MLR, exponential smoothing models assign weights to past observations that decrease exponentially over time. While these techniques have been quite successful, they have been less readily adopted as a good candidate for real-world short term load forecasting (STLF) \citep{hong16}. These techniques offer the advantage of requiring less data as these models do not usually rely on weather and calendar variables but consequently suffer in cases where the weather is a significant is a significant contributor e.g. extremely cold, hot or particularly volatile conditions.
+
+\citet{hong16} went further still and presented some common methodologies, which refer to "general solution framework" that can be implemented with multiple techniques. One methodology that is particularly relevant to this project is the similar day (SD) method. The idea is to find a day(s) in the historical data that is similar to the one being forecasted. For example, a normal weekday such as Thursday may be forecasted as the average of all past Thursdays. \citet{hong16} noted that this method is often used with clustering techniques which combine similar days or similar segments of a day to produce the forecast.
+
+\citet{char14} is yet again a good example of one clustering technique. The data were clustered into various zones depending on geography, into two seasons, into 24 hours of the day and either weekday or weekend. Thus, the authors treat load to be categorically different for a weekday and weekend and take geography and seasonality to be impactful. This is an example when data are clustered before the forecast is produced. In contrast \cite{dan14} uses the forecast, specifically an error metric to cluster roughly 600 households into three categories, one where the forecasting skill is poor, the second where the skill is good after being adjusted and the third where it is good overall. The forecasting skill here refers to how good the forecast is in comparison to the observed load.
+x
+
+Since some forecasting techniques and methods have been discussed it is also valuable to discuss how to assess the goodness of a forecast. Some conventional error metrics for point load forecasts, which have also been used for PLF, are mean absolute percentage error (MAPE) and mean absolute error \citep{hong16}. These error metric are reasonably simple and transparent and thus quite favourable. However, as noted by \cite{dan14}, for STLF a peaky forecast is more desirable and realistic than a flat forecast but error metrics such as mean square errors and MAPE unjustly penalise peaky forecasts and can often quantify the flat forecast to be better. This is because the peaky forecast is penalised twice: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs. A flat-forecast does not incur this double penalty. \citet{dan14}, therefore, developed an adjusted error metric that penalises less so a forecast which predicts a peak that is slightly shifted than a forecast where the peak is not predicted at all. The authors also test out three different forecasting methods:
+\begin{enumerate}
+\item flat forecast: a horizontal line determined from an average of past data.
+\item Last week (LW) forecast: The usage on the same day of the week, e.g. Forecasts for the coming Thursday is predicted to be the same as the Thursday from previous week.
+\item Averaged Adjustment (AA) Forecast: takes into account both a weighted historic average and a baseline usage.
+\end{enumerate}
+
+Using both the new error measure, relative to the typical error measure, as well as the mean displacements of peaks, \cite{dan14} show that the flat forecast is not a good forecasting method for this application and that in general the best technique out of the three is AA with LW performing relatively well too.
+
+We've discussed some common methods to produce forecast however one case that would be interesting to look at particularly in conjunction with regression would be those algorithms which are set in a Bayesian framework. For example,  \citet{douglas98} used Bayesian estimation together with a dynamic linear model (DLM) to create short-term forecasts for Oklahoma City. This study was ultimately interested in quantifying the impact of imperfect weather data on forecasts. This however is not what is relevant (at this point) for this project instead it is the use of Bayesian estimation (described below). The method proposed requires historical load data (acquired in hourly resolution), historical temperature data and temperature forecast data. The temperature data, acquired through the National Weather Service, traditionally only contains the average, highest, and lowest temperature for any given day. Thus, while two models were proposed the hourly model, which requires hourly temperature inputs, was not used. The model that was used was called the daily peak model in which ``peak load is forecasted, and then a typical load profile is linearly scaled to generate the required load profile'' \citep{douglas98}. It was noted in the study that, for days when drastic weather changes or anomalies are not occurring, a ``typical'' day is a reasonable representative of the load for that day and thus can be used to forecast the load reasonably accurately. This model uses peak temperature, average temperature, and temperature at hour 24 from the previous day and peak and average temperature forecast for the relevant days as the explanatory variables in a linear regression model. The Bayesian estimation procedure is described below.
+\begin{enumerate}
+\item Let us set up the problem first. A state space is given in equation \ref{eq:statespace}, where $\theta_t$ is the state vector which is time-dependent with dimensions $(k \times 1)$, $G$ is the state evolution matrix with dimension $(k \times k)$, $Y_t$ is the scalar output, $F_t$ is the regression vector with dimensions $(k \times 1)$, $V_t$ is the scalar variance and $W_t$ is the covariance matrix with dimensions $(k \times k)$.) $\mathscr{N}(a,b)$ denotes the normal distribution with mean $a$ and variance $b$ and $(\cdot)^T$ denotes the transpose.
+\begin{align} \label{eq:statespace}
+\begin{split}
+\theta_t &= G\theta_{t-1} + \omega_t, \quad \omega \sim \mathscr{N}(0,W_t) \\
+Y_t &= F_t\theta_{t-1} + \nu_t, \quad \nu \sim \mathscr{N}(0,V_t)
+\end{split}
+\end{align}
+%
+\item The \textit{a posteriori} distribution for time $t-1$ ($t$ is in days) and \textit{a priori} distribution for time t is shown in equation \ref{eq:pos_pri}. In these set of equations, $D_{t-1}$ is all the information that is available at time $t-1$, $C_{t-1}$ is the posterior convariance matrix, $m_{t-1}$ is the posterior state mean vector. $a_t$ and $R_t$ are the prior mean and covariance at time $t$. $n_{t-1}$ is the degrees of freedom of the student-t test, which is denoted by $T$ and $S_t$ is an estimate of the scalar output variance at time t.
+%
+\begin{align} \label{eq:pos_pri}
+\begin{split}
+(\theta_{t-1}|D_{t-1}) &\sim T_{n_{t-1}}(m_{t-1},C_{t-1}) \\
+(\theta_{t-1}| D_t) &\sim T_{n_{t-1}}(a_t,R_t)
+\end{split}
+\end{align}
+%
+where
+%
+\begin{equation*}
+a_t = Gm_{t-1}, \qquad R_t = \delta^{-1} \cdot GC_{t-1}G^T
+\end{equation*}
+%
+\item The forecast, for a day ahead, distribution then follows equation \ref{eq:bayforecast}. In addition to those variables defined above, $f_t$ and $Q_t$ are the mean and variance of the scalar forecast distribution.
+%
+\begin{align} \label{eq:bayforecast}
+\begin{split}
+(Y_t | D_{t-1}) \sim T_{n_{t-1}}(f_t,Q_t) \\
+\end{split}
+\end{align}
+%
+where
+%
+\begin{equation*}
+f_t = F^T_t a_t, \qquad Q_t = F_t R_t F_t^T + S_t
+\end{equation*}
+%
+\item Finally, the $a$ $posteriori$ distribution for time $t$ is calculated in accordance with equation \ref{eq:pos_update}, where $m_t$ and $C_t$ now are the posterior mean and covariance. The adaptive factor, $A_t$, in practice is often replaced by a scalar, namely $\delta$ which is then called a discount factor. A high $\delta$ is indicative of the relatively high importance of past load. The best value of $\delta$ was found to be 0.93 \citep{douglas98}.
+%
+\begin{align} \label{eq:pos_update}
+(\theta_t|D_t) \sim N(m_t,C_t)
+\end{align}
+%
+where
+%
+\begin{align*}
+\begin{split}
+m_t &= a_t + A_te_,t \\
+C_t &= U_t R_t U_t^T + A_t S_t A_t^T, \\
+U_t &= (I - A_tF_t^T), \\ 
+e_t &= Y_t - f_t \\
+A_t &= R_tF_tQ_t^{-1}, \\ 
+n_t &= n_{t-1} + 1\\
+d_t &= d_{t-1} + e^2S_tQ_t^{-1}
+\end{split}
+\end{align*}
+%
+\item Where the forecast is required for the $k^{\text{th}}$ day ahead, then the forecast distribution is given as shown in equation \ref{eq:kbayforecast} where all the variables are as before except $Y_{t+k}$ is the $k^{t\text{th}}$ step ahead forecast distribution.
+%
+\begin{align} \label{eq:kbayforecast}
+(Y_{t+k}|D_t) \sim T_{n_{t-1}}(f_t(k),Q_t(k))
+\end{align}
+%
+where
+%
+\begin{align*}
+\begin{split}
+f_t(k) &= F_t^T,a_t(k) \\
+Q_t(k) &= F_t R_t(k) F_t^T + S_t \\
+a_t(k) &= Gm_t(k-1) \\
+R_t(k) &= \delta^{-1}\cdot GR_t(k-1)G^T
+\end{split}
+\end{align*}
+%
+\end{enumerate}
+
+To generate a daily forecast, a set of 2 linear equations (eq. \ref{eq:simul_bay}) are solved. These equation depend on the $\hat{l}(p)$, the peak load estimate at hour $p$ with $p=0$ corresponding to the load estimate at hour 24 of the previous day, and on $l_t(p)$ being the typical day peak load at hour $p$ again with $p=0$ corresponding to hour 24 of the previous day.
+
+\begin{align} \label{eq:simul_bay}
+\begin{split}
+\hat{l}(p) &= a + bl_t(p) \\
+\hat{l}(0) &= a + bl_t(0)
+\end{split}
+\end{align}
+
+\noindent The solution then looks like equation \ref{eq:simul_bay_sol}.
+
+\begin{align} \label{eq:simul_bay_sol}
+\begin{split}
+a &= \frac{l_t(p)\hat{l}(0) - l_t(0)\hat{l}(p)}{l_t(p) - l_t(0)} \\
+b &= \frac{\hat{l}(p) - \hat{l}(0)}{l_t(p) - l_t(0)}
+\end{split}
+\end{align}
+
+\noindent Thus the typical day can then be (linearly) scaled according to equation \ref{eq:scale}.
+
+\begin{equation} \label{eq:scale}
+\hat{l}(i) = a + bl_t(i), \qquad \forall i= 1,...,24
+\end{equation}
+
+\cite{douglas98} does not, however, offer alternative strategies to deal with days when there are drastic weather changes or anomalies. Because the process is set up so that the load for the typical day passes both the peak load forecast and the load at hour 24 of the previous day, a typical load for the hour 24 of the previous day is required and subsequently a typical week must be generated to support the execution of this procedure. The authors do not quantify ``typical'' however they do say that it is generated from the historical load data. Thus it is reasonable to take ``typical'' to be the mean or median.
+
+\section{Objectives} \label{subsec:objectives}
+
+There are two main objectives in this project. The first objective is to create benchmark point load forecasts and error measures. This will be done by implementing some of the forecasts discussed before and validating them with existing error measures. The second objective is to set up the extreme value framework for electric load. In order to do this, we will conduct some preliminary exploratory statistical tools to understand the nature of ``extreme'' points. Further to this we will also estimate the extreme value index (EVI) and the right endpoint using the Block Maxima (BM) method. Finally we will use the Peak Over Threshold (POT) method to estimate the tail relative risk in the case where the data are not identically distributed i.e for heteroscedastic extreme under the assumption that the EVI remains constant in time. The results of this study will answer some very practical industry-based questions as well as being strongly grounded in the theoretical framework.

@@ -1,0 +1,162 @@
+\lhead{\emph{Extreme Value Statisitcs}}  % Set the left side page header to "Abbreviations"
+
+\chapter{Extreme Value Statistics} 
+As \cite{hong16} noted, the utility industry cares about expected values of electric load. At the household or substation level, the stress comes from both the collective use from several households and from collections of households requiring (unusually) large amounts of electricity. The statistics of these ``extremes'' is the topic of this section.
+
+While classical large sample theory allows the use of the empirical distribution to make some inferences about what happens in the tail behaviour, it fails in cases where the second moment and even the first moment (the variance and mean, respectively) cease to be finite. This is because classical theory is based on the law of large numbers and relies mostly on the normal distribution whose first and second moment are both finite. Additionally, classical theory does not allow the quantification of a probability of an event greater than any of the samples. This is the strength of extreme value theory (EVT); it offers us techniques that focus on the ``extreme values of a sample, on extremely high quantiles or on small tail probabilities'' \cite[ch.~1]{beirlant}.
+
+\section{Theoretical Framework} \label{subsec:EVT}
+
+As a precursor to what follows, let $F$ be a distribution function (DF) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of i.i.d. random variables with common DF $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the sample maximum by $X_{n,n}$ and define it as $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$, and we shall always be concerned with sample maxima.
+
+The celebrated Fisher and Tippet theorem, also known as the Extreme Value theorem \citep{ft28}, with prominent unifying contributions by \cite{Gnedenko:43} and \cite{deHaan:70}, establishes the Generalised Extreme Value (GEV) distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
+\begin{equation}\label{EVTheo}
+	\limit{n} \mathbb{P} \Bigl( \frac{X_{n,n}-b_n}{a_n} \leq x\Bigr)= \limit{n} F^n (a_n x + b_n) = G(x),
+\end{equation}
+for every continuity point of $G$, then $G(x)= G_{\gamma}(x)$ is given by
+\begin{equation}\label{GEVd}
+	G_{\gamma}(x)= \exp \{ -(1+ \gamma\, x)^{-1/\gamma}\}, \quad 1+\gamma\,x >0.
+\end{equation}
+We then say that $F$ is in the (maximum) domain of attraction of $G_\gamma$,  for some extreme value index (EVI), denoted $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. By taking the logarithm of both sides of the extreme value condition (\ref{EVTheo}) and using Taylor's expansion we have that 
+
+
+\begin{equation}
+-n\log(F(a_n x + b_n )) \approx n(1 - F(a_n x + b_n )) \arrowf{n} (1 + \gamma x )^{-1/\gamma}
+\end{equation}
+
+\noindent as $ n \rightarrow \infty$, for those $x$ such that $ 1 + \gamma x > 0 $. The above resonates as follows. We are intersted in extrapolating beyond the available sample, which entails that the mean number of observations above the deterministic threshold $ u_n = a_n x + b_n$ (large enough), given by $ n( 1- F(u_n)) $, must be near zero. In addition, the threshold $ u_n $ must not be too large so that tail inference can still be carried out, i.e. we assume an intermediate sequence $ k = k_n $ such that $ n (1 - F(u_n)) = k$, with $k \rightarrow \infty $ and $ k = o(n) $.
+
+The theory of regular variation \citep{Binghametal:87,deHaan:70, deHF:06}, provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalised inverse of $1/(1-F)$, i.e.
+
+
+\begin{equation*}
+U(t):=   F^{\leftarrow} \bigl( 1-1/t\bigr), \quad \mbox{ for } t >  1.
+\end{equation*}
+
+
+Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurable function $a(\cdot)$ such that the condition of \emph{extended regular variation}
+
+
+\begin{equation}\label{ERVU}
+	\limit{n}\,\frac{U\left(\frac{n}{k}t\right)-U\left(\frac{n}{k}\right)}{a\left(\frac{n}{k}\right)}= \frac{t^{\gamma}-1}{\gamma},
+\end{equation}
+
+
+holds for all $t>0$ [notation: $U\in ERV_{\gamma}$]. The limit in equation \ref{ERVU} coincides with the $U-$function of the Generalised Pareto (GP) distribution, with DF $ 1+ \log G_ \gamma $, which suggests the commonly known improved inference attached to the Peaks Over Threshold (POT) method. In fact, the extreme value condition (\ref{EVTheo}) on the tail quantile function $ u $ is the usual assumption in semi-parametric inference for extreme outcomes. Since we are mainly considering Block Maxima (BM) method (described below), we may use the extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold. To this effect, define the $ k^{\text{th}} $ block maximum as 
+
+\begin{equation}
+M_i = \max _{(i -1) m < j \le i m} X_j
+\end{equation}
+
+The above states that we are dividing the sample size n into $k$ block os equal length (time) $m$. For the EVT to hold within each block, the block length must be sufficiently large, i.e. one $m$ should tend to infinity. Now, let $V$ be the generalised inverse of $ -1/\log F $, i.e. $ V(-1 / \log( 1 - t ) ) = F^{\leftarrow}( 1 - t )$ for $ t > 0 $. Then, $F \in \mc(D) ( G_\gamma )$ if and only if
+
+
+\begin{equation} \label{EVTheo2}
+\limit{m} \frac{V(mt) - V(m)}{a_m} = \frac{t^\gamma - 1}{\gamma}
+\end{equation}
+
+\noindent for all $ t > 0 $. The extreme value condition in equation \ref{EVTheo2} is the main condition in the paper, eventually. Furthermore, by letting $ x = x_m $ such that $ x_m \rightarrow \infty $, as $ m \rightarrow \infty $, in the case where $ \gamma < 0 $, it is possible to devise a class of estimators for the right endpoint of F belong to some max-domain of attraction $ \mc{D} (G_\gamma) $.  Namely, condition \ref{EVTheo2} gives rise to the approximate equality $ V(\infty) \approx V(m) - a_m / \gamma $, as $ m \rightarrow \infty $, where $ V(\infty ) = \limit{t} V(t) = F^{\leftarrow}(1) = x^F $, the latter beign the right endpoint of F which can be viewed as the ultimate extreme quantile.
+
+
+Within the two main approaches in Extreme Value analysis we plan to tackle:
+\begin{enumerate}
+\item\label{BM} BM method: take observations in blocks of equal size and assume that the maximum in each block (time window) follows exactly the Generalised Extreme Value (GEV) distribution defined in equation \ref{GEVd}.
+\item\label{POT} POT method: restrict attention to those observations from the sample that exceed a certain level or threshold, supposedly high, while assuming that these exceedances follow exactly the GP distribution.
+\end{enumerate}
+
+A difficulty in applying EVT is that observations generally do not follow the exact extreme value distribution. The best we can hope for is that they come from a distribution in one of the only possible three domains of attraction. Hence an interesting aspect is to derive large sample properties of the obtained estimators by replacing the word ``exactly'' with ``approximate'' in points \ref{BM} and \ref{POT} above. The latter conveys a semi-parametric framework, which also proves to be a  fruitful setting in analysing extreme events. 
+
+Inference for Block Maxima has received much attention recently. The relative merits of this approach are discussed in \cite{FdeH:15}, where they lay down several results in line with equation \ref{ERVU}, cementing the path towards the semi-parametric approach to block maxima estimation.
+
+The maximum Lq-likelihood estimator (MLqE) of $\theta$ (real or vector-valued parameter) is defined as
+\begin{equation*}
+	\hat{\theta}= \argmax{\theta \in \Theta} \, \sumab{i=1}{n} L_q\bigl( f(X_i; \, \theta)\bigr), \quad q>0,
+\end{equation*}
+with $L_q(u)= \log u$ if $q=1$ and $L_q(u)= (u^{1-q}- 1)/(1-q)$, otherwise (cf. Definition 2.2 in Ferrari and Yang, 2010). The function $L_q$ is quite similar to the Box-Cox transformation in statistics. The parameter $q$ gauges the degree of distortion in the underlying density. If $q=1$, then the estimation procedure reads as the ordinary maximum likelihood (ML) method.
+
+The rationale to the maximum product spacing (MSP) estimator can be found in \cite{ChengAmin:79} and \cite{Ranneby:84}. These will be used in the analyses presented in section \ref{subsec:EVres}.
+
+
+%Lastly, what was referred to as the upper limits in the earlier section is known as the right endpoint in this framework and is defined as $x^F := \sup\{x | F(x) < 1\} \le \infty$.
+
+This discussion describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case in reality. \cite{einmahl16} developed the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, if the distribution function $F$ also shares this right endpoint then the \textit{scedasis function}, denoted by $c$ defined on $[0,1]$, and is indicative of the frequency of extremes. This scedasis function by equation \ref{eq:scedasisfn} and is uniquely defined $\forall n \in \mathbb{N}, 1 \le i \le n$ when the density condition (eq. \ref{eq:scedasis_cond}) is imposed.
+
+% The condition presented in equation \ref{eq:scedasis_cond} ensures that the definition presented in equation \ref{eq:scedasisfn} is unique $\forall n \in \mathbb{N}$ and $\forall 1 \le i \le n$.
+
+\begin{equation} \label{eq:scedasisfn}
+\lim_{x \rightarrow x^F} \frac{1-F_{n,i}(x)}{1 - F(x)} = c(\frac{i}{n})
+\end{equation}
+
+\begin{equation} \label{eq:scedasis_cond}
+\int_0^1 c(s)d(s) = 1
+\end{equation}
+
+The assumption required for this model is on $F  \in \mathcal{D}(G_{\gamma})$ belonging to the maximum domain of attraction of the GEV distribution and while it can be shown that $F_{n,i}  \in \mathcal{D}(G_{\gamma})$, this does not need to be assumed. The theory is developed for positive EVI, $\gamma > 0 $ in \citet{einmahl16} which means that the Hill estimator (eq. \ref{eq:hill_est}) was used to estimate the EVI. There are studies \citep{Ferreira17} which have developed estimators for $\gamma < 0$ albeit in the spatial-temporal scale but it can be adapted to just the temporal scale.
+
+\begin{equation} \label{eq:hill_est}
+\hat{\gamma}_H := \frac{1}{k} \sum_{j=1}^k log(X_{n,n-j+1}) - log(X_{n,n-k})
+\end{equation}
+where $k=k(n)$ is a suitable intermediate sequence such that 
+
+\begin{align} \label{eq:k_cond}
+\begin{split}
+\lim_{n \rightarrow \infty} k &= \infty \\
+\lim_{n \rightarrow \infty} \frac{k}{n} &= 0
+\end{split}
+\end{align}
+
+Although in the case of the electric load data at hand some early testing has suggested that the data are light tailed i.e. $\gamma < 0 $, there is not yet reason to be disappointed since \cite{einmahl16} state that estimators other than those presented in the paper may be used for $\gamma \in \mathbb{R}$ and the results such as the asymptotic independence between those estimators and the estimator for the integrated scedasis function still hold.
+
+\cite{einmahl16} splits their study into three main sections that are of significance to this report. In the first of these section, some properties of $c$ are deduced and $\gamma$ is estimated. In this section, two test statistics, $T_1$ and $T_2$, are used to reject the presence of homoscedastic extremes ($H_0: c \equiv 1$). In the second section, test statistics, $T_3$ and $T_4$ are used to test whether $\gamma$ is constant. The test statistics are given in equation \ref{eq:test_stat}.
+
+\begin{align} \label{eq:test_stat}
+\begin{split}
+T_1 : = \sup_{0 \le s \le 1} |\hat{C}(s) - C_0(s)|\\
+T_2 : = \int_0^1 \{\hat{C}(s) - C_0(s)\}^2 dC_0(s)\\
+T_3 := \sup_{0 \le s_1 < s_2 \le 1, \hat{C}(s_2) - \hat{C}(s_1)}|\frac{\hat{\gamma}_{(s_1,s_2]}}{\hat{\gamma}_H} -1| \\
+T_4 := \frac{1}{m} \sum_{j=1}^m (\frac{\hat{\gamma}_{(l_{j-1},l_j]}}{\hat{\gamma}_H}-1)^2
+\end{split}
+\end{align}
+
+\noindent where $C_0(s) = \int_0^s c_0(u)du$ for some $c_0$ that is given, $\hat{\gamma}_{(s_1,s_2]}$ is the Hill estimator based on $X_{[ns_1]+1}^{(n)}, ... , X_{[ns_2]}^{(n)}$,  $l_j : = \sup\{s: \hat{C}(s) \ge j/m\}$, where $m$ is the number of block the full sample has been divided into, and the estimator for $C$ is given by:
+
+
+\begin{equation} \label{eq:C_hat_est}
+\hat{C}(s) : = \frac{1}{k} \sum_{i=1}^{[ns]} \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}
+\end{equation}
+
+While equation \ref{eq:C_hat_est} estimates the integral of the scedasis function, equation \ref{eq:c_hat_est} gives the estimator of the scedasis function itself, which is the one that we're interested in.
+
+\begin{equation} \label{eq:c_hat_est}
+\hat{c}(s) = \frac{1}{kh} \sum_{i=1}^n \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}G(\frac{s-\frac{i}{n}}{h})
+\end{equation}
+
+Here, $G$ is a continuous, symmetric kernel on $[-1,1]$ s.t. $\int_{-1}^{1} G(s)ds = 1$ and $G(s) = 0 \quad \forall s \notin [-1,1]$ , $h := h_n$ is known as the bandwidth s.t. $h \rightarrow 0$ and $kh \rightarrow \infty$ as $n \rightarrow \infty$. The second section ran simulations using various data generating process so as to validate the model for various kinds of distributions. In these simulations, where the data length was $n=5000$, $k$ was chosen to be 400 and the other parameters were $h -0.1$ and $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$.
+
+The final section of \cite{einmahl16} that is of importance to us is the application of the above estimators and tests to financial data. To be specific the authors started with daily loss returns of the SP500 index from 1988 to 2012. This sample had 6302 observations with 2926 days of losses and tests were conducted using $k=160$. This data included the financial crisis that erupted in 2008 which may have to lead to the lack of significant results. Thus the authors used a subsample, from 1988 to 2007 which included 5043 observations and 2348 days with losses. In this case, $k$ was chosen to be 130 and it was shown that the null hypthesis ($H_0 = \gamma$ constant) could not be rejected (using tests $T_3$ and $T_4$) whereas the frequency of extremes being invariant was rejected (using tests $T_1$ and $T_2$).  It was also noted that the scedasis function, generated using the subsample, showed a sharp increase at the end of 2007 even before the financial crisis occurred. This final analysis is relevant to our work since much like electric load data %(as we'll see later)
+financial data are light tailed. However, financial returns (such as loss returns as used here) are heavy tailed which may also be the case for transformations of electric load data. Moreover, this data set is also a time series much like ours and we too will consider returns and the heteroscedaticity of these returns. Much like what the authors have done here, we too will eventually consider quantifying changes, if any, in the frequency of extremes. Understanding how the behaviour of extremes changes, specifically in their frequency, allows Distribution Network Operators (DNO) to infer new installations of appliances in homes or of photovoltaic (PV) cells and purchases of electric vehicles thereby supporting the personalisation of electricity plans and contracts for better customer care and service. Features such as the sharp increase scedasis function may also inform DNO of impending risk of power failure.
+
+\section{Extreme Value Analyses} \label{subsec:EVres}
+
+Now that we've set up the basic framework, it is useful to consider some graphical tools. A quantile-quantile (QQ) plot answers the typical question: does a particular model plausibly fit the distribution of the random variable at hand? It is relatively simple to generate and can even be done by hand in some cases e.g. for the exponential distribution. For each data point in the sample, the equivalent quantile of the proposed model is calculated. Then the ordered data points are plotted against these quantiles to get the QQ plot. Mathematically speaking, the QQ plot is given by the graph \cite[ch.~6]{embrechts}. \newline
+
+\centerline{$\{(X_{k,n},F^{\leftarrow}(\frac{n-k+1}{n+1})), k = \{1,...,n\}\}$}
+
+\noindent where $n$ is number of observations. The linearity in the QQ plots can be used as a goodness of fit test between the model and the random variable at hand.
+
+The other graphical tool that is often used in extreme value analysis is a mean excess plot. Mathematically, the mean excess function, $e$,  is defined as
+
+\centerline{$e(t) = \mathbb{E}[X-t | X>t], t \in \mathbb{R}$} 
+ 
+In practice however, the mean excess function can be estimated by its the empirical counterpart, $\hat{e}_n$ \citep[ch.~1]{beirlant}
+
+\centerline{$\hat{e}_n(t) = \frac{\sum\limits_{i=1}^n x_i 1_{(t,\infty)}(x_i)}{\sum\limits_{i=1}^n 1_{(t,\infty)}(x_i)} - t$}
+
+This empirical mean excess function can be plotted against the threshold $t$ or against the $k$ which the number of $x_i$ that exceed the threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the shape of the mean excess function can inform us further about the distribution of the data. Further, from the figure we can also assess the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails whereas a decreasing trend of light tails.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{beirfig.png}
+\caption{Typical mean excess function for some common distributions. Source: \cite{beirlant}}
+\label{fig:beir} 
+\end{figure}

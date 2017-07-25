@@ -1,0 +1,9 @@
+\providecommand{\noopsort}[1]{}
+\begin{thebibliography}{}
+
+\bibitem[Ferreira et~al., 2015]{FdeH:15}
+Ferreira, A., de~Haan, L., et~al. (2015).
+\newblock On the block maxima method in extreme value theory: Pwm estimators.
+\newblock {\em The Annals of statistics}, 43(1):276--298.
+
+\end{thebibliography}
