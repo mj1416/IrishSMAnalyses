@@ -85,6 +85,12 @@ Hong, T. and Fan, S. (2016).
 \newblock Probabilistic electric load forecasting: A tutorial review.
 \newblock {\em International Journal of Forecasting}, 32(3):914--938.
 
+\bibitem[ISSDA, 2015]{issda}
+ISSDA (2015).
+\newblock \emph{CER Smart Metering Project}.
+\newblock \url{http://www.ucd.ie/issda/data/commissionforenergyregulationcer/}
+  [Accessed: 25-07-2017].
+
 \bibitem[Ranneby, 1984]{Ranneby:84}
 Ranneby, B. (1984).
 \newblock The maximum spacing method. an estimation method related to the

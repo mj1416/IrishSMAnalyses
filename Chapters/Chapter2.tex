@@ -2,11 +2,11 @@
 
 \chapter{Data} \label{sec:results}
 
-The data used here is the publicly available  \todo{describe better with proper citations and stuff: controlled smart meter trials}. There are 7 weeks of data at half hourly resolution, where the weeks are labelled from 16 to 22 (inclusive). The half hours are labelled from 1 to 48 where 1 is understood to correspond to midnight. Additionally days are also numbered. In this case, the numbering starts at 593 which is understood to be the 16th of August 2010 and the numbering ends at 641. From this the days of the weeks, ranging from 1 to 7 where 1 is Monday and 7 is Sunday, has been deduced. Being equipped with this knowledge, let us explore some basic properties of the data.
+The Irish Social Science Data Archive has made smart meter data publicly available for about 5000 households in Ireland \citep{issda}. The Smart Metering Project was launched in 2007 with the intention of understanding consumer behaviour with regard to the influence of smart meter technology. The data used here are for the households that were used as the controls in the trials. There are 7 weeks of data at half hourly resolution, where the weeks are labelled from 16 to 22 (inclusive). The half hours are labelled from 1 to 48 where 1 is understood to correspond to midnight. Additionally days are also numbered. In this case, the numbering starts at 593 which is understood to be the 16th of August 2010 and the numbering ends at 641. From this the days of the weeks, ranging from 1 to 7 where 1 is Monday and 7 is Sunday, has been deduced. Being equipped with this knowledge, we explore some basic properties of the data.
 
 \section{Profiles and Trends}
 \label{subsec:basic} 
-This section presents some basic visualisation and discussion of the general nature of electricity demand. First consider the histogram of the measurements shown in figure \ref{fig:hist}. The $75^{th}$ percentile of this data is 0.5 kWh so clearly most households use less than 0.5 kWh at any given time, however there are households which record almost as high as 12 kWh. These high consumers are most likely operating a small business from home and/or may have multiple large appliances and electric vehicles in their homes.  While this is a plausible explanation in general, for this data set this last part does not seem to be the case as an electric vehicle recharging is a constant electric demand which lasts for several hours. Such sustained demand was not observed in the data.
+This section presents some basic visualisation and discussion of the general nature of electricity demand. First consider the histogram of the measurements shown in figure \ref{fig:hist}. The $75^{\text{th}}$ percentile of this data is 0.5 kWh so clearly most households use less than 0.5 kWh at any given time, however there are households which record almost as high as 12 kWh. These high consumers are most likely operating a small business from home and/or may have multiple large appliances and electric vehicles in their homes.  While this is a plausible explanation in general, for this data set this last part does not seem to be the case as an electric vehicle recharging is a constant electric demand which lasts for several hours. Such sustained demand was not observed in the data.
 
 \begin{figure}
 \centering
@@ -42,7 +42,7 @@ One way to see if there are ``extreme'' households is to breakdown the daily con
 \label{fig:totes}
 \end{figure}
 
-One last thing to be considered in this section is the auto-correlation. It is reasonable to suspect that the demands of households are correlated to its past demand and that future weekdays will be like past weekdays and future weekends will be like past weekends and similarly that today's demand is much like yesterday's demand (if yesterday and today are both weekends or both weekdays). Indeed all of of our forecasts rely on this property so it is useful to verify it.  Figure \ref{fig:ty_colour} shows the linear relationship between the total daily demand of each house, again colour coordinated, on day d and day d-1 at the same HH and clearly there is some linear trend here. To see how far back this relationship holds (certainly holds for a week back as seen in figure \ref{fig:ty_colour}), an autocorrelation function for one day (fig. \ref{fig:acf_day}) is provided. The autocorrelation function plotted is an arithmetic mean of all customers at each HH.
+One last thing to be considered in this section is the auto-correlation. It is reasonable to suspect that the demands of households are correlated to its past demand and that future weekdays will be like past weekdays and future weekends will be like past weekends and similarly that today's demand is much like yesterday's demand (if yesterday and today are both weekends or both weekdays). Indeed all of of our forecasts rely on this property so it is useful to verify it.  Figure \ref{fig:ty_colour} shows the linear relationship between the total daily demand of each house, again colour coordinated, on day d and day d-1 at the same HH and clearly there is some linear trend here. To see how far back this relationship holds, an autocorrelation function for one day (fig. \ref{fig:acf_day}) is provided. As it can be seen that there is some symmetry and while it is not shown here there is also periodicity throughout the data set though with decreasing autocorrelation. The autocorrelation function plotted in figure \ref{fig:acf_day} is an arithmetic mean of all customers at each HH.
 
 \begin{figure}
 \centering
@@ -57,5 +57,7 @@ One last thing to be considered in this section is the auto-correlation. It is r
 \caption{Auto-correlation function for 1 day. Lag is measured in HH}
 \label{fig:acf_day} 
 \end{figure}
+
+
 
 

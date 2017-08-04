@@ -41,7 +41,7 @@ meplot(unlist(SD_err,use.names = FALSE),main="SD_err")
 dev.off()
 filename <- 'LR_err_meplot.pdf'
 pdf(file=filename,width=12,paper="a4r")
-meplot(unlist(LR_err,use.names = FALSE),main="LR_err")
+meplot(unlist(LR_err,use.names = FALSE),main="WA_err")
 dev.off()
 #########################       AA scedasis     ##########################
 

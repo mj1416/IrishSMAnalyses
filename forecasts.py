@@ -393,7 +393,7 @@ def plot_forecast_sample():
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
     #
     plt.subplot(5,1,4)
-    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1].P1,"r",label="LR")
+    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1].P1,"r",label="WA")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1].P1,'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")

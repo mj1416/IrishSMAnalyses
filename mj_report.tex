@@ -283,7 +283,7 @@ This section presents one of the most common forecasting methods known as the Si
 \end{enumerate}
 
 \subsubsection{Last Week Forecast} \label{subsubsec:lwforecast}
-The Last Week (LW) forecast is a very simple forecast. As the name suggests, the forecast is produced by using data only from the most recent week. It can be seen as a special case of the SD forecast where instead of using all historical data only the most recent week is used. Even before we test this method, it is probable that this is not a good forecasting method as relevant data, if available, may go unused and will not account for week to week variability. However, where data is not available, this may be a good enough option. Additionally, it is possible that the LW forecasts performs reasonably well for households which are very predictable e.g. those with pensioners.
+The Last Week (LW) forecast is a very simple forecast. As the name suggests, the forecast is produced by using data only from the most recent week. It can be seen as a special case of the SD forecast where instead of using all historical data only the most recent week is used. Even before we test this method, it is probable that this is not a good forecasting method as relevant data, if available, may go unused and will not account for week to week variability. However, where data is not available, this may be a good enough option. Additionally, it is possible that the LW forecasts performs reasonably well for households which are very predictable e.g. those with only pensioners as occupants.
 
 \subsubsection{Adjusted Average Forecast} \label{subsubsec:AAforecast}
 \cite{dan14} introduced an adjusted average (AA) forecast. In this section, the algorithm will be discussed in detail and its implementation in Python will be outlined.
@@ -348,7 +348,7 @@ In this way it is possible to think of the SD forecast as a special case of the 
 \begin{equation}\label{eq:err_p}
 E_p \equiv ||\boldsymbol{f} - \boldsymbol{a}||_p := \left( \sum_{i=1}^{n} |f_i - a_i |^p\right)^{\frac{1}{p}}
 \end{equation}
-where $\boldsymbol{f}$ is the forecast that is $n$ half hours long and $\boldsymbol{a}$ is the observed measurement. This gives the $p-$norm error for each householf. Commonly, $p=2$ is taken, which translates to mean square error however in this report we will take $p=4$ as has been done \citet{dan14} \todo{check this} so as to exaggerate larger differences.
+where $\boldsymbol{f}$ is the forecast that is $n$ half hours long and $\boldsymbol{a}$ is the observed measurement. This gives the $p-$norm error for each household. Commonly, $p=2$ is taken, which translates to mean square error however in this report we will take $p=4$ as has been done \citet{dan14} \todo{check this} so as to exaggerate larger differences.
 
 \subsubsection{Adusted error}
 \label{subsubsec:Adj_err} While the above error measure provides a good benchmark for an error measure, another error measure that is worth considering is the one introduced in \citet{dan14}. The mathematical set up for this error measure is as follows:
@@ -741,7 +741,7 @@ There are improvements that can be made to this algorithm for example finding ap
 \end{figure}
 
 \subsubsection{Last Week Forecast} \label{subsubsec:LW_res}
-Similarly, for customer 1, the LW forecast versus the observations are given shown in figure \ref{fig:LW_forecast_P1}. Much like the SD forecast, LW is also not very well suited to representing the peaks accurately and is particularly vulnerable due to the week to week volatility in load. However, it can be seen that there are cases where, even though the magnitude of the peak is not correct, the peaks are being forecasted at roughly the right time. With this in mind we can combine the ideas from the SD and LW forecasts to generate an adjusted average forecast (section \ref{subsubsec:AA_res}).
+Similarly, for customer 1, the LW forecast versus the observations are shown in figure \ref{fig:LW_forecast_P1}. Much like the SD forecast, LW is also not very well suited to representing the peaks accurately and is particularly vulnerable due to the week to week volatility in load. However, it can be seen that there are cases where, even though the magnitude of the peak is not correct, the peaks are being forecasted at roughly the right time. With this in mind we can combine the ideas from the SD and LW forecasts to generate an adjusted average forecast (section \ref{subsubsec:AA_res}).
 
 \begin{figure}
 \includegraphics[scale=0.55]{forecast_LW_P1.pdf}
