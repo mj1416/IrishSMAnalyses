@@ -106,7 +106,7 @@ for (s in ss){
 
 plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Max")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
+axis(side=2,at=c(0.5,1,1.5),labels = c(0.5,1,1.5))
 
 
 #########################       Postive differences MM     ##########################
@@ -135,7 +135,35 @@ for (s in ss){
 
 plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Max")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
+axis(side=2,at=c(0.4,0.9,1.4),labels = c(0.4,0.9,1.4))
+
+#########################       Postive differences SS      ##########################
+
+data_max <- data.matrix(frame = pos_diff["SS"],rownames.force = NA)
+
+n <- length(data_max)
+k <- 20#lofloor(n*0.08)
+data_ord <- sort(data_max)
+k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
+
+#define time vectors
+ss <- seq(1/n,1,1/n)
+
+#define bandwidth
+h <- 0.1
+
+#scedasis estimator
+c_est <- vector(mode = "numeric",length = length(ss))
+for (s in ss){
+  i <- 1:n
+  u <- (s-i/n)/h
+  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+}
+
+
+plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Total")
+axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
+axis(side=2,at=c(0.4,0.85,1.3),labels = c(0.4,0.85,1.3))
 
 
 #########################       Postive differences MS      ##########################
@@ -164,36 +192,7 @@ for (s in ss){
 
 plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Total")
 axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
-#dev.off()
-
-#########################       Postive differences SS      ##########################
-
-data_max <- data.matrix(frame = pos_diff["SS"],rownames.force = NA)
-
-n <- length(data_max)
-k <- 20#lofloor(n*0.08)
-data_ord <- sort(data_max)
-k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
-
-#define time vectors
-ss <- seq(1/n,1,1/n)
-
-#define bandwidth
-h <- 0.1
-
-#scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
-for (s in ss){
-  i <- 1:n
-  u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
-}
-
-
-plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Total")
-axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0,1,2,3),labels = c(0,1,2,3))
+axis(side=2,at=c(0.3,0.75,1.2),labels = c(0.3,0.75,1.2))
 dev.off()
 
 #######################     checking with financial data      ########################

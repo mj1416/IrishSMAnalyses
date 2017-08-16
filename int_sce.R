@@ -12,7 +12,7 @@ k_largest <- data_ord[(length(data_ord)-k+1)]#:length(data_ord)]
 
 #define time vectors
 n <- dim(data)[1]
-ss <- seq(0,1,length=n)
+ss <- seq(1/n,1,1/n)
 C_est <- vector(mode = "numeric",length = length(ss))
 
 for (s in ss){

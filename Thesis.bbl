@@ -22,6 +22,20 @@ Cheng, R. C.~H. and Amin, N. (1979).
   lognormal distribution.
 \newblock {\em Math Report}, 79(1).
 
+\bibitem[Chrisafis and Vaughan, 2017]{fuelban}
+Chrisafis, A. and Vaughan, A. (2017).
+\newblock \emph{France to ban sales of petrol and diesel cars by 2040}.
+\newblock
+  \url{https://www.theguardian.com/business/2017/jul/06/france-ban-petrol-diesel-cars-2040-emmanuel-macron-volvo}
+  [Accessed: 10-08-2017].
+
+\bibitem[Csorgo and Faraway, 1996]{tables2}
+Csorgo, S. and Faraway, J.~J. (1996).
+\newblock The exact and asymptotic distributions of cram{\'e}r-von mises
+  statistics.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)}, pages 221--234.
+
 \bibitem[Douglas et~al., 1998]{douglas98}
 Douglas, A.~P., Breipohl, A.~M., Lee, F.~N., and Adapa, R. (1998).
 \newblock The impacts of temperature forecast uncertainty on bayesian load
@@ -48,8 +62,8 @@ Ferreira, A., de~Haan, L., et~al. (2015).
 \bibitem[Ferreira et~al., 2017]{Ferreira17}
 Ferreira, A., Friederichs, P., de~Haan, L., Neves, C., and Schlather, M.
   (2017).
-\newblock Estimating space-time trend and dependency of heavy rainfall.
-\newblock {\em Biometrika}, 103:1--23.
+\newblock Estimating space-time trend and dependence of heavy rainfall.
+\newblock {\em arXiv preprint arXiv:1707.04434}.
 
 \bibitem[Fisher and Tippett, 1928]{ft28}
 Fisher, R.~A. and Tippett, L. H.~C. (1928).
@@ -64,7 +78,7 @@ Gnedenko, B. (1943).
 \newblock {\em Annals of mathematics}, pages 423--453.
 
 \bibitem[{\noopsort{Haan}}{de Haan}, 1975]{deHaan:70}
-{\noopsort{Haan}}{de Haan} (1975).
+{\noopsort{Haan}}{de Haan}, L. (1975).
 \newblock On regular variation and its application to the weak convergence of
   sample extremes.
 \newblock {\em MC Tracts}, 32:1--124.
@@ -85,8 +99,8 @@ Hong, T. and Fan, S. (2016).
 \newblock Probabilistic electric load forecasting: A tutorial review.
 \newblock {\em International Journal of Forecasting}, 32(3):914--938.
 
-\bibitem[ISSDA, 2015]{issda}
-ISSDA (2015).
+\bibitem[Irish Social Science Data~Archive, 2015]{issda}
+Irish Social Science Data~Archive, I. (2015).
 \newblock \emph{CER Smart Metering Project}.
 \newblock \url{http://www.ucd.ie/issda/data/commissionforenergyregulationcer/}
   [Accessed: 25-07-2017].

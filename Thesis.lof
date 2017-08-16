@@ -2,34 +2,36 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {1.1}{\ignorespaces Various classifications for electric load forecasts and their applications. The abbreviations are Short Term Load Forecasting (STLF), Very Short Term Load Forecasting (VSTLF), Medium Term Load Forecasting (MTLF) and Long Term Load Forecasting (LTLF). Source: \citet {hong16}\relax }}{3}{figure.caption.14}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces histogram of the HH smart meter readings for all 503 households.\relax }}{7}{figure.caption.24}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Cumulative demand profiles in kilo Watt hours (kWh) for various time horizons.\relax }}{8}{figure.caption.25}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Total daily profiles for each day of the week.\relax }}{8}{figure.caption.26}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Total daily usage per household for each day in the data.\relax }}{9}{figure.caption.27}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Daily total electric load for day d against day d-1.\relax }}{10}{figure.caption.28}
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Auto-correlation function for 1 day. Lag is measured in HH\relax }}{10}{figure.caption.29}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Histogram of the HH smart meter readings for all 503 households.\relax }}{7}{figure.caption.21}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Cumulative demand profiles in kiloWatt hours (kWh) for various time horizons.\relax }}{8}{figure.caption.22}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Total daily profiles for each day of the week.\relax }}{8}{figure.caption.23}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Total daily usage per household for each day in the data.\relax }}{9}{figure.caption.24}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Electric load day d against day d-1 in kWh.\relax }}{10}{figure.caption.25}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Auto-correlation function for 1 day. Lag is measured in HH\relax }}{10}{figure.caption.26}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces SD forecast (for each day of the week) and the observations for customer 1.\relax }}{12}{figure.caption.36}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces LW forecast (for each day of the week) for customer 1.\relax }}{13}{figure.caption.38}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces AA forecast (for each day of the week) for customer 1 where the solid black line is the observed load, the broken black line is the SD forecast and broken blue line is the AA forecast.\relax }}{15}{figure.caption.45}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Weighted Average forecast (for each day of the week) for customer 1.\relax }}{17}{figure.caption.55}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Bayesian Ridge Regression forecast (for each day of the week) for customer 1.\relax }}{18}{figure.caption.57}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces $4^{th}$-norm error for each forecast.\relax }}{19}{figure.caption.61}
-\contentsline {figure}{\numberline {3.7}{\ignorespaces Adjusted error for each forecast.\relax }}{21}{figure.caption.62}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces SD forecast (for each day of the week) and the observations for customer 1.\relax }}{12}{figure.caption.33}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces LW forecast (for each day of the week) for customer 1.\relax }}{13}{figure.caption.35}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces AA forecast (for each day of the week) for customer 1 where the solid black line is the observed load, the broken black line is the SD forecast and broken blue line is the AA forecast.\relax }}{15}{figure.caption.42}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Weighted Average forecast (for each day of the week) for customer 1.\relax }}{17}{figure.caption.52}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Bayesian Ridge Regression forecast (for each day of the week) for customer 1.\relax }}{18}{figure.caption.54}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces $4^{th}$-norm error for each forecast.\relax }}{19}{figure.caption.57}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Adjusted error for each forecast.\relax }}{20}{figure.caption.58}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces QQ plot.\relax }}{26}{figure.caption.75}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Typical mean excess function for some common distributions. Source: \cite {beirlant}\relax }}{26}{figure.caption.76}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Mean excess plot plotted against threshold.\relax }}{27}{figure.caption.77}
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Estimates for the shape parameter based on the weekly maxima.\relax }}{29}{figure.caption.78}
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Estimates for the right endpoint, based on the weekly maxima.\relax }}{29}{figure.caption.79}
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Extreme value index estimation using the $k$th larger order statistics.\relax }}{30}{figure.caption.80}
-\contentsline {figure}{\numberline {4.7}{\ignorespaces $\mathaccentV {hat}05E{p}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.\relax }}{34}{figure.caption.95}
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Profiles of various positive differences.\relax }}{36}{figure.caption.106}
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Estimated scedasis functions, $\mathaccentV {hat}05E{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.\relax }}{36}{figure.caption.107}
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Scedasis using the frequency of exeedances (eq. \ref {eq:sced_prop}) for 7 weeks with $k=24000$.\relax }}{38}{figure.caption.111}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Mean excess plot of the absolute difference between the AA forecast and observation for week 22.\relax }}{39}{figure.caption.112}
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Mean excess plot of the absolute difference between the SD forecast and observation for week 22.\relax }}{40}{figure.caption.113}
-\contentsline {figure}{\numberline {4.13}{\ignorespaces Mean excess plot of the absolute difference between the WA forecast and observation for week 22.\relax }}{40}{figure.caption.114}
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Estimated scedasis function of AA forecast errors.\relax }}{41}{figure.caption.115}
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Estimated scedasis function of SD forecast errors.\relax }}{42}{figure.caption.116}
-\contentsline {figure}{\numberline {4.16}{\ignorespaces Estimated scedasis function of LR forecast errors.\relax }}{42}{figure.caption.117}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces QQ plot.\relax }}{26}{figure.caption.72}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Typical mean excess function for some common distributions. Source: \cite {beirlant}\relax }}{27}{figure.caption.73}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Mean excess plot plotted against threshold.\relax }}{27}{figure.caption.74}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Estimates for the shape parameter based on the weekly maxima.\relax }}{29}{figure.caption.75}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Estimates for the right endpoint based on the weekly maxima.\relax }}{30}{figure.caption.76}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Extreme value index estimation using the $k$th larger order statistics.\relax }}{30}{figure.caption.77}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Proportion scedasis for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.\relax }}{33}{figure.caption.88}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces $\mathaccentV {hat}05E{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.\relax }}{34}{figure.caption.90}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Profiles of various positive differences.\relax }}{36}{figure.caption.100}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Estimated scedasis functions, $\mathaccentV {hat}05E{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.\relax }}{36}{figure.caption.101}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Scedasis using the frequency of exeedances (eq. \ref {eq:sced_prop}) for 7 weeks with $k=24000$.\relax }}{39}{figure.caption.105}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Mean excess plot of the absolute difference between the AA forecast and observation for week 22.\relax }}{39}{figure.caption.107}
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Mean excess plot of the absolute difference between the SD forecast and observation for week 22.\relax }}{40}{figure.caption.108}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Mean excess plot of the absolute difference between the WA forecast and observation for week 22.\relax }}{40}{figure.caption.109}
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Estimated scedasis function of AA forecast errors.\relax }}{41}{figure.caption.110}
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Estimated scedasis function of SD forecast errors.\relax }}{42}{figure.caption.111}
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Estimated scedasis function of WA forecast errors.\relax }}{42}{figure.caption.112}
+\addvspace {10\p@ }

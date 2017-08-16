@@ -6,7 +6,7 @@ import stat
 
 def plot_autocorr():
     filename="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
-    data = pd.read_csv(filename)
+    data = pd.read_csv(filename,index_col=0)
     #
     #by day number
     DayN_sum = data.groupby('DayN').sum()
@@ -26,8 +26,8 @@ def plot_autocorr():
     for c in range(3,504):
         plt.figure(2)
         plt.scatter(yesterday[[c]],today[[c]],color=colors[c],marker ='.')
-    plt.xlabel('Electricity usage at time t on day d-1')
-    plt.ylabel('Electricity usage at time t on day d')
+    plt.xlabel('Electricity usage on day d-1')
+    plt.ylabel('Electricity usage on day d')
     plt.show()
     #
     plt.scatter(today[range(4,today.shape[1])],yesterday[range(4,yesterday.shape[1])])

@@ -145,7 +145,7 @@
 \newcommand*{\FACULTY}[1]{\def\FACNAME{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
-\supervisor  {}
+\supervisor  {Danica Vukadinovic Greetham, Claudia Neves \\ Industrial Partner: Maciej Fila}
 \examiner    {}
 \degree      {}
 \authors     {}
@@ -199,8 +199,9 @@
       {\LARGE by \par}
       \smallskip
       {\LARGE \authornames \par}
+      {Supervised by: \supname \par}
       \vfill
-      {\large Sumbitted to Imperial College London and University of Reading\par}
+      {\large Submitted to Imperial College London and University of Reading\par}
       {\large in fulfilment of the requirements for the degree of Master by Research \par}
       \bigskip
       \bigskip

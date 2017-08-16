@@ -1,15 +1,16 @@
 \lhead{\emph{Extreme Value Statisitcs}}  % Set the left side page header to "Abbreviations"
 
-\chapter{Extreme Value Statistics} 
-As \cite{hong16} noted, the utility industry cares about expected values of electric load. At the household or substation level, the stress comes from both the collective use from several households and from collections of households requiring (unusually) large amounts of electricity. The statistics of these ``extremes'' is the topic of this chapter.
+\chapter{Extreme Value Statistics} \label{sec:EVT}
 
-While classical large sample theory allows the use of the empirical distribution to make some inferences about what happens in the tail behaviour, it fails in cases where the second moment and even the first moment (the variance and mean, respectively) cease to be finite. This is because classical theory is based on the law of large numbers and relies mostly on the normal distribution whose first and second moment are both finite. Additionally, classical theory does not allow the quantification of a probability of an event greater than any of the samples. This is the strength of extreme value theory (EVT); it offers us techniques that focus on the ``extreme values of a sample, on extremely high quantiles or on small tail probabilities'' \cite[ch.~1]{beirlant}.
+As we have noted from the literature review in section \ref{subsec:litrev}, there is no discussion of extremes when it comes to electric load forecasting or about the influence of stresses on the electric grid. Intuitively we can see that the stress may come from a large number of households requiring electricity at the same time, say for breakfast or in the evening but it may also come from a relatively small number of households requiring (unusually) large amounts of electricity, say from a neighbourhood where many households have electric vehicles. The statistics of these extremes is the topic of this chapter.
+
+While classical large sample theory allows the use of the empirical distribution to make some inferences about what happens in the tail behaviour, it fails in cases where the second moment and even the first moment (the variance and mean, respectively) cease to be finite. This is because classical theory is based on the law of large numbers and relies mostly on the normal distribution whose first and second moment are both finite. Additionally, classical theory does not allow the quantification of a probability of an event greater than what has already been observed. This is the strength of extreme value theory (EVT); it offers us techniques that focus on the ``extreme values of a sample, on extremely high quantiles or on small tail probabilities'' \cite[ch.~1]{beirlant}.
 
 \section{Theoretical Framework} \label{subsec:EVT}
 
-As a precursor to what follows, let $F$ be a distribution function (DF) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of i.i.d. random variables with common DF $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the sample maximum by $X_{n,n}$ and define it as $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$, and we shall always be concerned with sample maxima.
+As a precursor to what follows, let $F$ be a distribution function (d.f.) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of identically and independently distributed (i.i.d.) random variables with common d.f. $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the \textit{sample maximum} by $X_{n,n}$ and define it as $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$. We can also define the order statistics, $\{X_{1,n} \le X_{2,n} \le ... \le X_{n,n}\}$ and understand the \textit{upper order statistics} to  be $\{X_{n-k,n} \le ... \le X_{n,n}\}$, for suitable $k$.% to conduct tail inference.% and we shall always be concerned with sample maxima.
 
-The celebrated Fisher and Tippet theorem, also known as the Extreme Value theorem \citep{ft28}, with prominent unifying contributions by \cite{Gnedenko:43} and \cite{deHaan:70}, establishes the Generalised Extreme Value (GEV) distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
+The celebrated Fisher and Tippet theorem \citep{ft28}, also known as the Extreme Value theorem, with prominent unifying contributions by \cite{Gnedenko:43} and \cite{deHaan:70}, establishes the Generalised Extreme Value (GEV) distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
 \begin{equation}\label{EVTheo}
 	\limit{n} \mathbb{P} \Bigl( \frac{X_{n,n}-b_n}{a_n} \leq x\Bigr)= \limit{n} F^n (a_n x + b_n) = G(x),
 \end{equation}
@@ -17,16 +18,23 @@ for every continuity point of $G$, then $G(x)= G_{\gamma}(x)$ is given by
 \begin{equation}\label{GEVd}
 	G_{\gamma}(x)= \exp \{ -(1+ \gamma\, x)^{-1/\gamma}\}, \quad 1+\gamma\,x >0.
 \end{equation}
-We then say that $F$ is in the (maximum) domain of attraction of $G_\gamma$,  for some extreme value index (EVI), denoted $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. By taking the logarithm of both sides of the extreme value condition (\ref{EVTheo}) and using Taylor's expansion we have that 
+We then say that $F$ is in the (maximum) domain of attraction of $G_\gamma$,  for some extreme value index (EVI), $\gamma \in \real$ [notation: $F \in \mathcal{D}(G_{\gamma}) $]. For $\gamma=0$, the right-hand side is interpreted by continuity as $\exp\bigl\{-e^{-x}\bigr\}$. By taking the logarithm of both sides of the extreme value condition (\ref{EVTheo}) and using Taylor's expansion we have that 
 
 
 \begin{equation}
--n\log(F(a_n x + b_n )) \approx n(1 - F(a_n x + b_n )) \arrowf{n} (1 + \gamma x )^{-1/\gamma}
+-n\log(F(a_n x + b_n )) \approx n(1 - F(a_n x + b_n )) \arrowf{n} (1 + \gamma x )^{-1/\gamma},
 \end{equation}
 
-\noindent as $ n \rightarrow \infty$, for those $x$ such that $ 1 + \gamma x > 0 $. The above resonates as follows. We are intersted in extrapolating beyond the available sample, which entails that the mean number of observations above the deterministic threshold $ u_n = a_n x + b_n$ (large enough), given by $ n( 1- F(u_n)) $, must be near zero. In addition, the threshold $ u_n $ must not be too large so that tail inference can still be carried out, i.e. we assume an intermediate sequence $ k = k_n $ such that $ n (1 - F(u_n)) = k$, with $k \rightarrow \infty $ and $ k = o(n) $.
+%as $ n \rightarrow \infty$, 
+\noindent for those $x$ such that $ 1 + \gamma x > 0 $. The above resonates as follows. We are intersted in extrapolating beyond the available sample, which entails that the mean number of observations above the deterministic threshold $ u_n = a_n x + b_n$ (large enough), given by $ n( 1- F(u_n)) $, must be a very small number. In addition, the threshold $ u_n $ must not be too large so that tail inference can still be carried out, i.e. we assume an \textit{intermediate sequence}, $ k = k_n $ such that $n (1 - F(u_n)) = k$ satisfying
+\begin{align} \label{eq:k_cond}
+\begin{split}
+\lim_{n \rightarrow \infty} k &= \infty \\
+\lim_{n \rightarrow \infty} \frac{k}{n} &= 0.
+\end{split}
+\end{align}
 
-The theory of regular variation \citep{Binghametal:87,deHaan:70, deHF:06}, provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalised inverse of $1/(1-F)$, i.e.
+The theory of regular variation \citep{Binghametal:87,deHaan:70, deHF:06} provides necessary and sufficient conditions for $F\in \mc{D}(G_{\gamma})$. Let $U$ be the tail quantile function defined by the generalised inverse of $1/(1-F)$, i.e.
 
 
 \begin{equation*}
@@ -42,20 +50,20 @@ Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurab
 \end{equation}
 
 
-holds for all $t>0$ [notation: $U\in ERV_{\gamma}$]. The limit in equation \ref{ERVU} coincides with the $U-$function of the Generalised Pareto (GP) distribution, with DF $ 1+ \log G_ \gamma $, which suggests the commonly known improved inference attached to the Peaks Over Threshold (POT) method. In fact, the extreme value condition (\ref{EVTheo}) on the tail quantile function $ u $ is the usual assumption in semi-parametric inference for extreme outcomes. Since we are mainly considering Block Maxima (BM) method (described below), we may use the extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold. To this effect, define the $ k^{\text{th}} $ block maximum as 
+holds for all $t>0$ [notation: $U\in ERV_{\gamma}$]. The limit in equation \ref{ERVU} coincides with the $U-$function of the Generalised Pareto (GP) distribution, with d.f. $ 1+ \log G_ \gamma $, which suggests the commonly known improved inference attached to the Peaks Over Threshold (POT) method (described below). In fact, the extreme value condition (\ref{EVTheo}) on the tail quantile function $ u $ is the usual assumption in semi-parametric inference for extreme outcomes. Since we are mainly considering Block Maxima (BM) method (described below), we may use the extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold. To this effect, define the $ k^{\text{th}} $ block maximum as 
 
 \begin{equation}
-M_i = \max _{(i -1) m < j \le i m} X_j
+M_i = \max _{(i -1) m < j \le i m} X_j.
 \end{equation}
 
-The above states that we are dividing the sample size n into $k$ block os equal length (time) $m$. For the EVT to hold within each block, the block length must be sufficiently large, i.e. one $m$ should tend to infinity. Now, let $V$ be the generalised inverse of $ -1/\log F $, i.e. $ V(-1 / \log( 1 - t ) ) = F^{\leftarrow}( 1 - t )$ for $ t > 0 $. Then, $F \in \mc(D) ( G_\gamma )$ if and only if
+The above states that we are dividing the sample of size n into $k$ block of equal length (time) $m$. For the extreme value theorem to hold within each block, the block length must be sufficiently large, i.e. one $m$ should tend to infinity. Now, let $V$ be the generalised inverse of $ -1/\log F $, i.e. $ V(-1 / \log( 1 - t ) ) = F^{\leftarrow}( 1 - t )$ for $ t > 0 $. Then, $F \in \mc{D} ( G_\gamma )$ if and only if
 
 
 \begin{equation} \label{EVTheo2}
 \limit{m} \frac{V(mt) - V(m)}{a_m} = \frac{t^\gamma - 1}{\gamma}
 \end{equation}
 
-\noindent for all $ t > 0 $. The extreme value condition in equation \ref{EVTheo2} is the main condition in the paper, eventually. Furthermore, by letting $ x = x_m $ such that $ x_m \rightarrow \infty $, as $ m \rightarrow \infty $, in the case where $ \gamma < 0 $, it is possible to devise a class of estimators for the right endpoint of F belong to some max-domain of attraction $ \mc{D} (G_\gamma) $.  Namely, condition \ref{EVTheo2} gives rise to the approximate equality $ V(\infty) \approx V(m) - a_m / \gamma $, as $ m \rightarrow \infty $, where $ V(\infty ) = \limit{t} V(t) = F^{\leftarrow}(1) = x^F $, the latter beign the right endpoint of F which can be viewed as the ultimate extreme quantile.
+\noindent for all $ t > 0 $. The extreme value condition in equation \ref{EVTheo2} is the main condition in this report, eventually. Furthermore, by letting $ x = x_m $ such that $ x_m \rightarrow \infty $, as $ m \rightarrow \infty $, in the case where $ \gamma < 0 $, it is possible to devise a class of estimators for the right endpoint of $F$ belonging to some max-domain of attraction, $ \mc{D} (G_\gamma) $.  Namely, condition \ref{EVTheo2} gives rise to the approximate equality $ V(\infty) \approx V(m) - a_m / \gamma $, as $ m \rightarrow \infty $, where $ V(\infty ) := \limit{t} V(t) = F^{\leftarrow}(1) = x^F $, the latter being the right endpoint of $F$ which can be viewed as the ultimate extreme quantile.
 
 
 Within the two main approaches in Extreme Value analysis we plan to tackle:
@@ -76,11 +84,11 @@ Now that we've set up the basic framework, it is useful to consider some graphic
 
 \noindent where $n$ is number of observations. The linearity in the QQ plots can be used as a goodness of fit test between the model and the random variable at hand.
 
-Figure \ref{fig:beta} shows what the QQ plot looks like when the underlying distribution is taken to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, there is no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it only tells if a certain distribution is correct, not which one is correct. However we can still glean some information from figure \ref{fig:beta} which is that the data are likely to have light tailed distributions since both the uniform and beta distributions are light tailed. This will explain why other distributions such as the log-normal and Weibull distributions didn't fit the data well anywhere (not shown). 
+Figure \ref{fig:beta} shows what the QQ plot looks like when the underlying distribution of electric load data is assumed to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, there is no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it only tells if a certain distribution is correct, not which one is correct. Even though, the underlying distribution hasn't been established, it is probable that the data are light tailed, i.e $\gamma < 0$ since both the uniform and beta distributions are light tailed. This will also explain why heavy tailed distributions such as the log-normal and Weibull didn't fit the data well anywhere (not shown). 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{qqplot_beta.png}
+\includegraphics[width=0.8\textwidth]{qqplot_beta.png}
 \caption{\label{fig:beta} QQ plot.}
 \end{figure}
 
@@ -92,20 +100,20 @@ In practice however, the mean excess function can be estimated by its the empiri
 
 \centerline{$\hat{e}_n(t) = \frac{\sum\limits_{i=1}^n x_i 1_{(t,\infty)}(x_i)}{\sum\limits_{i=1}^n 1_{(t,\infty)}(x_i)} - t$}
 
-This empirical mean excess function can be plotted against the threshold $t$ or against the $k$ which is the number of $x_i$ that exceed the threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the shape of the mean excess function can inform us further about the distribution of the data. Further, from the figure we can also assess the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails (such as the log-normal distribution) whereas a decreasing trend of light tails (such as uniform distribution).
+This empirical mean excess function can be plotted against the threshold $t$ or against $k$ which is the number of $x_i$ that exceed the threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the shape of the mean excess function can yield further information about both the distribution and the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails (such as the log-normal distribution) whereas a decreasing trend of light tails (such as uniform distribution).
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{beirfig.png}
+\includegraphics[width=0.8\textwidth]{beirfig.png}
 \caption{Typical mean excess function for some common distributions. Source: \cite{beirlant}}
 \label{fig:beir} 
 \end{figure}
 
-Comparing this image with the mean excess plot for the data at hand (fig. \ref{fig:r_me}), there is not any obvious distribution that can be out however it is clear that for appropriately high threshold, the mean excess function is decreasing adding to the evidence of the light-tailedness of the distribution. the mean excess plot in figure \ref{fig:r_me} is also decreasing when the threshold is chosen appropriately (here considered to be 6 kWh). This can seem to be an arbitrary or convenient choice especially when we see increasing behaviour for a threshold of 9 kWh however choosing such high threshold also has high variance and thus decreases our confidence in the result. Choosing our threshold to be 6 kWh gives us roughly 370 ``extreme'' observations which is large enough on its own but negligible with respect to the total number of observations available (over of 1 million). This would imply that $k=369$ (because the $n-k^{th}$ observations for $k=370$ is greater than 6 kWh) but typically we round up. Thus when we're dealing with electric load (as opposed to returns or positive differences), we chose $k$ such that $X_{N-k,N} \approx 6$.
+Comparing this image with the mean excess plot for the data at hand (fig. \ref{fig:r_me}), there is not any obvious distribution that can be picked out however it is clear that for appropriately high threshold, the mean excess function is decreasing, supporting the earlier deduction that the data may be light tailed. The choice of the appropriate threshold (here considered to be roughly 6 kWh) may seem to be an arbitrary or convenient choice especially when we see increasing behaviour for a threshold of 9 kWh, however choosing such a high threshold also has high variance and thus decreases our confidence in the result. Choosing our threshold to be 6 kWh gives us roughly 370 ``extreme'' observations which is large enough on its own but negligible with respect to the total number of observations available (over of 1 million). Thus when we're dealing with electric load (as opposed to transformed electric load such as returns), we chose $k$ such that $X_{N-k,N} \approx 6$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{R_meplot.png}
+\includegraphics[width=0.8\textwidth]{R_meplot.png}
 \caption{\label{fig:r_me} Mean excess plot plotted against threshold.}
 \end{figure}
 
@@ -118,13 +126,17 @@ One of the proposed maximum Lq-likelihood estimator (MLqE) of $\theta$ (real or 
 \end{equation*}
 with $L_q(u)= \log u$ if $q=1$ and $L_q(u)= (u^{1-q}- 1)/(1-q)$, otherwise (cf. Definition 2.2 in Ferrari and Yang, 2010). The function $L_q$ is quite similar to the Box-Cox transformation in statistics. The parameter $q$ gauges the degree of distortion in the underlying density. If $q=1$, then the estimation procedure reads as the ordinary maximum likelihood (ML) method.
 
-The rationale to the maximum product spacing (MSP) estimator can be found in \cite{ChengAmin:79} and \cite{Ranneby:84}. Now we are going to apply both of these estimation methods (MLqE and MSP) to the available sample (7 weeks) of weekly maxima. We choose weekly maxima so that assumption of independence may hold however this leads to very few extreme (max-) data. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings, thus we will have $7 \times 503$ extreme data points.
+The rationale to the maximum product spacing (MSP) estimator can be found in \cite{ChengAmin:79} and \cite{Ranneby:84}. The MSP estimator is given by
 
-Figure \ref{fig:gammaEst} displays the estimates for the EVI $\gamma$ (or shape parameter) using both Lq-likelihood and MSP estimation procedures upon the BM method. Figure \ref{fig:POTEst} in contrast uses a Peak Over Threshold (POT) method using the $k$ upper order statistics. Notice again in this image observations are chosen to be above the 6 kWh threshold.
+\begin{equation*}
+\hat{\theta} = \argmax{\theta \in \Theta} \frac{1}{n+1} \sumab{i=1}{n} \log \left( (F(X_{j,n};\theta) - F(X_{j-1,n};\theta))(n+1) \right),
+\end{equation*}
 
-The above mentioned were obtained using weekly maxima for the 7 week period, hence using $7 \times 503= 3521$ maxima. Using both MLqE and MSP estimation methods, $\gamma$ is seen to be negative and also for the POT method where $k$ is not so low. This further validates the light tailed nature however this rigorousness holds for weekly maxima not necessarily maxima for other blocks. 
+\noindent where $F(x;\theta)$ and $G(x)$ are distribution functions of $f(x;\theta)$ and $g(x)$ respectively. $g(x)$ is the true but unknown density function of the random variables $X_1, X_2, ... $ where as $f(x;\theta)$ is the density function of the model assigned to the same. Both the MSP and ML estimators are related by the fact that they are approximating the same information, though in separate ways \citep{Ranneby:84}. The information that is being approximated is known as the Kullback-Leibler information, $I(g,f) = \int g(x)\log( g(x)/f(x) ) d\lambda(x)$, where $\lambda$ is some measure. 
 
-Figure \ref{fig:EndPointEst}  shows two estimates of the right endpoint. This is the upper limit of HH usage. Method 1 of the MLqEP (red) are more conservative estimates and the downfall, as observed, is that it can return values that are less than sample maxima. However, method 2 gives a more realistic estimate.
+Now we are going to apply both of these estimation methods (MLqE and MSP) to the available sample (7 weeks) of weekly maxima. We choose weekly maxima so that assumption of independence may hold however this leads to very few extreme (max-) data. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings, thus we will have $7 \times 503$ extreme data points.
+
+Figure \ref{fig:gammaEst} displays the estimates for the EVI, $\gamma$ (or shape parameter), using both Lq-likelihood and MSP estimation procedures upon the BM method. We are not so much concerned with the estimate of $\gamma$ but the sign of the estimate of $\gamma$, which we see is negative. Thus, we have rigorously confirmed our earlier deduction that $\gamma <0$, though this rigor holds only for weekly maxima and not necessarily for other block maxima. Intuitively, data being light-tailed means that the sum of the tail probabilities is small which in turn means that the right endpoint is finite. This brings us neatly to the right endpoint estimation. The estimation requires an input for $\gamma$, thus the values shown in figure \ref{fig:gammaEst} are used in the estimation of the right endpoint (fig. \ref{fig:EndPointEst}). From these two implementations if the MLqE, the red one being the more conservative estimate of the two, we get that the right endpoint for weekly maxima is between 12-13.5 kWh. This makes intuitive and contextual sense; most DNO impose an upper limit for households by contract and exceeding this limit may cause a fuse to blow or a blackout to occur thus giving a physical limit to what an electric grid may be able support.  Reassuringly, the estimate of 13.5 kWh is actually quite close to the 15 kWh upper limit imposed by DNO on residential customers.
 
 \begin{figure}
 \begin{center}
@@ -136,128 +148,125 @@ Figure \ref{fig:EndPointEst}  shows two estimates of the right endpoint. This is
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.7]{EndpointEst.pdf}
-\caption{Estimates for the right endpoint, based on the weekly maxima.} \label{fig:EndPointEst}
+\caption{Estimates for the right endpoint based on the weekly maxima.} \label{fig:EndPointEst}
 \end{center}
 \end{figure}
 
-Figure \ref{fig:POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. Even though the POT method is not one that we are currently pursuing, it adds to the evidence that the data are indeed light tailed.
+Figure \ref{fig:POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. Notice that, for the sake of consistency, we have chosen the threshold to be 6 kWh. Even though the POT method is not one that we are currently pursuing, it adds to the evidence that the data are indeed light tailed. Except for $k$ very small, where variance is too large and data too sparse to conduct any inference with confidence, we have that $\gamma < 0$.  
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.75]{EVIestimation.pdf}
+\includegraphics[scale=0.7]{EVIestimation.pdf}
 \caption{Extreme value index estimation using the $k$th larger order statistics.} \label{fig:POTEst}
 \end{center}
 \end{figure}
 
 \section{Heteroscedasticity of Extremes} \label{subsec:sced}
 
-The discussion in section \ref{subsec:EVT} describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case in reality. \cite{einmahl16} developed the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, if the distribution function $F$ also shares this right endpoint then the \textit{scedasis function}, denoted by $c$ and defined on $[0,1]$, is indicative of the frequency of extremes. This scedasis function is defined by equation \ref{eq:scedasisfn} and becomes uniquely defined  $\forall n \in \mathbb{N}, 1 \le i \le n$ when the density condition (eq. \ref{eq:scedasis_cond}) is imposed.
-
+The discussion in section \ref{subsec:EVT} describes ``classical'' extreme value theory, the foundation of which requires the data to be i.i.d. However, this may not always be the case in reality. \cite{einmahl16} described the behaviour of the extremes which do not subscribe to the notion of identically distributed, namely heteroscedastic extremes. The mathematical set up is as follows. Suppose we have independent observations taken at $n$ time points, $X_1^{(n)} , ... , X_n^{(n)}$, which have different distribution functions $F_{n,1}, ... , F_{n,n}$. Each of the $n$ observations however have the same right endpoint, denoted by $x^F \in (-\infty, \infty]$. Furthermore, if the distribution function $F$ also shares this right endpoint, then the \textit{scedasis function}, denoted by $c$ and defined (eq. \ref{eq:scedasisfn}) on $[0,1]$, is indicative of the frequency of extremes.
 % The condition presented in equation \ref{eq:scedasis_cond} ensures that the definition presented in equation \ref{eq:scedasisfn} is unique $\forall n \in \mathbb{N}$ and $\forall 1 \le i \le n$.
 
 \begin{equation} \label{eq:scedasisfn}
-\lim_{x \rightarrow x^F} \frac{1-F_{n,i}(x)}{1 - F(x)} = c(\frac{i}{n})
+\lim_{x \rightarrow x^F} \frac{1-F_{n,i}(x)}{1 - F(x)} = c\left(\frac{i}{n}\right).
 \end{equation}
+
+\noindent This scedasis function becomes uniquely defined  $\forall n \in \mathbb{N}, 1 \le i \le n$ when the density condition (eq. \ref{eq:scedasis_cond}) is imposed.
+
 
 \begin{equation} \label{eq:scedasis_cond}
-\int_0^1 c(s)d(s) = 1
+\int_0^1 c(s)d(s) = 1.
 \end{equation}
 
-The assumption required for this model is on $F  \in \mathcal{D}(G_{\gamma})$ belonging to the maximum domain of attraction of the GEV distribution and while it can be shown that $F_{n,i}  \in \mathcal{D}(G_{\gamma})$, this does not need to be assumed.  The theory is developed for positive EVI, $\gamma > 0 $ in \citet{einmahl16} which means that the Hill estimator (eq. \ref{eq:hill_est}) was used to estimate the EVI.
+The assumption required for this model is on $F  \in \mathcal{D}(G_{\gamma})$ belonging to the maximum domain of attraction of the GEV distribution and while it can be shown that $F_{n,i}  \in \mathcal{D}(G_{\gamma})$, this does not need to be assumed \textit{a priori}. The theory presented in \cite{einmahl16} is developed for positive EVI. Since we know our data is light tailed, any results using an estimate of $\gamma$ cannot be applied directly. Estimators for $\gamma <0$ exist \citep{Ferreira17} but these need to be adapted before. This adaptation will be pursued as future work. %, i.e. $\gamma > 0 $ which means that the Hill estimator (eq. \ref{eq:hill_est}) was used to estimate the EVI.
+%
+%\begin{equation} \label{eq:hill_est}
+%\hat{\gamma}_H := \frac{1}{k} \sum_{j=1}^k log(X_{n,n-j+1}) - log(X_{n,n-k}),
+%\end{equation}
+%where $k=k(n)$ is a suitable intermediate sequence. The Hill estimator is not suitable for $ \gamma \in \mathbb{R}$ however other appropriate exist. For example, \citet{Ferreira17} developed an estimator for $\gamma < 0 $ in the spatial-temporal setting, which can be adapted for just the temporal setting as in our context. 
 
-\begin{equation} \label{eq:hill_est}
-\hat{\gamma}_H := \frac{1}{k} \sum_{j=1}^k log(X_{n,n-j+1}) - log(X_{n,n-k})
+Despite the fact that the work presented in \cite{einmahl16} is for $\gamma >0$, we can still apply some of the results and tests for electric demand. Let us first look at some of the results. %\cite{einmahl16} splits their study into three main sections that are of significance to this report. In the first of these section, some properties of $c$ are deduced and $\gamma$ is estimated. 
+The first result that is relevant to us is the estimator for the scedasis function (eq. \ref{eq:c_hat_est}).
+
+\begin{equation} \label{eq:c_hat_est}
+\hat{c}(s) = \frac{1}{kh} \sum_{i=1}^n \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}G \left(\frac{s-\frac{i}{n}}{h} \right),
 \end{equation}
-where $k=k(n)$ is a suitable intermediate sequence such that 
 
-\begin{align} \label{eq:k_cond}
-\begin{split}
-\lim_{n \rightarrow \infty} k &= \infty \\
-\lim_{n \rightarrow \infty} \frac{k}{n} &= 0
-\end{split}
-\end{align}
+\noindent where $G$ is a continuous, symmetric kernel on $[-1,1]$ s.t. $\int_{-1}^{1} G(s)ds = 1$ and $G(s) = 0 \quad \forall s \notin [-1,1]$ , $h := h_n$ is known as the bandwidth s.t. $h \rightarrow 0$ and $kh \rightarrow \infty$ as $n \rightarrow \infty$. the biweight kernel, $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$, was used throughout the study. The kernel has value 0 for $s \notin [-1,1]$.
 
-\noindent Studies such as \citet{Ferreira17} have developed estimators for $\gamma < 0$ albeit in the spatial-temporal scale but it can be adapted to just the temporal scale for our context. Although in the case of the electric load data we have seen that at least weekly maxima (and possibly others) are light tailed but this is not yet reason to not adapt the work developed in \cite{einmahl16}  since the authors state that estimators other than those presented in the paper may be used for $\gamma \in \mathbb{R}$ and the results such as the asymptotic independence between those estimators and the estimator for the integrated scedasis function still hold. Before we adapt the estimators of this study to electric load, let us first look at some of their results. \cite{einmahl16} splits their study into three main sections that are of significance to this report. In the first of these section, some properties of $c$ are deduced and $\gamma$ is estimated. In this section, two test statistics, $T_1$ and $T_2$ (eq. \ref{eq:test_stat12}), are used to reject the presence of homoscedastic extremes ($H_0: c \equiv 1$). 
+The second result that is of importance is the two test statistics, $T_1$ and $T_2$ (eq. \ref{eq:test_stat12}).  
 
 \begin{align} \label{eq:test_stat12}
 \begin{split}
-T_1 : =& \sup_{0 \le s \le 1} |\hat{C}(s) - C_0(s)|\\
-T_2 : =& \int_0^1 \{\hat{C}(s) - C_0(s)\}^2 dC_0(s)\\
+T_1 : =& \sup_{0 \le s \le 1} |\hat{C}(s) - C_0(s)|,\\
+T_2 : =& \int_0^1 \{\hat{C}(s) - C_0(s)\}^2 dC_0(s),\\
 \end{split}
 \end{align}
 
-\noindent where $C_0(s) = \int_0^s c_0(u)du$ for some $c_0$ that is given. In the second section, test statistics, $T_3$ and $T_4$ (eq. \ref{eq:test_stat34}), are used to test whether $\gamma$ is constant.
-
-\begin{align}  \label{eq:test_stat34}
-\begin{split}
-T_3 := & \quad \sup_{0 \le s_1 < s_2 \le 1, \hat{C}(s_2) - \hat{C}(s_1)}|\frac{\hat{\gamma}_{(s_1,s_2]}}{\hat{\gamma}_H} -1| \\
-T_4 := & \quad \frac{1}{m} \sum_{j=1}^m (\frac{\hat{\gamma}_{(l_{j-1},l_j]}}{\hat{\gamma}_H}-1)^2
-\end{split}
-\end{align}
-
-\noindent where  $\hat{\gamma}_{(s_1,s_2]}$ is the Hill estimator based on $X_{[ns_1]+1}^{(n)}, ... , X_{[ns_2]}^{(n)}$,  $l_j : = \sup\{s: \hat{C}(s) \ge j/m\}$, where $m$ is the number of block the full sample has been divided into, and the estimator for $C = \int_0^s c(u) du $ is given by:
+\noindent where $C_0(s) = \int_0^s c_0(u)du$ for $c_0$ given. We start by implementing the scedasis estimator, $\hat{c}$, (eq. \ref{eq:c_hat_est}) and then test for the trend. These are used to reject the presence of homoscedastic extremes ($H_0: c \equiv 1$) under the assumption that $\gamma$ is constant. \cite{einmahl16} provided statistics to test for the invariance of $\gamma$ but these utilise the Hill estimator which is inappropriate for the light tailed data at hand. The adaptation of these test for negative EVI will be pursued in the future. We will assume for the time being that $\gamma$ is constant and test for the trend in the scedasis function.
 
 
-\begin{equation} \label{eq:C_hat_est}
-\hat{C}(s) : = \frac{1}{k} \sum_{i=1}^{[ns]} \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}
-\end{equation}
+%\begin{align}  \label{eq:test_stat34}
+%\begin{split}
+%T_3 := & \quad \sup_{0 \le s_1 < s_2 \le 1, \hat{C}(s_2) - \hat{C}(s_1)} \left|\frac{\hat{\gamma}_{(s_1,s_2]}}{\hat{\gamma}_H} -1\right|, \\
+%T_4 := & \quad \frac{1}{m} \sum_{j=1}^m \left(\frac{\hat{\gamma}_{(l_{j-1},l_j]}}{\hat{\gamma}_H}-1\right)^2,
+%\end{split}
+%\end{align}
+%
+%\noindent where  $\hat{\gamma}_{(s_1,s_2]}$ is the Hill estimator based on $X_{[ns_1]+1}^{(n)}, ... , X_{[ns_2]}^{(n)}$,  $l_j : = \sup\{s: \hat{C}(s) \ge j/m\}$, where $m$ is the number of block the full sample has been divided into, and the estimator for $C = \int_0^s c(u) du $ is given by $\hat{C}(s) : = \frac{1}{k} \sum_{i=1}^{[ns]} \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}$. Note that both test statistics $T_3$ and $T_4$ use the Hill estimator for $\gamma$, which is unsuitable for our use. More work needs to be done in order to adapt these tests for negative EVI, which will be pursued in the future.
 
-While equation \ref{eq:C_hat_est} estimates the integral of the scedasis function, equation \ref{eq:c_hat_est} gives the estimator of the scedasis function itself, which is the one that we're interested in.
+%Test statistics $T_3$ and $T_4$ use the Hill estimator and are not applicable to our data, thus we will not test for the trend in $\gamma$. Instead 
 
-\begin{equation} \label{eq:c_hat_est}
-\hat{c}(s) = \frac{1}{kh} \sum_{i=1}^n \mathbb{1}_{\{X_i^{(n)} > X_{n,n-k}\}}G(\frac{s-\frac{i}{n}}{h})
-\end{equation}
-
-Here, $G$ is a continuous, symmetric kernel on $[-1,1]$ s.t. $\int_{-1}^{1} G(s)ds = 1$ and $G(s) = 0 \quad \forall s \notin [-1,1]$ , $h := h_n$ is known as the bandwidth s.t. $h \rightarrow 0$ and $kh \rightarrow \infty$ as $n \rightarrow \infty$. The second section of the study also ran simulations using various data generating process so as to validate the model for various kinds of distributions. In these simulations, where the data length was $n=5000$, $k$ was chosen to be 400 and the other parameters were $h = 0.1$ and $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$. This kernel is known as the biweight kernel, which is taken to be zero for $ s \notin [-1,1]$.
-
-The final section of \cite{einmahl16} that is of importance to us is the application of the above estimators and tests to financial data. To be specific the authors started with daily loss returns of the SP500 index from 1988 to 2012. This sample had 6302 observations with 2926 days of losses and tests were conducted using $k=160$. This data included the financial crisis that erupted in 2008 which may have to lead to the lack of significant results. Thus the authors used a subsample, from 1988 to 2007 which included 5043 observations and 2348 days with losses. In this case, $k$ was chosen to be 130 and it was shown that the null hypthesis ($H_0 = \gamma$ constant) could not be rejected (using tests $T_3$ and $T_4$) whereas the frequency of extremes being invariant was rejected (using tests $T_1$ and $T_2$).  It was also noted that the scedasis function, generated using the subsample, showed a sharp increase at the end of 2007 even before the financial crisis occurred. This final analysis is relevant to our futurex work since much like electric load data financial data are light tailed. However, financial returns (such as loss returns as used here) are heavy tailed which may also be the case for transformations of electric load data. Moreover, this data set is also a time series much like ours and we too will consider properties and heteroscedasticity of returns. Much like what the authors have done here, we too will eventually consider quantifying changes, if any, in the frequency of extremes. Understanding how the behaviour of extremes changes, specifically in their frequency, allows Distribution Network Operators (DNO) to infer new installations of appliances in homes or of photovoltaic (PV) cells and purchases of electric vehicles thereby supporting the personalisation of electricity plans and contracts for better customer care and service. Features such as the sharp increase in the scedasis function may also inform DNO of impending risk of power failure.
-
-
-We finally move on to some adaptation of the work presented in \cite{einmahl16} on heteroscedastic extremes. SP500 data is one time series whereas we have 503 time series, one for each household. Thus, we proceed as follows.
+ \citet{einmahl16} applied these results to daily loss returns from the Standard and Poor's 500 Index (SP500) and found that $\gamma$ was constant for certain years and confirmed the presence of heteroscedastic extremes i.e. $c \neq 1$. We now adapt this work. SP500 data is one time series whereas we have 503 time series, one for each household. Thus, we proceed as follows.
 \begin{enumerate}
 \item Data is at half hourly resolution which means that for each of 503 households, there are 2352 measurements.
 \item At each half hour, the maximum over household is taken. In this way we get a single time series with length 2352.
-\item The choice of $k$ is often heuristic and application dependent. The correct choice of $k$ has not been yet been evaluated. Since we chose the global threshold to be roughly 6 kWh, we choose a $k$ for this data so that $X_{N-k,N} \approx 6$ also which gives us $k=353$ however we end up using $k=400$ due to rounding up as before. 
-\item The scedasis is then estimated using the biweight kernel.
-\item The resulting image is given in figure \ref{fig:mysced_hh_max}.
+\item The choice of $k$ is often heuristic and application dependent. The correct choice of $k$ has not been yet been evaluated. Since we chose the global threshold to be roughly 6 kWh, we choose a $k$ for this data so that $X_{N-k,N} \approx 6$ also which gives us $k=353$ however we end up using $k=400$ as it is common practice to round up.
+\item The scedasis is then estimated using the biweight kernel and a bandwidth of 0.1. Similar to $k$, choosing the bandwidth, $h$, is not trivial and is application specific. For the purpose of this report we have used the same $h$ as in \citet{einmahl16}.
+\item The resulting image, evaluated using equation \ref{eq:c_hat_est}, is given in figure \ref{fig:mysced_hh_max}.
 \end{enumerate}
+
+%The second section of the study also ran simulations using various data generating process so as to validate the model for various kinds of distributions. In these simulations, where the data length was $n=5000$, $k$ was chosen to be 400 and the other parameters were $h = 0.1$ and $G(s) = \frac{15(1-x^2)^2}{16}, x \in [-1,1]$. This kernel is known as the biweight kernel, which is taken to be zero for $ s \notin [-1,1]$.
+
+%The final section of \cite{einmahl16} that is of importance to us is the application of the above estimators and tests to financial data. To be specific the authors started with daily loss returns of the SP500 index from 1988 to 2012. This sample had 6302 observations with 2926 days of losses and tests were conducted using $k=160$. This data included the financial crisis that erupted in 2008 which may have to lead to the lack of significant results. Thus the authors used a subsample, from 1988 to 2007 which included 5043 observations and 2348 days with losses. In this case, $k$ was chosen to be 130 and it was shown that the null hypothesis ($H_0 = \gamma$ constant) could not be rejected (using tests $T_3$ and $T_4$) whereas the frequency of extremes being invariant was rejected (using tests $T_1$ and $T_2$).  It was also noted that the scedasis function, generated using the subsample, showed a sharp increase at the end of 2007 even before the financial crisis occurred. This final analysis is relevant to our future work since much like electric load data financial data are light tailed. However, financial returns (such as loss returns as used here) are heavy tailed which may also be the case for transformations of electric load data. Moreover, this data set is also a time series much like ours and we too will consider properties and heteroscedasticity of returns. Much like what the authors have done here, we too will eventually consider quantifying changes, if any, in the frequency of extremes. Understanding how the behaviour of extremes changes, specifically in their frequency, allows Distribution Network Operators (DNO) to infer new installations of appliances in homes or of photovoltaic (PV) cells and purchases of electric vehicles thereby supporting the personalisation of electricity plans and contracts for better customer care and service. Features such as the sharp increase in the scedasis function may also inform DNO of impending risk of power failure.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.55]{hh_max_sced_pres.pdf}
-\caption{\label{fig:mysced_hh_max} $\hat{p}$ for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
+\caption{\label{fig:mysced_hh_max} Proportion scedasis for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
 \end{figure}
 
 %Both estimations of the scedasis function (\ref{fig:mysced_hh_max}) are reasonably consistent with each other except perhaps the middle peaks; the biweight kernel yields 5 peaks whereas the Epanechnikov kernel yields 4. For the most part peaks occur roughly at the same time and as do the troughs. 
-The scedasis of the half hourly maxima has 5 main peaks. It is valuable to see if there are any patterns about when this happens. The first peak occurs roughly around day numbered 597 which is a Friday. This is encouraging because we know already that collectively customers are using more on weekends that weekdays (\ref{fig:sums}). The other peaks also follow the same pattern: the second peaks occurs around day numbered 605 (Saturday), the third occurs between days numbered 617 (Thursday) and 621 (Monday), the fourth between 625 (Friday) and 629 (Tuesday) and the last peak between 633 (Saturday) and 637 (Wednesday). The last two in these cases are admitted closer to their lower ranges than the higher ranges which confirms that it is not just overall high usage that occurs on weekends but individual peaks are also more likely to occur on weekdays. Also it is notable that although we observe peaks on weekends, we don't have a peak at every weekend. Having said that, it is encouraging that there are more peaks later in the time series as we did see an increase in usage towards the end of the weekly total demand.
 
-Let's come back for a moment to the concept of scedasticity. Scedasis is not necessarily a measure of where the most extreme event is likely to occur or has occured rather an indication of where extremes are more frequent and it's a somewhat relative scale. This means that we may have two households where household 1 has a larger scedasis at a certain time and household 2 has a smaller scedasis but the value of demand at the time may be larger for household 2. This is because household 1 is simply using more energy than is ``normal'' at that point in time where as the load from household 2 is relatively (to itself) is not as extreme (we'll see this later).
+The scedasis of the half hourly maxima (fig. \ref{fig:mysced_hh_max}) has 5 main peaks. It is valuable to see if there are any patterns regarding the timing of these peaks. The first peak occurs roughly around day numbered 597 which is a Friday. Recall from figure \ref{fig:sums} that collectively Friday was the day of the week which was had the smallest electric load however this result is not entirely discouraging; it demonstrates that extreme values may behave differently to sums and averages which we know to be true and is the reason that a theory for extremes exists. The other peaks occur roughly on weekends and thus better aligns with what we saw in figure \ref{fig:sums}: the second peaks occurs around day numbered 605 (Saturday), the third occurs between days numbered 617 (Thursday) and 621 (Monday), the fourth between 625 (Friday) and 629 (Tuesday) and the last peak between 633 (Saturday) and 637 (Wednesday). The last two in these cases are admitted closer to their lower ranges than the higher ranges which confirms that it is not just overall high usage that occurs on weekends but individual peaks are also more likely to occur on weekdays. Also it is notable that although we observe peaks on weekends, we don't have a peak at every weekend. Having said that, it is encouraging that there are more peaks later in the time series as we did see an increase in usage towards the end of the weekly total demand.
 
-Coming back to figure \ref{fig:mysced_hh_max}, we can look at a moving average of the half hourly maxima and for large windows, say 100 or 200 half hours, we notice a somewhat similar pattern. \todo{include image later} All the peaks occur at roughly the same time and roughly in similar magnitudes. While this may a rudimentary comparison it helps to better conceptualise the relative risk or excess that the scedasis function describes.
+Let's come back for a moment to the concept of scedasticity. Scedasis is not necessarily a measure of where the most extreme event is likely to occur or has occurred rather an indication of where extreme values are more frequent and it's a somewhat relative scale. This means that we may have two households where household 1 has a larger scedasis at a certain time than household 2 at the same time but the load at the time may be larger for household 2. This is because household 1 is simply using more energy than is ``normal'' at that point in time where as the load from household 2 is relatively (to itself) not as extreme.% (we'll see this later). 
+We can look at a moving average of the half hourly maxima and for large windows, say 100 or 200 half hours, we notice a somewhat similar pattern to figure \ref{fig:mysced_hh_max}. \todo{include image later} All the peaks occur at roughly the same time and roughly in similar magnitudes. While this may a rudimentary comparison it helps to conceptualise relative risk that the scedasis function describes.
 
-%For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}. \todo{needs interpretation/ discussion}
+For the same data set, the integrated scedasis function can be seen in figure \ref{fig:myintsced_hh_max}. The image in itself is not what is of consequence here but the use of these values to apply tests $T_1$ and $T_2$ given in equation \ref{eq:test_stat12}.
 
-%\begin{figure}
-%\centering
-%\includegraphics[scale=0.6]{hh_max_int_sced.pdf}
-%\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.}
-%\end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{hh_max_int_sced.pdf}
+\caption{\label{fig:myintsced_hh_max} $\hat{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.}
+\end{figure}
 
-We can continue and consider analogies for the daily losses considered in \cite{einmahl16}. For example, the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household which can be aggregated again in some way to get one time-series. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
+Now that we have established an estimate for $\hat{C}$ and $\hat{c}$, we can apply the Kolmogorov-Smirnov-type test statistic ($T_1$) and Cramer-Von-Mises-type test statistic ($T_2$). We are testing to see if there is a trend in the scedasis function thus the null hypothesis is $H_0: c_0 =0$. This gives that $C_0(s) = s$. Then we get that $T_1 = 0.675$ and $T_2 = 0.153$ which when normalised appropriately (cf Corollary 1 in \citet{einmahl16}) we get 13.5 and 61.21 respectively. We can look up the corresponding critical values in \citet{tables1,tables2} and we get p-values which are virtually zero. Thus we reject the null hypothesis and establish the presence of heteroscedastic extremes i.e. there is a trend in $c$. This is important because we now know that our earlier assumption that extremes come from the same distribution is not correct. On the other hand this result provides good motivation to further develop parametric estimators in the setting where the data are not identically distributed.
+
+We can continue and consider analogies for the daily losses considered in \cite{einmahl16}, e.g. the positive differences between some aggregate statistic for day $d$ and the same aggregate statistic for day $d-1$ for each household which can be aggregated again in some way to get one time-series. However the data set we are currently considering is only 7 weeks long i.e. 49 days so we are limited but it's a valuable start nonetheless.
 
 Before scedasis function is estimated for various positive differences, it is useful to review what aggregating statistics have been used. The following were thought to be relevant either from an electric load perspective or an extremes perspective: \begin{enumerate*}[label=\roman*)] \item maximum, \item mean, and \item sum. \end{enumerate*} Using these, 4 different positive differences data sets were created in the following way:
 \begin{enumerate}
 \item The data, which contains measurements at half hourly resolution for 503 customers, was grouped by day.
 \item For each house the mean, maximum or total electric load was recorded for each day.
 \item Then to get one time series as before, a maximum or a sum over all households were recorded.
-\item Thus 4 positive differences were recorded. The naming that is present in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``max of Daily mean'' indicates the for for each household, the average load was recorded for each day and then the maximum  over all households is recorded where ``max of daily max'' indicates a maximum over all households is acquired from daily maxima.
+\item Thus 4 positive differences were used. The naming system in figures \ref{fig:pos_diff} and \ref{fig:pos_diff_sced} represent which kind of aggregation has been applied. For example ``Total of Daily max'' indicates the  daily max is summed over all households whereas ``max of daily max'' indicates a maximum over all households is acquired from daily maxima.
 \item What these look like in terms of measurements is shown in figure \ref{fig:pos_diff}.
 \item The corresponding estimated scedasis function is given in figure \ref{fig:pos_diff_sced}.
 \end{enumerate}
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{pos_diffs.pdf}
+\includegraphics[scale=0.85]{pos_diffs.pdf}
 \caption{\label{fig:pos_diff} Profiles of various positive differences.}
 \end{figure}
 
@@ -267,7 +276,7 @@ Before scedasis function is estimated for various positive differences, it is us
 \caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.}
 \end{figure}
 
-As we did above, we can look at where the peaks occur for positive differences. There are seven peaks for most of positive differences. It's only the scedasis of the ``Max of Daily Max'' that has 5 peaks and maybe another point of inflexion. For those that have 7 peaks, the $4^{\text{th}}$ and $5^{\text{th}}$ peaks are very close and could arguably be part of the same. First let's look at when each of the peaks occurs (table \ref{tab:pos_diff_sced}). Table \ref{tab:pos_diff_scedd} related the day numbering to the day of the week. Clearly some of these occur in the middle of the week but most occur over weekends and there is not a clear pattern. Given that cumulatively Saturdays and Sundays tend to be most intensive week and Thursdays and Fridays have the least usage (fig. \ref{fig:sums}) thus we would expect a lot of positive differences to peak on Saturday but this would only be strictly true if we were considering general behaviour, not necessarily peak behaviour. When we consider daily totals, a lot of the peaks do occur on the Saturdays as expected or at least on the weekend but some occur on weekdays too and indiscriminately so. This is because extreme behaviour need not follow average/general behaviour and also individual peak behaviour need not follow cumulative peak behaviour.  For example, ``Max of Daily Max'' follows individual extreme behaviour as does ``Max of Daily Total''. In contrast the ``Total of Daily Total'' picks out collective peak behaviour along with ``Total of Daily Max''. Most of the peaks of ``Max of Daily Max'' occur directly after the corresponding peaks in ``Total of Daily Total'' showing how the cumulative peak can differ from the individual peak. Qualitatively speaking it also shows that the peak individual load, in this case transformed load, carries on after the peak cumulative load but does not contribute to it. This makes sense; it's quite common that individuals use a lot of energy but outside of peak hours and unless enough households are also doing the same, it is of no concern.
+As we did above, we can look at where the peaks occur for positive differences. There are seven peaks for most of positive differences. It's only the scedasis of the ``Max of Daily Max'' that has 5 peaks and maybe another point of inflexion. For those that have 7 peaks, the $4^{\text{th}}$ and $5^{\text{th}}$ peaks are very close and could arguably be part of the same. First let's look at when each of the peaks occurs (table \ref{tab:pos_diff_sced}). Table \ref{tab:pos_diff_scedd} related the day numbering to the day of the week. Clearly some of these occur in the middle of the week but most occur over weekends and there is not a clear pattern. Given that cumulatively Saturdays and Sundays tend to be most intensive week and Thursdays and Fridays have the least usage (fig. \ref{fig:sums}) thus we would expect a lot of positive differences to peak on Saturday but this would only be strictly true if we were considering general behaviour, not necessarily peak behaviour. When we consider daily totals, a lot of the peaks do occur on the Saturdays as expected or at least on the weekend but some occur on weekdays too and indiscriminately so. This is because extreme behaviour need not follow average/general behaviour and also individual peak behaviour need not follow cumulative peak behaviour.  For example, ``Max of Daily Max'' follows individual extreme behaviour as does ``Max of Daily Total''. In contrast the ``Total of Daily Total'' picks out collective peak behaviour along with ``Total of Daily Max''. Most of the peaks of ``Max of Daily Max'' occur directly after the corresponding peaks in ``Total of Daily Total'' showing how the cumulative peak can differ from the individual peak. Qualitatively speaking it also shows that the peak individual load, in this case transformed load, carries on after the peak cumulative load but does not necessarily contribute to it. This makes sense; it's quite common that individual households use a lot of energy, say outside of peak hours and unless enough households are also doing the same, it does not put strain on the network.
 
 
 \begin{table}
@@ -313,14 +322,14 @@ As we did above, we can look at where the peaks occur for positive differences. 
 \label{tab:pos_diff_scedd}
 \end{table}
 
-Thus far we have used a density scedasis however because we have more than one time series (one for each household) it is possible also to look at the proportion of houses which exceed a global threshold which can relate more easily to probability than the density scedasis estimator. The density scedasis does not directly translate to a probability since locally it may be more than one but it still tells us how frequent the extremes are at a time $j/n$ however using the frequency of exceedances and proportion scedasis, it is more straightforward to interpret as a probability.
+Thus far we have used a density scedasis but this quite wasteful of the data. We can use more of the data by considering the proportion of houses which exceed a global threshold. The advantage of this approach is that which can relate more easily to probability than the density scedasis estimator. The density scedasis does not directly translate to a probability since locally it may be more than one (it still tells us how frequent the extremes are at a time $j/n$) however using the frequency of exceedances and proportion scedasis, it is more straightforward to interpret as a probability.
 
-Thus, a crude estimation of the number of households which exceed a global threshold can be calculated and this can be thought of as a crude estimation of the scedasis function based on proportion. Suppose we have $m$ household which are measured a $n$ time points thus we have $N= n \times m$ observations. The scedasis assumption is
+Thus, a crude estimation of the number of households which exceed a global threshold at time $j/n$ can be calculated and interpreted as a scedasis estimator based on proportion. Suppose we have $m = 503 $ household which are measured a $n = 2352$ time points thus we have $N= n \times m$ observations. Recall the scedasis assumption reformulated as shown below holds uniformly in $i$ and $n$, $\forall j$ satisfying $\int_0^1 c(t)dt = 1$
 
 \begin{equation*}
-\frac{\mathbb{P}(X_i(j)>x)}{1-F(x)} \quad  \displaystyle{ \mathop{\rightarrow}^{x \uparrow x*}} \quad c\left(\frac{j}{n}\right)
+\frac{\mathbb{P}(X_i(j)>x)}{1-F(x)} \quad  \displaystyle{ \mathop{\rightarrow}^{x \uparrow xF}} \quad c\left(\frac{j}{n}\right)
 \end{equation*}
-\noindent uniformly in $i$ and $n$, $\forall j$ satisfying $\int_0^1 c(t)dt = 1$. Thus we replace the density scedasis estimator by the proportion of households that exceed a global threshold of $X_{N-k,N}$ at time $j/n \equiv s_j$. Thus
+\noindent Thus we replace the density scedasis estimator, $\hat{c}$, by the \textit{proportion scedasis}, denoted by $\hat{p}$, which is the proportion of households that exceed a global threshold of $X_{N-k,N}$ at time $j/n \equiv s_j$. Thus
 
 \begin{align} \label{eq:sced_prop}
 \begin{split}
@@ -329,7 +338,7 @@ Thus, a crude estimation of the number of households which exceed a global thres
 \end{split}
 \end{align}
 
-Implementing this in R for the 7 weeks of data at the half hourly time resolution (i.e. $n = 1185498$), the frequency scedasis obtained is presented in figure \ref{fig:hh_sced_prop}. Here the $k$ was chosen heuristically to use about 20\% of the data. Not the a line plot is no longer presented. This is to represent the discrete nature of $\hat{p}$.
+Implementing this in R for the 7 weeks of data at the half hourly time resolution (i.e. $N = 1185498$), the frequency scedasis obtained is presented in figure \ref{fig:hh_sced_prop}. Here the $k$ was chosen heuristically to use about 20\% of the data. Note that a line plot is no longer presented to reflect the discrete nature of $\hat{p}$.
 
 \begin{figure}
 \centering
@@ -337,7 +346,9 @@ Implementing this in R for the 7 weeks of data at the half hourly time resolutio
 \caption{\label{fig:hh_sced_prop} Scedasis using the frequency of exeedances (eq. \ref{eq:sced_prop}) for 7 weeks with $k=24000$.}
 \end{figure}
 
-We have yet to connect forecasts and forecast errors with scedasis functions so let's do this now. Picking the Adjusted Average (AA) forecast, the Same Day forecast and the linear regressions (LR) forecast, we can estimate the scedasis function of absolute errors (absolute value of difference between each forecast and observation for week 22). As before weeks 16 to 21 (inclusive) have been used to calculate the forecast for 503 customers for week 22. Thus we have $336 \times 503 = 169008$ measurements. For each error an mean excess plot (figs. \ref{fig:AA_err_me} - \ref{fig:LR_err_me}) has been created so we may choose an appropriate value of $k$. Looking at these images, an error of 5kWh was chosen as appropriately extreme error in each case. This threshold had 58, 46 and 48 exceedance for the AA, SD and LR errors, respectively. Thus our choice of $k$, by rounding up is 100. Intuitively we know this is a very high threshold to have since the median observation of electric load is around the 5 kWh however using 4kWh means then that $k=200$ which would no longer satisfy the second condition of equation \ref{eq:k_cond}. 
+\section{Heteroscedastic Extremes in Forecasts} \label{subsec:sced_forecast}
+
+We have yet to connect forecasts and forecast errors with scedasticity so let's do this now. Picking the AA forecast, the SD forecast and the WA forecast, we can estimate the scedasis function of errors (absolute difference between forecast and observation). As before week 22 is forecasted for 503 households thus we have $336 \times 503 = 169008$ measurements. For each error a mean excess plot (figs. \ref{fig:AA_err_me}, \ref{fig:SD_err_me}, \ref{fig:LR_err_me}) has been created so we may choose an appropriate value of $k$. Looking at these images, an error of 5kWh was chosen as appropriately extreme error in each case. From this $k$ was deduced to be 58, 46 and 48 for the AA, SD and LR errors, respectively. Thus our choice of $k$, by rounding up, is 100. %Intuitively we know this is a very high threshold to have since the median observation of electric load is around the 5 kWh however using 4kWh means then that $k=200$ which would no longer satisfy the second condition of equation \ref{eq:k_cond}. 
 
 \begin{figure}
 \centering
@@ -357,7 +368,7 @@ We have yet to connect forecasts and forecast errors with scedasis functions so 
 \caption{\label{fig:LR_err_me} Mean excess plot of the absolute difference between the WA forecast and observation for week 22.}
 \end{figure}
 
-Let's then look at the scedasis functions of these errors (figs. \ref{fig:AA_err_sced}- \ref{fig:LR_err_sced}). All three of these estimated scedasis functions are interesting because they all contain 7 peaks (though admittedly some are not as strong as the others). Recall that there are seven days worth of data at half hourly resolution. The labels of the x-axis have been placed so that it indicates the noon of that day. Thus each of these images is telling us that we're most unsure of what is happening around from noon to night time or that errors are particularly high for these times of the day. Moreover, the last two peaks are particularly pronounced meaning that it there relatively large errors for Saturday. All of this is particularly worrying because most of the high cumulative usage is exactly in these hours (figs. \ref{fig:sums} and \ref{fig:days}). However we can take comfort from knowing that this is not because of any one forecasting method. Perhaps because of the varied usage and peak hours of usage, these periods of the day will always be susceptible to higher errors that other periods of the day. Not only, perhaps this may further establish the benefits of usage as it may help us to better predict usage at precisely these periods of the day. As such this will be our next port of enquiry.
+Let's then look at the scedasis functions of these errors (figs. \ref{fig:AA_err_sced}- \ref{fig:LR_err_sced}). All three of these estimated scedasis functions are interesting because they all contain 7 peaks (though admittedly some are not as strong as the others). Recall that there are seven days worth of data at half hourly resolution. The labels of the x-axis have been placed so that it indicates the noon of that day. Thus each of these images is telling us that we're most unsure of what is happening around from noon to night time or that errors are particularly high for these times of the day. Moreover, the last two peaks are particularly pronounced meaning that it there relatively large errors for Saturday. All of this is particularly worrying because most of the high cumulative usage is exactly in these hours (figs. \ref{fig:sums} and \ref{fig:days}). However we can take comfort from knowing that this is not because of any one forecasting method. Perhaps because of the varied usage and peak hours of usage, these periods of the day will always be susceptible to higher errors that other periods of the day. Not only, perhaps this may further establish the benefits of clustering usage as it may help us to better predict usage at precisely these periods of the day.
 
 \begin{figure}
 \centering
@@ -374,7 +385,7 @@ Let's then look at the scedasis functions of these errors (figs. \ref{fig:AA_err
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{LR_err_sced.pdf}
-\caption{\label{fig:LR_err_sced} Estimated scedasis function of LR forecast errors.}
+\caption{\label{fig:LR_err_sced} Estimated scedasis function of WA forecast errors.}
 \end{figure}
 
 
