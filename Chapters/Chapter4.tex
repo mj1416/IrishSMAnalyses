@@ -1,14 +1,14 @@
 \lhead{\emph{Extreme Value Statisitcs}}  % Set the left side page header to "Abbreviations"
 
-\chapter{Extreme Value Statistics} \label{sec:EVT}
+\chapter{Extreme Value Analyses} \label{sec:EVT}
 
 As we have noted from the literature review in section \ref{subsec:litrev}, there is no discussion of extremes when it comes to electric load forecasting or about the influence of stresses on the electric grid. Intuitively we can see that the stress may come from a large number of households requiring electricity at the same time, say for breakfast or in the evening but it may also come from a relatively small number of households requiring (unusually) large amounts of electricity, say from a neighbourhood where many households have electric vehicles. The statistics of these extremes is the topic of this chapter.
 
 While classical large sample theory allows the use of the empirical distribution to make some inferences about what happens in the tail behaviour, it fails in cases where the second moment and even the first moment (the variance and mean, respectively) cease to be finite. This is because classical theory is based on the law of large numbers and relies mostly on the normal distribution whose first and second moment are both finite. Additionally, classical theory does not allow the quantification of a probability of an event greater than what has already been observed. This is the strength of extreme value theory (EVT); it offers us techniques that focus on the ``extreme values of a sample, on extremely high quantiles or on small tail probabilities'' \cite[ch.~1]{beirlant}.
 
-\section{Theoretical Framework} \label{subsec:EVT}
+\section{Extreme Value Conditions} \label{subsec:EVT}
 
-As a precursor to what follows, let $F$ be a distribution function (d.f.) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of identically and independently distributed (i.i.d.) random variables with common d.f. $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the \textit{sample maximum} by $X_{n,n}$ and define it as $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$. We can also define the order statistics, $\{X_{1,n} \le X_{2,n} \le ... \le X_{n,n}\}$ and understand the \textit{upper order statistics} to  be $\{X_{n-k,n} \le ... \le X_{n,n}\}$, for suitable $k$.% to conduct tail inference.% and we shall always be concerned with sample maxima.
+As a precursor to what follows, let $F$ be a distribution function (d.f.) underlying the population $X$. Assume $X_1,X_2, \ldots, X_n, \ldots$ is a sequence of identically and independently distributed (i.i.d.) random variables with common d.f. $F$. Since there is no essential difference in maximisation and minimisation, we shall consider extreme value theory regarding the maximum of the random sample $(X_1,X_2, \ldots, X_n)$ for a sufficiently large sample size $n$. We shall denote the \textit{sample maximum} by $X_{n,n}$ and define it as $X_{n,n}:= \max(X_1,X_2, \ldots, X_n)$. We can also define the order statistics, $\{X_{1,n} \le X_{2,n} \le ... \le X_{n,n}\}$ and understand the \textit{upper order statistics} to  be $\{X_{n-k,n} \le ... \le X_{n,n}\}$, for suitably small $k$.% to conduct tail inference.% and we shall always be concerned with sample maxima.
 
 The celebrated Fisher and Tippet theorem \citep{ft28}, also known as the Extreme Value theorem, with prominent unifying contributions by \cite{Gnedenko:43} and \cite{deHaan:70}, establishes the Generalised Extreme Value (GEV) distribution as the class of limiting distributions for the linearly normalised partial maxima $\{X_{n,n} \}_{n\geq 1}$. More concretely, if there exist real constants $a_n>0$, $b_n \in \real$ such that
 \begin{equation}\label{EVTheo}
@@ -50,41 +50,46 @@ Then, $F\in \mc{D}(G_{\gamma})$ if and only if there exists a positive  measurab
 \end{equation}
 
 
-holds for all $t>0$ [notation: $U\in ERV_{\gamma}$]. The limit in equation \ref{ERVU} coincides with the $U-$function of the Generalised Pareto (GP) distribution, with d.f. $ 1+ \log G_ \gamma $, which suggests the commonly known improved inference attached to the Peaks Over Threshold (POT) method (described below). In fact, the extreme value condition (\ref{EVTheo}) on the tail quantile function $ u $ is the usual assumption in semi-parametric inference for extreme outcomes. Since we are mainly considering Block Maxima (BM) method (described below), we may use the extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold. To this effect, define the $ k^{\text{th}} $ block maximum as 
+holds for all $t>0$ [notation: $U\in ERV_{\gamma}$]. The limit in equation \ref{ERVU} coincides with the $U-$function of the Generalised Pareto (GP) distribution, with d.f. $ 1+ \log G_ \gamma $, which suggests the commonly known improved inference attached to the Peaks Over Threshold (POT) method (described below). In fact, the extreme value condition (\ref{EVTheo}) on the tail quantile function $ u $ is the usual assumption in semi-parametric inference for extreme outcomes. Since we are mainly considering Block Maxima (BM) method, we define the $ k^{\text{th}} $ block maximum to be:
 
 \begin{equation}
 M_i = \max _{(i -1) m < j \le i m} X_j.
 \end{equation}
 
-The above states that we are dividing the sample of size n into $k$ block of equal length (time) $m$. For the extreme value theorem to hold within each block, the block length must be sufficiently large, i.e. one $m$ should tend to infinity. Now, let $V$ be the generalised inverse of $ -1/\log F $, i.e. $ V(-1 / \log( 1 - t ) ) = F^{\leftarrow}( 1 - t )$ for $ t > 0 $. Then, $F \in \mc{D} ( G_\gamma )$ if and only if
-
+\noindent Then we may use the extreme value condition provided in \citet{FdeH:15} which enables us to deal with block length and/or block number as opposed to the number of upper order statistics above a sufficiently high (random) threshold.
 
 \begin{equation} \label{EVTheo2}
 \limit{m} \frac{V(mt) - V(m)}{a_m} = \frac{t^\gamma - 1}{\gamma}
 \end{equation}
 
+
+The above states that we are dividing the sample of size n into $k$ block of equal length (time) $m$. For the extreme value theorem to hold within each block, the block length must be sufficiently large, i.e. one $m$ should tend to infinity. Now, let $V$ be the generalised inverse of $ -1/\log F $, i.e. $ V(-1 / \log( 1 - t ) ) = F^{\leftarrow}( 1 - t )$ for $ t > 0 $. Then, $F \in \mc{D} ( G_\gamma )$ if and only if
+
+
+
 \noindent for all $ t > 0 $. The extreme value condition in equation \ref{EVTheo2} is the main condition in this report, eventually. Furthermore, by letting $ x = x_m $ such that $ x_m \rightarrow \infty $, as $ m \rightarrow \infty $, in the case where $ \gamma < 0 $, it is possible to devise a class of estimators for the right endpoint of $F$ belonging to some max-domain of attraction, $ \mc{D} (G_\gamma) $.  Namely, condition \ref{EVTheo2} gives rise to the approximate equality $ V(\infty) \approx V(m) - a_m / \gamma $, as $ m \rightarrow \infty $, where $ V(\infty ) := \limit{t} V(t) = F^{\leftarrow}(1) = x^F $, the latter being the right endpoint of $F$ which can be viewed as the ultimate extreme quantile.
 
 
-Within the two main approaches in Extreme Value analysis we plan to tackle:
-\begin{enumerate}
-\item\label{BM} BM method: take observations in blocks of equal size and assume that the maximum in each block (time window) follows exactly the Generalised Extreme Value (GEV) distribution defined in equation \ref{GEVd}.
-\item\label{POT} POT method: restrict attention to those observations from the sample that exceed a certain level or threshold, supposedly high, while assuming that these exceedances follow exactly the GP distribution.
-\end{enumerate}
+%Within the two main approaches in Extreme Value analysis we plan to tackle:
+%\begin{enumerate}
+%\item\label{BM} BM method: take observations in blocks of equal size and assume that the maximum in each block (time window) follows exactly the Generalised Extreme Value (GEV) distribution defined in equation \ref{GEVd}.
+%\item\label{POT} POT method: restrict attention to those observations from the sample that exceed a certain level or threshold, supposedly high, while assuming that these exceedances follow exactly the GP distribution.
+%\end{enumerate}
 
-A difficulty in applying EVT is that observations generally do not follow the exact extreme value distribution. The best we can hope for is that they come from a distribution in one of the only possible three domains of attraction. Hence an interesting aspect is to derive large sample properties of the obtained estimators by replacing the word ``exactly'' with ``approximate'' in points \ref{BM} and \ref{POT} above. The latter conveys a semi-parametric framework, which also proves to be a  fruitful setting in analysing extreme events. 
+A difficulty in applying EVT is that observations generally do not follow the exact extreme value distribution. The best we can hope for is that they come from a distribution in one of the only possible three domains of attraction. Hence an interesting aspect is to derive large sample properties of the obtained estimators in a % by replacing the word ``exactly'' with ``approximate'' in points \ref{BM} and \ref{POT} above. The latter conveys a 
+semi-parametric framework, which also proves to be a  fruitful setting in analysing extreme events. 
 
 %Lastly, what was referred to as the upper limits in the earlier section is known as the right endpoint in this framework and is defined as $x^F := \sup\{x | F(x) < 1\} \le \infty$.
 
-\section{Extreme Value Analyses} \label{subsec:EVres}
+\section{Extreme Value Statistics} \label{subsec:EVres}
 
-Now that we've set up the basic framework, it is useful to consider some graphical tools. A quantile-quantile (QQ) plot answers the typical question: does a particular model plausibly fit the distribution of the random variable at hand? It is relatively simple to generate and can even be done by hand in some cases e.g. for the exponential distribution. For each data point in the sample, the equivalent quantile of the proposed model is calculated. Then the ordered data points are plotted against these quantiles to get the QQ plot. Mathematically speaking, the QQ plot is given by the graph \cite[ch.~6]{embrechts}. \newline
+Now that we've set up the basic framework, it is useful to consider some graphical tools. A quantile-quantile (QQ) plot answers the typical question: does a particular model plausibly fit the distribution of the random variable at hand? It is relatively simple to construct and can even be done by hand in some cases e.g. for the exponential distribution. For each observation the equivalent quantile of the proposed d.f. $F$ is calculated. Then the ordered data points are plotted against these quantiles to get the QQ plot. Mathematically speaking, the QQ plot is given by the graph \cite[ch.~6]{embrechts}. \newline
 
 \centerline{$\{(X_{k,n},F^{\leftarrow}(\frac{n-k+1}{n+1})), k = \{1,...,n\}\}$}
 
-\noindent where $n$ is number of observations. The linearity in the QQ plots can be used as a goodness of fit test between the model and the random variable at hand.
+\noindent where $n$ is number of observations. The linearity in the QQ plots can be used as a goodness of fit assessment between the model and the random variable at hand.
 
-Figure \ref{fig:beta} shows what the QQ plot looks like when the underlying distribution of electric load data is assumed to be the standard beta distribution. While it is not shown, the uniform distribution also fits the data qualitatively similarly. At this point, there is no evidence to suggest that the data are beta distributed (or uniform) which exposes one disadvantage of the QQ plot; it only tells if a certain distribution is correct, not which one is correct. Even though, the underlying distribution hasn't been established, it is probable that the data are light tailed, i.e $\gamma < 0$ since both the uniform and beta distributions are light tailed. This will also explain why heavy tailed distributions such as the log-normal and Weibull didn't fit the data well anywhere (not shown). 
+Figure \ref{fig:beta} shows what the QQ plot looks like for the prescribed d.f. $F$ of half hourly electric load data is assumed to be the standard beta distribution (i.e. with parameters $\alpha=1$ and $\beta=1$, which is the same as the uniform distribution). At this point, there is no evidence to suggest that the data are beta (or uniform) distributed  which exposes one disadvantage of the QQ plot; it only tells if a certain distribution is plausible, not which one is correct. Even though, the underlying distribution hasn't been established, it is probable that the data are light tailed, i.e $\gamma < 0$ since both the uniform and beta distributions are light tailed. This will also explain why heavy tailed distributions such as the log-normal and Weibull didn't fit the data well anywhere (not shown). 
 
 \begin{figure}
 \centering
@@ -100,7 +105,7 @@ In practice however, the mean excess function can be estimated by its the empiri
 
 \centerline{$\hat{e}_n(t) = \frac{\sum\limits_{i=1}^n x_i 1_{(t,\infty)}(x_i)}{\sum\limits_{i=1}^n 1_{(t,\infty)}(x_i)} - t$}
 
-This empirical mean excess function can be plotted against the threshold $t$ or against $k$ which is the number of $x_i$ that exceed the threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the shape of the mean excess function can yield further information about both the distribution and the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails (such as the log-normal distribution) whereas a decreasing trend of light tails (such as uniform distribution).
+This empirical mean excess function can be plotted against the threshold $t$ or against $k$ which is the number of $x_i$ that exceed the threshold, $X_{n-k,n}$. Figure \ref{fig:beir} shows how the monotonicity of the mean excess function can yield further information about both the distribution and the tail heaviness of the data; an increasing trend for high thresholds is suggestive of heavy tails (such as the log-normal distribution) whereas a decreasing trend of light tails (such as uniform distribution).
 
 \begin{figure}
 \centering
@@ -129,12 +134,13 @@ with $L_q(u)= \log u$ if $q=1$ and $L_q(u)= (u^{1-q}- 1)/(1-q)$, otherwise (cf. 
 The rationale to the maximum product spacing (MSP) estimator can be found in \cite{ChengAmin:79} and \cite{Ranneby:84}. The MSP estimator is given by
 
 \begin{equation*}
-\hat{\theta} = \argmax{\theta \in \Theta} \frac{1}{n+1} \sumab{i=1}{n} \log \left( (F(X_{j,n};\theta) - F(X_{j-1,n};\theta))(n+1) \right),
+\hat{\theta} = \argmax{\theta \in \Theta} \sumab{i=1}{n} \log \left( F(X_{j,n};\theta) - F(X_{j-1,n};\theta) \right),
 \end{equation*}
 
-\noindent where $F(x;\theta)$ and $G(x)$ are distribution functions of $f(x;\theta)$ and $g(x)$ respectively. $g(x)$ is the true but unknown density function of the random variables $X_1, X_2, ... $ where as $f(x;\theta)$ is the density function of the model assigned to the same. Both the MSP and ML estimators are related by the fact that they are approximating the same information, though in separate ways \citep{Ranneby:84}. The information that is being approximated is known as the Kullback-Leibler information, $I(g,f) = \int g(x)\log( g(x)/f(x) ) d\lambda(x)$, where $\lambda$ is some measure. 
+\noindent with $F(X_{0,n}) = 0$ and $F_(X_{n+1,n}) = 1$. %where $F(x;\theta)$ and $G(x)$ are distribution functions of $f(x;\theta)$ and $g(x)$ respectively. $g(x)$ is the true but unknown density function of the random variables $X_1, X_2, ... $ where as $f(x;\theta)$ is the density function of the model assigned to the same. Both the MSP and ML estimators are related by the fact that they are approximating the same information, though in separate ways \citep{Ranneby:84}. The information that is being approximated is known as the Kullback-Leibler information, $I(g,f) = \int g(x)\log( g(x)/f(x) ) d\lambda(x)$, where $\lambda$ is some measure.
+The MSP estimator looks at spacings between subsequent observations whereas the ML estimators looks at the observations.
 
-Now we are going to apply both of these estimation methods (MLqE and MSP) to the available sample (7 weeks) of weekly maxima. We choose weekly maxima so that assumption of independence may hold however this leads to very few extreme (max-) data. Therefore we need to replicate. This will be done by drawing on the 503 customers' meter readings, thus we will have $7 \times 503$ extreme data points.
+Now we are going to apply both of these estimation methods (MLqE and MSP) to the available sample (7 weeks) of weekly maxima, which are assumed to follow a GEV by equation \ref{GEVd}. We choose weekly maxima so that assumption of independence may hold. Note that in chapter two (fig. \ref{fig:acf_day}) we explored the dependent structure of averages and exploited tis in chapter 3 for each of the forecasting methods. However, in the most extreme observations, this structural dependence becomes week and the extreme value conditions still hold. Since we have few extreme (max-)data we need to replicate. This will be done by drawing on the 503 customers' meter readings, thus we will have $7 \times 503$ extreme data points.
 
 Figure \ref{fig:gammaEst} displays the estimates for the EVI, $\gamma$ (or shape parameter), using both Lq-likelihood and MSP estimation procedures upon the BM method. We are not so much concerned with the estimate of $\gamma$ but the sign of the estimate of $\gamma$, which we see is negative. Thus, we have rigorously confirmed our earlier deduction that $\gamma <0$, though this rigor holds only for weekly maxima and not necessarily for other block maxima. Intuitively, data being light-tailed means that the sum of the tail probabilities is small which in turn means that the right endpoint is finite. This brings us neatly to the right endpoint estimation. The estimation requires an input for $\gamma$, thus the values shown in figure \ref{fig:gammaEst} are used in the estimation of the right endpoint (fig. \ref{fig:EndPointEst}). From these two implementations if the MLqE, the red one being the more conservative estimate of the two, we get that the right endpoint for weekly maxima is between 12-13.5 kWh. This makes intuitive and contextual sense; most DNO impose an upper limit for households by contract and exceeding this limit may cause a fuse to blow or a blackout to occur thus giving a physical limit to what an electric grid may be able support.  Reassuringly, the estimate of 13.5 kWh is actually quite close to the 15 kWh upper limit imposed by DNO on residential customers.
 
@@ -152,7 +158,7 @@ Figure \ref{fig:gammaEst} displays the estimates for the EVI, $\gamma$ (or shape
 \end{center}
 \end{figure}
 
-Figure \ref{fig:POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. Notice that, for the sake of consistency, we have chosen the threshold to be 6 kWh. Even though the POT method is not one that we are currently pursuing, it adds to the evidence that the data are indeed light tailed. Except for $k$ very small, where variance is too large and data too sparse to conduct any inference with confidence, we have that $\gamma < 0$.  
+Figure \ref{fig:POTEst} displays the semi-parametric estimation results while adopting the Moment (M) and Mixed Moment (MM) estimators in connection with the POT method. Notice that, for the sake of consistency, we have chosen the threshold to be 6 kWh. Even though the POT method is not one that we are currently pursuing, it adds to the evidence that the data are indeed light tailed. Except for $k$ very small, where variance is too large and data too sparse to conduct any inference with confidence, we have that $\gamma < 0$.
 
 \begin{figure}
 \begin{center}
@@ -231,7 +237,7 @@ T_2 : =& \int_0^1 \{\hat{C}(s) - C_0(s)\}^2 dC_0(s),\\
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.55]{hh_max_sced_pres.pdf}
+\includegraphics[scale=0.55]{hh_max_sced(1).pdf}
 \caption{\label{fig:mysced_hh_max} Proportion scedasis for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.}
 \end{figure}
 
@@ -272,7 +278,7 @@ Before scedasis function is estimated for various positive differences, it is us
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{pos_diff_sced.pdf}
+\includegraphics[scale=0.5]{pos_diff_sced(1).pdf}
 \caption{\label{fig:pos_diff_sced} Estimated scedasis functions, $\hat{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.}
 \end{figure}
 
@@ -387,6 +393,8 @@ Let's then look at the scedasis functions of these errors (figs. \ref{fig:AA_err
 \includegraphics[scale=0.5]{LR_err_sced.pdf}
 \caption{\label{fig:LR_err_sced} Estimated scedasis function of WA forecast errors.}
 \end{figure}
+
+We have a covered a lot of ground in this chapter. We confirmed the light tailed nature of (weekly-) maxima which we had suspected due to the exploratory analysis in section \ref{subsec:EVres}. This means that we have a finite right endpoint, i.e. a value that bounds the most extreme data. This makes sense from a contextual point of view too since DNOs tend to put a contractual obligations on customers to use less than a certain amount of electricity at any given time and while this may be exceeded without the occurrence of a power outage there exists a physical limit to how much a household can use before the fuse blows. As we discussed before, if longer data were available for each household the same analyses could be done to find a right endpoint so that a tailored contract may be provided to each customer and thus reducing both the cost of electricity for the customer and the amount of energy DNOs need to supply at any given time. The pitfall of these results is that we assumed our data to be i.i.d. which we showed in the last section was not the case. In doing this part we established that there is a trend in extremes meaning that the frequency of extremes changes in time. With realistic modelling of physical, demographic and meteorological variables, we can study these better and use it to forecast load more efficiently and in turn also effectively incentivise customers to reduce demand. Lastly we looked at how the errors were connected to the scedasis function. We observed increased frequency of large errors coinciding with when most usage was high regardless of the forecast used which presents both a challenge and an opportunity to make real  world improvements in electric load forecasts.
 
 
 

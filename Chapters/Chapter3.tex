@@ -1,7 +1,7 @@
 \lhead{\emph{Forecasting Electric Load}}  % Set the left side page header to "Abbreviations"
 
 \chapter{Electric Load Forecasts}
-We reviewed many of the existing forecasting methods and techniques in section \ref{subsec:litrev} and we've discussed the value of having good forecasts with some commentary on how the quality of a forecast may be judged. In this chapter, various forecasts will be generated and their goodness discussed both qualitatively and quantitatively. Due to the strong periodic and symmetric autocorrelation (fig. \ref{fig:acf_day}), we can confidently use many of the common forecasting methods in the literature and build on those. Recall that we have 7 weeks of data, where we treat weeks 16-21 (inclusive) as past data and forecast the load in week 22.
+We reviewed many of the existing forecasting methods and techniques in section \ref{subsec:litrev} and we have discussed the value of having good forecasts with some commentary on how the quality of a forecast may be judged. In this chapter, various forecasts will be generated and their goodness discussed both qualitatively and quantitatively. Due to the strong periodic and symmetric autocorrelation (fig. \ref{fig:acf_day}), we can confidently use many of the common forecasting methods in the literature and build on those. Recall that we have 7 weeks of data, where we treat weeks 16-21 (inclusive) as past data and forecast the load in week 22.
 
 \section{Forecasts} \label{subsec:forecasts}
 
@@ -14,7 +14,7 @@ The first forecast considered is the Similar Day (SD) forecast which forms the f
 \item Thus a week long forecast is generated at half hourly resolution.
 \end{enumerate}
 
-A sample forecast showing also the measured load for one customer is provided in figure \ref{fig:SDforecast}. From this, we can see that though the peaks are largely underestimated, they occur at roughly the right time, specifically the breakfast hours for the weekdays. Similarly, we see peak in forecast for the evening time are also underestimated but moreover the forecast is smoother than the observed load. This is because the breakfast peak occurs over a narrower time winder than the evening peak and doesn't get as smoothed due to the week to week variability. Additionally, it maybe argued that the underestimation of peaks is an effect of reduced load in the first few weeks of the past data (recall fig. \ref{fig:sums}).
+A sample forecast showing also the measured load for one customer is provided in figure \ref{fig:SDforecast}. This customer was chosen randomly but also because it was judged, by looking through other sample, to portray some of the key advantages and disadvantages of each forecast that will be reviewed/introduced in this chapter. Though the household is numbered 1 though this numbering tells us nothing about the customer since the data have been randomised to ensure confidentiality. From this, we can see that though the peaks are largely underestimated, they occur at roughly the right time, specifically the breakfast hours for the weekdays. Similarly, we see peak in forecast for the evening time are also underestimated but moreover the forecast is smoother than the observed load. This is because the breakfast peak occurs over a narrower time winder than the evening peak and doesn't get as smoothed due to the week to week variability. Additionally, it maybe argued that the underestimation of peaks is an effect of reduced load in the first few weeks of the past data (recall fig. \ref{fig:sums}).
 
 \begin{figure}
 \centering
@@ -37,9 +37,7 @@ As before, for the same customer, the LW forecast as well as the observations ar
 
 \subsection{Adjusted Average Forecast}
 
-\cite{dan14} introduced an adjusted average (AA) forecast. The idea is that we start with a last week forecast and iteratively update it to included information from previous weeks with the most recent week having the most influence on the end forecast. The iterative update involved a local, restricted permutation in time which minimises some cost function. The algorithm as outlined by \cite{dan14} is as follows:
-
-The forecast, as described by \cite{dan14}, forecasts each day of the week individually though analogously.
+\cite{dan14} introduced an adjusted average (AA) forecast. The idea is that we start with a last week forecast and iteratively update it to included information from previous weeks with the most recent week having the most influence on the end forecast. The iterative update involved a local, restricted permutation in time which minimises some cost function. The forecast, as described by \cite{dan14}, forecasts each day of the week individually though analogously and the algorithm is as follows:
 \begin{enumerate}[label=\roman*)]
 \item Let $d$ be the day of the week being forecasted $(d=1,...,7)$ and suppose that there are $N$ daily usage profiles (i.e. historical data for day $d$ exists for the most recent $N$ weeks) at half hourly resolution. For $k = 1, ..., N$, the daily usage profile is denoted by $\boldsymbol{G}^{(k)} = (g_1^{(k)}, ... , g_{48}^{(k)})^T$. Note the convention that $\boldsymbol{G}^{(1)}$ is the profile for day $d$ in the most recent week whereas $\boldsymbol{G}^{(N)}$ is of the earliest week.
 \item A base profile, $\boldsymbol{F}^{(1)} = \left(f_1^{(1)}, ... , f_{48}^{(1)} \right)^T$. Each $f_i^{(1)}$ is defined by the median of past load of the corresponding half hour i.e $ \forall \quad i \in (1, ..., 48), \quad f_i^{(1)} = \text{median}(g_i^{(1)}, ..., g_i^{(N)})$.
@@ -50,14 +48,14 @@ The forecast, as described by \cite{dan14}, forecasts each day of the week indiv
 
 The Hungarian algorithm is used to solve the minimisation problem above, which can be thought of as an optimisation problem. The Hungarian algorithm uses a cost matrix and thus for this implementation we must also specify a cost matrix. Recall that we have a deformation limit, $\omega$ which we set to 3. This comes into play as for any index $i = 1, ..., 48$, which relates to half hour, $(i,j)^{th}$ element is set to be the cost if $|i-j|\le\omega$ or set to be infinity if $|i-j| > \omega$. Thus at iteration $k$, the cost matrix looks like: \newline
 
-\centerline{$\begin{bmatrix}
+\begin{tiny}\centerline{$\begin{bmatrix}
     |g_1^{(k)} - f_1^{(k)}| & |g_2^{(k)} - f_1^{(k)}| & |g_3^{(k)} - f_1^{(k)}| & |g_4^{(k)} -f_1^{(k)}| & \infty  & \infty& \infty & \infty & \dots & \infty \\
     |g_1^{(k)} - f_2^{(k)}| & |g_2^{(k)} - f_2^{(k)}| & |g_3^{(k)} - f_2^{(k)}| &  |g_4^{(k)} - f_2^{(k)}| & |g_5^{(k)} - f_2^{(k)}| & \infty & \infty &\infty & \dots & \infty\\
     |g_1^{(k)} - f_3^{(k)}| & |g_2^{(k)} - f_3^{(k)}| & |g_3^{(k)} - f_3^{(k)}| &  |g_4^{(k)} - f_3^{(k)}|& |g_5^{(k)}- f_3^{(k)}| & |g_6^{(k)}-f_3^{(k)}| & \infty & \infty & \dots  & \infty\\
     |g_1^{(k)}-f_4^{(k)}| & |g_2^{(k)} - f_4^{(k)}| & |g_3^{(k)} - f_4^{(k)}| & |g_4^{(k)} - f_4^{(k)}| &  |g_5^{(k)} - f_4^{(k)}| & |g_6^{(k)}- f_4^{(k)}|& |g_7^{(k)} - f_4^{(k)}| &\infty &\dots & \infty\\
     \infty & |g_2^{(k)} - f_5^{(k)}| & |g_3^{(k)} - f_5^{(k)}| & |g_4^{(k)} - f_5^{(k)}| &  |g_5^{(k)} - f_5^{(k)}|& |g_6^{(k)}- f_5^{(k)}|& |g_7^{(k)} - f_5^{(k)}| &|g_8^{(k)} - f_5^{(k)}| &\dots & \infty\\
      &  & \dots &  & &  & &  & \\
-\end{bmatrix}$}
+\end{bmatrix}$} \end{tiny}
 
 This algorithm is intuitively quite suited for forecasting as it gives a peaky forecast and at least for the sample forecast (fig. \ref{fig:AA_forecast_P1}) we can see that this is the case. Obviously not all peaks are represented well however from looking at this one customer, it seems that more peaks are being forecasted and roughly the correct times. The magnitudes are still not correct however in many cases they are closer to the observed than the SD forecast. We will quantify this further in section \ref{subsec:errs}. This should be the best forecast at least when the error measure used is the adjusted error measure.
 
@@ -70,18 +68,18 @@ This algorithm is intuitively quite suited for forecasting as it gives a peaky f
 
 \subsection{Weighted Average Forecast}
 
-We can now move on to some other modifications of the SD forecast. The SD forecast weighted all past data equally and didn't use any window as in the AA forecast. Instead of guessing the weights we can calculate the weights using linear regression. As \cite{hong16} noted there is a misconception that linear regression can only be used in cases where there is a linear relationship between the independent and dependent variable. In fact linear regression is appropriate in applications where the model depends linearly on the unknown parameters, $\boldsymbol \beta$, (equation \ref{eq:lin_reg}) but the relationship between the features need not be linear.
+We can now move on to some other modifications of the SD forecast. The SD forecast weighted all past data equally and didn't use any window as in the AA forecast. Instead of guessing the weights we can calculate the weights using linear regression. Since these forecasts are used by non-mathematicians it is valuable to reinforce the appropriateness of the linear regression technique.  linear regression is appropriate in applications where the model depends linearly on the unknown parameters, $\boldsymbol \beta$, (equation \ref{eq:lin_reg}) but the relationship between the features need not be linear.
 
 Given a data set $\{y_i, x_{i1}, ... , x_{ip}\}_{i=1}^n$, linear regression, in vector form, can be represented as shown in equation \ref{eq:lin_reg}.
 
 \begin{equation} \label{eq:lin_reg}
 \textbf{y} = X \boldsymbol \beta +\boldsymbol \epsilon
 \end{equation}
-where $\textbf{y} = (y_1, y_2, ... , y_n)^T $, $X =  (\textbf{x}_1^T, \textbf{x}_2^T,, ... ,\textbf{x}_n^T)^T$,  $\textbf{x}_i^T, = (x_{i1}, ... , x_{ip})$ for $i = 1, ... , n$, $\boldsymbol \beta = (\beta_1 , ... , \beta_p)$ and $\boldsymbol \epsilon = (\epsilon_1, ... , \epsilon_n)$ with $( \cdot )^T$ denoting transpose. The $\boldsymbol \epsilon$ is a disturbance or error variable which adds noise to the model and is commonly assumed to be normally distributed with zero mean and variance $\sigma^2$.
+where $\textbf{y} = (y_1, y_2, ... , y_n)^T $, $X =  (\textbf{x}_1^T, \textbf{x}_2^T,, ... ,\textbf{x}_n^T)^T$,  $\textbf{x}_i^T, = (x_{i1}, ... , x_{ip})$ for $i = 1, ... , n$, $\boldsymbol \beta = (\beta_1 , ... , \beta_p)$ and $\boldsymbol \epsilon = (\epsilon_1, ... , \epsilon_n)$ with $( \cdot )^T$ denoting transpose. The $\boldsymbol \epsilon$ is a disturbance or error vector which adds noise to the model and is commonly assumed to have identically and independently distributed multivariate normal components each with with zero mean and variance $\sigma^2$.
 
 Thus, in the context of electric load, we can use linear regression to predict each load at each half hour by modelling the relationship between the half hour in question and available observations that we deem relevant, where we inform ourselves of what is relevant by utilising the correlations (recall fig. \ref{fig:acf_day}). Thus by running 48 linear regressions, a one day forecast can be generated. The specifics of the implementation are as follows:
 \begin{enumerate}
-\item Using the \texttt{Python's SciKit} package, linear regression is done on variable $X$ and $Y$, where $X$ is the matrix of features and $Y$ is the target variable.
+\item Linear regression is done on variable $X$ and $Y$, where $X$ is the matrix of features and $Y$ is the target variable.
 %\item As mentioned before, the data set contains 7 weeks of data. These weeks range from 16 to 22. Week 22 is the week being forecasted and weeks 16 to 21 are considered "past" data which will form part of the feature matrix. 
 \item The implementation contains two steps: \begin{enumerate} \item The first step is to find/learn the parameters $\boldsymbol \beta$. To do this both $X$ and $Y$ are required. In this first step, $Y$ is a vector which contains information about the half hour in question for each household for the most recent week i.e week 21 whereas matrix $X$ contains data for the same half hour as well a lag 1 hour in each direction from weeks 16 to 20 (inclusive). Thus by using ordinary least squares, $\boldsymbol \beta$ is found by fitting $X$ to $Y$.
 \item In the second step, the forecast is created. The python implementation requires the feature matrix in the fitting phase and the forecasting phase to have the same dimension thus $X$ has to be adjusted. Since we are now forecasting week 22, we use the same half hour and lags but now taken from weeks 17 to 21 to ensure that the new $X$ has the same dimensions as the old $X$. The values predicted by the model are considered to be the forecast for the half hour in question for week 22. \end{enumerate}
@@ -89,6 +87,7 @@ Thus, in the context of electric load, we can use linear regression to predict e
 \item The daily forecast for day $d$ is then produced by repeating the two steps for each half hour.
 \item Then acquiring the weekly forecast means running the daily forecast for each day of the week.
 \end{enumerate}
+%Using the \texttt{Python's SciKit} package, 
 
 In this way it is possible to think of the SD forecast as a special case of the linear regression where the coefficients/parameters of the lag are zero in the SD forecast and the others are equal to 1 regardless of when measurements were taken. This forecast will be referred to as the Weighted Average (WA) forecast, a sample of which along with the observations is shown in figure \ref{fig:LR_forecast_P1}. Given that many of the existing algorithms in the literature are based around regression techniques, it is reasonable to expect that this is better than the LW forecast and also potentially the SD forecast given that it uses more data and the weights have been calculated. However, since the load profile is irregular, the peaks are likely to get smoothed in the process and may not be ideal for this context. This can explicitly be seen in figure in the sample forecasts given in figure \ref{fig:LR_forecast_P1} but we will quantify this more concretely as we proceed. %and \ref{fig:forecasts_P1}. 
 \begin{figure}
@@ -169,12 +168,12 @@ As for the $4^{\text{th}}-$norm error we can visualise the adjusted error but in
  \hline
 \textbf{SD} & 3.829 & 3.496 \\
 \textbf{LW} & 4.76 & 4.100 \\ 
-\textbf{AA} & 4.125 & 3.396 \\ 
+\textbf{AA} & 4.125 & \textbf{3.396} \\ 
 \textbf{WA} & 3.866 & 3.542 \\ 
-\textbf{BRR} & 3.805 & 3.575 \\
+\textbf{BRR} & \textbf{3.805} & 3.575 \\
 \hline
 \end{tabular}
-\caption{Mean of $4^{\text{th}}-$norm error and adjusted error.}
+\caption{Mean of $4^{\text{th}}-$norm error and adjusted error with the bold showing the lowest error in each metric.}
 \label{tab:errs}
 \end{table}
 

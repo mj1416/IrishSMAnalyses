@@ -34,7 +34,7 @@ def plot_autocorr():
 
 def plot_sums():
     filename="~/Documents/MPECDT/MRes/Danica/Irish SM data/short_data.csv"
-    data = pd.read_csv(filename)
+    data = pd.read_csv(filename,index_col=0)
     #
     #total usages
     #by half hour
@@ -61,27 +61,27 @@ def plot_sums():
     plt.xlabel('Time of day')
     plt.xticks((1,7,13,19,25,31,37,43,48),('00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00','23.30'))
     plt.ylabel('Smart meter \nreadings')
-    #plt.title('Half-hourly total usage for weeks 16-22')
+    plt.title('Half-hourly total usage for weeks 16-22')
     #
-    plt.subplot(2,2,2)
+    plt.subplot(2,2,4)
     plt.plot(week_sum,color='blue',linestyle='-',marker='+')
     plt.xlabel('Number of weeks')
     plt.ylabel('Smart meter \n readings')
-    #plt.title('Weekly total usage for weeks 16-22')
+    plt.title('Weekly total usage for weeks 16-22')
     #
-    plt.subplot(2,2,3)
+    plt.subplot(2,2,2)
     plt.plot(dayn_sum,color='magenta',linestyle='-',marker='+')
     plt.xlabel('Number of days')
     plt.ylabel('Smart meter \n readings')
-    #plt.title('Daily total usage for weeks 16-22')
+    plt.title('Daily total usage for weeks 16-22')
     #
-    plt.subplot(2,2,4)
+    plt.subplot(2,2,3)
     plt.plot(day_sum,color='orange',linestyle='-',marker='+')
     plt.xlabel('Day of the Week')
     plt.xticks(range(1,8),('Mon','Tue','Wed','Thur','Fri','Sat','Sun'))
     plt.ylabel('Smart meter \n readings')
-    #plt.title('total usage for weeks 16-22 by days of the week')
-    #plt.tight_layout(pad=1,h_pad=1,w_pad=0.5)
+    plt.title('Total usage for weeks 16-22 by days of the week')
+    #plt.tight_layout(pad=0.1,h_pad=0.5,w_pad=0.1)
     plt.show()
     # raw_input('press return to save file and continue')
     #print("Saving image")

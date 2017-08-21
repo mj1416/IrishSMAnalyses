@@ -4,7 +4,7 @@
 
 Electric load forecasts inform both industrial and societal decision making processes. From energy trading and electricity pricing to demand response and infrastructure maintenance,  electric load forecasts allow distribution network operators (DNOs) and policy makers to prepare for the short and long term future. In order to make informed decisions, the factors influencing electric demand need to be understood, particularly as low carbon technologies (LCT) become more prevalent. 
 
-In order to understand and meet demands effectively, smart grids are being developed in many countries, including the United Kingdom, making high resolution data collected through smart meters a ccessible. This data allows for better analysis of load, identification of issues and control of electric networks. 
+In order to understand and meet demands effectively, smart grids are being developed in many countries, including the United Kingdom, making high resolution data collected through smart meters accessible. This data allows for better analysis of load, identification of issues and control of electric networks. 
 
 As governments and businesses respond to the threat of climate change and make commitments to move towards technologies powered by electric sources \citep{fuelban}, electric demand will become more volatile. Therefore, though a large body of literature exists in forecasting with smart meter data, there is definite need to revisit the topic and realistically model social behaviour and demographic and meteorological impacts under various future scenarios.
 
@@ -12,8 +12,7 @@ Moreover, rarely though inevitably, businesses and even households may experienc
 
 Not only will the combination of electric load forecasts with extreme value statistics allow the quantification of risk from events such as blackouts but it can also help inform if the electric grid needs upgrade, and by how much. It will also allow DNOs to tailor contracts to consumers and provided targeted incentives to reduce peaks in demand. By managing local networks more efficiently, it will be possible to collectively reduce the amount of electricity consumed and thus reducing overall carbon emissions. It is with these industry driven applications that we proceed with this project.
 
-The rest of this chapter will review existing literature on electric load forecasting and outline the objectives of this report. In chapter 2, we will familiarise ourselves with the data. We will tackle some existing and modified forecasts in chapter 3 and discuss the goodness of each. Chapter 4 we will review the mathematical framework of extreme value statistics and discuss the results as applied to electric load forecasting. Finally we will conclude the results of this work in chapter 5.
-
+The rest of this chapter will review existing literature on electric load forecasting and outline the objectives of this report. 
 % Further, we also want to produce confidence bounds on these limits which can result in financial savings for businesses and help policy makers in decisions regarding infrastructure development.
 
 %Evaluating how LCT and renewable energy sources interact with each other to change and impact the demand at household and substation level will allow energy distributors and policy makers to manage infrastructure development and conduct timely maintenance works.
@@ -153,16 +152,24 @@ The method proposed requires historical load data, historical temperature data a
 
 
 
-Since some forecasting techniques and methods have been discussed it is also valuable to discuss how to assess the goodness of a forecast. Some conventional error metrics for point load forecasts, which have also been used for PLF, are mean absolute percentage error (MAPE) and mean absolute error \citep{hong16}. These error metric are reasonably simple and transparent and thus quite favourable. However, as noted by \cite{dan14}, for STLF a peaky forecast is more desirable and realistic than a flat forecast but error metrics such as mean square errors and MAPE unjustly penalise peaky forecasts and can often quantify the flat forecast to be better. This is because the peaky forecast is penalised twice: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs. A flat-forecast does not incur this double penalty. \citet{dan14}, therefore, developed an adjusted error metric that penalises less so a forecast which predicts a peak that is slightly shifted than a forecast where the peak is not predicted at all. The authors also test out three different forecasting methods:
+\section{Forecast Uncertainty}
+
+No forecast can be adopted into real-world practice without assessing the quality of it. There are many ways to make these assessments or more strictly many error metric that can be used. %Since some forecasting techniques and methods have been discussed it is also valuable to discuss how to assess the goodness of a forecast. 
+Some conventional error metrics for load forecasts are mean absolute percentage error (MAPE) and mean absolute error \citep{hong16}. These error metric are reasonably simple and transparent and thus quite favourable. However, as noted by \cite{dan14}, for STLF a peaky forecast is more desirable and realistic than a flat forecast but error metrics such as mean square errors and MAPE unjustly penalise peaky forecasts and can often quantify the flat forecast to be better. This is because the peaky forecast is penalised twice: once for the peak not occurring at the exact same point where the observed peak occurs and again for the peak occurring at some point slightly shifted from where the observed peak occurs. A flat-forecast does not incur this double penalty. \citet{dan14}, therefore, developed an adjusted error metric that penalises less so a forecast which predicts a peak that is slightly shifted than a forecast where the peak is not predicted at all. The authors also test out three different forecasting methods:
 \begin{enumerate}
 \item flat forecast: a horizontal line determined from an average of past data.
 \item Last week (LW) forecast: The same usage as in the previous, e.g. forecast for Thursday is predicted to be the same as the Thursday from the previous week.
 \item Averaged Adjustment (AA) Forecast: takes into account both a weighted historic average and a baseline usage, where permutations in time are allowed.
 \end{enumerate}
 
-Using both the new error measure, relative to the typical error measure, as well as the mean displacements in peaks, \cite{dan14} show that the flat forecast is not a good forecasting method for this application and that in general the best technique out of the three is AA with LW performing relatively well too.
+Using both the new error measure, relative to the typical error measure, as well as the mean displacements in peaks, \cite{dan14} show that the flat forecast is not a good forecasting method for high resolution smart meter data and that in general the best technique out of the three is AA with LW performing relatively well too. Thus there is evidence to suggest that while some forecasts are good at forecasting electric load at national ad regional load, the same forecast are unsuitable for forecasting load of households and low voltage networks. Thus we need to investigate the quality of existing forecasts in the context of household load and/or device new ones to ensure that forecasts enable sound decisions to be made.
 
 
 \section{Objectives} \label{subsec:objectives}
 
 There are two main objectives in this project. The first objective is to create benchmark point load forecasts and error measures. This will be done by implementing some of the forecasts discussed before and validating them with existing error measures. The second objective is to set up the extreme value framework for electric load. In order to do this, we will conduct some preliminary exploratory statistical analysis to understand the nature of ``extreme'' values . Further to this we will also estimate the extreme value index (EVI) and the right endpoint using the Block Maxima (BM) method. Finally we will use the Peak Over Threshold (POT) method to estimate the tail relative risk in the case where the data are not identically distributed i.e for heteroscedastic extremes under the assumption that the EVI remains constant in time. The results of this study will answer some practical industry-based questions as well as being strongly grounded in the theoretical framework.
+
+
+\section{Outline}
+
+Thus far we have reviewed some of the literature in electric load forecasting and outlined the objectives of the project. Chapter 2 follows next wherein we familiarise ourselves with the data. In chapter 3 we tackle some existing and modified forecasts and discuss the goodness of each. Chapter 4 will review the mathematical framework of extreme value statistics and discuss the results as applied to electric load forecasting. Finally we will conclude the results of this work in chapter 5.

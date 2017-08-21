@@ -13,9 +13,22 @@ acf(data[,5], plot=TRUE, main= "Title")
 #data[1,] #first row
 #data[1,2] #specific element
 
+
+conf.level <- 0.95
+ciline <- qnorm((1 - conf.level)/2)/sqrt(length(MEAN))
+
 #Removing na
 MEAN<-rowMeans(data[,5:507], na.rm = FALSE, dims = 1)
-acf(MEAN,lag.max = 48, plot=TRUE,main="Mean Electric Usage (Day)")
+bacf <- acf(MEAN,lag.max = 48, plot=TRUE,main="Mean Electric Usage (Day)")
+bacfdf <- with(bacf, data.frame(lag,acf))
+q <- ggplot(data = bacfdf, mapping = aes(x = lag, y = acf)) +
+  geom_hline(aes(yintercept = 0)) +
+  geom_segment(mapping = aes(xend = lag, yend = 0),color="#FF6666")
+conf.level <- 0.95
+ciline <- qnorm((1 - conf.level)/2)/sqrt(length(MEAN))
+q <- q + geom_hline(yintercept = ciline, color = "blue",size = 0.2,linetype="dashed") + 
+  geom_hline(yintercept = -ciline, color = "blue",size = 0.2,linetype="dashed")
+q
 acf(MEAN,lag.max = 336, plot=TRUE,main="Mean Electric Usage (Week)")
 acf(MEAN,lag.max = 672, plot=TRUE,main="Mean Electric Usage (2 Weeks)")
 acf(MEAN,lag.max = 2352, plot=TRUE,main="Mean Electric Usage (Full")

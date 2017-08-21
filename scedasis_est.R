@@ -8,6 +8,42 @@ G_kernel <- function(u){
   return(G)
 }
 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
 #########################       Epanechnikov Kernel     ##########################
 K_kernel <- function(u){
   if (abs(u)<=1){
@@ -17,6 +53,7 @@ K_kernel <- function(u){
   }
   return(K)
 }
+
 
 #########################       Set Directory    ##########################
 setwd("~/Documents/MPECDT/MRes/Danica/Irish SM data/")
@@ -65,21 +102,29 @@ for (s in ss){
   c_estK[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=K_kernel)))/(k*h)
 }
 
-#generate and save an image in landscape pdf
-filename <- "hh_max_sced_pres.pdf"
+# #generate and save an image in landscape pdf
+# filename <- "hh_max_sced_pres.pdf"
+# pdf(file=filename,width = 12,paper = "a4r")
+# plot(x=n*ss,y=c_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab="Day")
+# #matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
+# #legend("bottom", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
+# axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
+# axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
+# dev.off()
+qwe=data.frame(n*ss,c_estG)
+g <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_estG)) +
+  geom_hline(yintercept=1,color="Dark Turquoise",linetype="dashed") +
+  geom_line(color="Salmon") + theme(legend.position="none",panel.grid.minor=element_line(size = 1)) +
+  labs(x="Half hour",y=expression(hat(c)))
+filename <- "hh_max_sced(1).pdf"
 pdf(file=filename,width = 12,paper = "a4r")
-plot(x=n*ss,y=c_estG,type="l",col="blue",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab="Day")
-#matplot(x = cbind(n*ss,n*ss),y = cbind(c_estG,c_estK),type="l",col=c("blue","black"),xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day')
-#legend("bottom", inset=.05, legend=c("Biweight Kernel", "Epanechnikov Kernel"), lty=c(1,2), col=c("blue","black"), horiz=FALSE)
-axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
-axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
+g
 dev.off()
-
 
 #########################           Positive Differences          ##########################
 
-pdf(file = "pos_diff_sced.pdf",width=12,paper="a4r")
-par(mfrow=c(2,2))
+#pdf(file = "pos_diff_sced(1).pdf",width=12,paper="a4r")
+#par(mfrow=c(2,2))
 #########################       Postive differences Mm     ##########################
 
 pos_diff <- read.csv(file = "pos_diff.csv",dec='.',header=TRUE)
@@ -97,16 +142,24 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+c_est1 <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_est1[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Max")
-axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0.5,1,1.5),labels = c(0.5,1,1.5))
+qwe=data.frame(n*ss,c_est1)
+g1 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est1)) +
+  geom_hline(yintercept=1,color="Black",linetype="dashed") +
+  geom_line(color="Red") + 
+  labs(x="Half hour",y=expression(hat(c)),title="Total of Daily Max") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
+g1
+
+# plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Max")
+# axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
+# axis(side=2,at=c(0.5,1,1.5),labels = c(0.5,1,1.5))
 
 
 #########################       Postive differences MM     ##########################
@@ -125,17 +178,24 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+c_est2 <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_est2[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
+qwe=data.frame(n*ss,c_est2)
+g2 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est2)) +
+  geom_hline(yintercept=1,color="Black",linetype="dashed") +
+  geom_line(color="Dark Green") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5)) +
+  labs(x="Half hour",y=expression(hat(c)),title="Max of Daily Max") 
+g2
 
-plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Max")
-axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0.4,0.9,1.4),labels = c(0.4,0.9,1.4))
+# plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Max")
+# axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
+# axis(side=2,at=c(0.4,0.9,1.4),labels = c(0.4,0.9,1.4))
 
 #########################       Postive differences SS      ##########################
 
@@ -153,17 +213,25 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+c_est3 <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_est3[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
+qwe=data.frame(n*ss,c_est3)
+g3 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est3)) +
+  geom_hline(yintercept=1,color="Black",linetype="dashed") +
+  geom_line(color="Magenta") +
+  labs(x="Half hour",y=expression(hat(c)),title="Total of Daily Total") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
 
-plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Total")
-axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0.4,0.85,1.3),labels = c(0.4,0.85,1.3))
+g3
+
+# plot(x = n*ss,y = c_est,type="l",col="magenta",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Total")
+# axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
+# axis(side=2,at=c(0.4,0.85,1.3),labels = c(0.4,0.85,1.3))
 
 
 #########################       Postive differences MS      ##########################
@@ -182,18 +250,27 @@ ss <- seq(1/n,1,1/n)
 h <- 0.1
 
 #scedasis estimator
-c_est <- vector(mode = "numeric",length = length(ss))
+c_est4 <- vector(mode = "numeric",length = length(ss))
 for (s in ss){
   i <- 1:n
   u <- (s-i/n)/h
-  c_est[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
+  c_est4[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
+qwe=data.frame(n*ss,c_est4)
+g4 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est4)) +
+  geom_hline(yintercept=1,color="Black",linetype="dashed") +
+  geom_line(color="Dark Turquoise") +
+  labs(x="Half hour",y=expression(hat(c)),title="Max of Daily Total") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
+g4
 
-plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Total")
-axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
-axis(side=2,at=c(0.3,0.75,1.2),labels = c(0.3,0.75,1.2))
-dev.off()
+# plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Total")
+# axis(side = 1,at=c(0,10,20,30,40,48),labels = c(593,603,613,623,633,641))
+# axis(side=2,at=c(0.3,0.75,1.2),labels = c(0.3,0.75,1.2))
+#dev.off()
+
+multiplot(g1,g3,g2,g4,cols=2)
 
 #######################     checking with financial data      ########################
 

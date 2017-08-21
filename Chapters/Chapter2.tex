@@ -6,7 +6,7 @@
 
 \section{Profiles and Trends}
 \label{subsec:basic} 
-This section presents some basic visualisation and discussion of the general nature of electricity demand. First consider the histogram of the measurements shown in figure \ref{fig:hist}. The $75^{\text{th}}$ percentile of this data is 0.5 kWh so clearly most households use less than 0.5 kWh at any given time, however there are households which record almost as high as 12 kWh. These high use consumers are most likely operating a small business from home and/or may have multiple large appliances and electric vehicles in their homes.  While this is a plausible explanation in general, it is not the case here as electric vehicle recharging is a recurring, constant and prolonged activity. Such sustained demand was not observed in the data.
+This section presents some basic visualisation and discussion of the general nature of electricity demand. First consider the histogram of the measurements shown in figure \ref{fig:hist}. The $75^{\text{th}}$ percentile of this data is 0.5 kWh so clearly most households use less than 0.5 kWh at any given time, however there are households which record almost as high as 12 kWh. These high use consumers are most likely operating a small business from home and/or may have multiple large appliances and electric vehicles in their homes. While this is a plausible explanation in general, it is not the case here as electric vehicle recharging is a recurring, constant and prolonged activity. After a thorough search through the profiles of individual customers, which is not presented here, such a sustained demand was not observed in the data.
 
 \begin{figure}
 \centering
@@ -15,11 +15,11 @@ This section presents some basic visualisation and discussion of the general nat
 \label{fig:hist} 
 \end{figure}
 
-Where figure \ref{fig:hist} told us about half hourly (HH) demand, figure \ref{fig:sums} gives some general profiles. These four plots show the total/cumulative pattern of electricity demand. The top left plot, shows the dip in usage overnight, the increase for breakfast which stabilises during typical working hours and rises again for dinner. These are as expected. Similarly the bottom left plot shows a recurring pattern indicating that there are specific days in the week where usage is relatively high and other days where it is relatively low. This is further confirmed by the image on the bottom right which tells us that, in total Fridays tend to have the lowest load whereas weekends typically have the highest. The image on the top right shows a rise in demand starting in week 18, which is around the beginning of September, aligning with the start of the academic year for all primary and some secondary schools in Ireland. This explains why the jump in data occurs as the weeks preceding are weeks when many families may travel abroad and thus have little usage.
+Where figure \ref{fig:hist} tells us about half hourly demand, figure \ref{fig:sums} gives some general profiles. These four plots show the total/cumulative pattern of electricity demand. The top left plot in figure \ref{fig:sums} shows the dip in usage overnight, the increase for breakfast which stabilises during typical working hours and rises again for dinner. These are as expected. Similarly the top right plot of figure \ref{fig:sums} shows a recurring pattern indicating that there are specific days in the week where usage is relatively high and other days where it is relatively low. This is further confirmed by the image on the bottom left which tells us that, in total Fridays tend to have the lowest load whereas weekends typically have the highest. The image on the bottom right shows a rise in demand starting in week 18, which is around the beginning of September, aligning with the start of the academic year for all primary and some secondary schools in Ireland. This explains why the jump in data occurs as the weeks preceding are weeks when many families may travel abroad and thus have little usage.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{16_22_sums.png}
+\includegraphics[width=\textwidth]{16_22_sums.pdf}
 \caption{Cumulative demand profiles in kiloWatt hours (kWh) for various time horizons.}
 \label{fig:sums} 
 \end{figure}
@@ -42,7 +42,7 @@ One way to see if there are ``extreme'' households is to breakdown the daily con
 \label{fig:totes}
 \end{figure}
 
-One last thing to be considered in this section is the auto-correlation. It is reasonable to suspect that the demands of households are correlated to its past demand and that future weekdays will be like past weekdays and future weekends will be like past weekends and similarly that today's demand is much like yesterday's demand (if yesterday and today are both weekends or both weekdays). Indeed all of of our forecasts rely on this property so it is useful to verify it.  Figure \ref{fig:ty_colour} shows the relationship between the daily demand of each household, again colour coordinated, on day $d$ against the demand on day d-1. Clearly, there is a somewhat linear trend and some variation which may be resulting from the fact that weekends have not been segregated from weekdays. To see how far back this relationship holds, an autocorrelation function for one day (fig. \ref{fig:acf_day}) is provided. As can be seen that there is some symmetry and while it is not shown here there is also periodicity throughout the data set though with decreasing autocorrelation. The autocorrelation function plotted in figure \ref{fig:acf_day} is an arithmetic mean of all customers at each half hour (HH). This gives us the empirical foundation to use the SD forecasts and others like it.
+One last thing to be considered in this section is the auto-correlation. It is reasonable to suspect that the demands of households are correlated to its past demand and that future weekdays will be like past weekdays and future weekends will be like past weekends and similarly that today's demand is much like yesterday's demand (if yesterday and today are both weekends or both weekdays). Indeed all of of our forecasts exploit this property so it is useful to verify it.  Figure \ref{fig:ty_colour} shows the relationship between the daily demand of each household, again colour coordinated, on day $d$ against the demand on day $d-1$. There seems to be evidence of a somewhat linear trend and some variation which may be resulting from the fact that weekends have not been segregated from weekdays. To see how far back this relationship holds, an autocorrelation function for one day (fig. \ref{fig:acf_day}) is provided. The dashed line represents the 95\% confidence interval. As can be seen that there is some symmetry and while it is not shown here there is also periodicity throughout the data set though with decreasing autocorrelation. The autocorrelation function plotted in figure \ref{fig:acf_day} is an arithmetic mean of all customers, $1/n \sum_{i-1}^{n} x_i$, where $x_i$ is the load of the $i^{\text{th}}$ household, at each half hour. This gives us the empirical foundation to use the SD forecasts and others like it.
 
 \begin{figure}
 \centering
@@ -53,8 +53,8 @@ One last thing to be considered in this section is the auto-correlation. It is r
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\textwidth]{r_autocorr_day.png}
-\caption{Auto-correlation function for 1 day. Lag is measured in HH}
+\includegraphics[width=0.9\textwidth]{autocorr_day.pdf}
+\caption{Auto-correlation function for 1 day. Lag is measured in half hour.}
 \label{fig:acf_day} 
 \end{figure}
 
