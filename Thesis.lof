@@ -23,15 +23,15 @@
 \contentsline {figure}{\numberline {4.4}{\ignorespaces Estimates for the shape parameter based on the weekly maxima.\relax }}{29}{figure.caption.75}
 \contentsline {figure}{\numberline {4.5}{\ignorespaces Estimates for the right endpoint based on the weekly maxima.\relax }}{29}{figure.caption.76}
 \contentsline {figure}{\numberline {4.6}{\ignorespaces Extreme value index estimation using the $k$th larger order statistics.\relax }}{30}{figure.caption.77}
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Proportion scedasis for half hourly max over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.\relax }}{33}{figure.caption.88}
-\contentsline {figure}{\numberline {4.8}{\ignorespaces $\mathaccentV {hat}05E{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.\relax }}{34}{figure.caption.90}
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Profiles of various positive differences.\relax }}{35}{figure.caption.100}
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Estimated scedasis functions, $\mathaccentV {hat}05E{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.\relax }}{36}{figure.caption.101}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Scedasis using the frequency of exeedances (eq. \ref {eq:sced_prop}) for 7 weeks with $k=24000$.\relax }}{38}{figure.caption.105}
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Mean excess plot of the absolute difference between the AA forecast and observation for week 22.\relax }}{39}{figure.caption.107}
-\contentsline {figure}{\numberline {4.13}{\ignorespaces Mean excess plot of the absolute difference between the SD forecast and observation for week 22.\relax }}{40}{figure.caption.108}
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Mean excess plot of the absolute difference between the WA forecast and observation for week 22.\relax }}{40}{figure.caption.109}
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Estimated scedasis function of AA forecast errors.\relax }}{41}{figure.caption.110}
-\contentsline {figure}{\numberline {4.16}{\ignorespaces Estimated scedasis function of SD forecast errors.\relax }}{41}{figure.caption.111}
-\contentsline {figure}{\numberline {4.17}{\ignorespaces Estimated scedasis function of WA forecast errors.\relax }}{42}{figure.caption.112}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Proportion scedasis for half hourly maxima over 503 households for a period of 7 weeks using $k=400$ and $h=0.1$ where $n=2352$.\relax }}{32}{figure.caption.85}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces $\mathaccentV {hat}05E{C}$ for half hourly max over 503 households for a period of 7 weeks with $k=400$.\relax }}{34}{figure.caption.87}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Profiles of various positive differences.\relax }}{35}{figure.caption.97}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Estimated scedasis functions, $\mathaccentV {hat}05E{c}$ for various positive differences with $k=20$ (rough scaling), $h=0.1$ and using the biweight kernel at daily resolution.\relax }}{36}{figure.caption.98}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Scedasis using the frequency of exeedances (eq. \ref {eq:sced_prop}) for 7 weeks with $k=24000$.\relax }}{38}{figure.caption.102}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Mean excess plot of the absolute difference between the AA forecast and observation for week 22.\relax }}{39}{figure.caption.104}
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Mean excess plot of the absolute difference between the SD forecast and observation for week 22.\relax }}{39}{figure.caption.105}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Mean excess plot of the absolute difference between the WA forecast and observation for week 22.\relax }}{40}{figure.caption.106}
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Estimated scedasis function of AA forecast errors.\relax }}{41}{figure.caption.107}
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Estimated scedasis function of SD forecast errors.\relax }}{41}{figure.caption.108}
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Estimated scedasis function of WA forecast errors.\relax }}{42}{figure.caption.109}
 \addvspace {10\p@ }

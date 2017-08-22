@@ -111,15 +111,16 @@ for (s in ss){
 # axis(side = 1,at=seq(1,n,by=48*4),labels = seq(593,593+49,by=4))
 # axis(side=2,at=c(0.4,0.8,1.2),labels = c(0.4,0.8,1.2))
 # dev.off()
+require(ggplot2)
 qwe=data.frame(n*ss,c_estG)
 g <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_estG)) +
   geom_hline(yintercept=1,color="Dark Turquoise",linetype="dashed") +
   geom_line(color="Salmon") + theme(legend.position="none",panel.grid.minor=element_line(size = 1)) +
+  geom_point(data=qwe[c(260,600,1295,1570,1980),],aes(x=n*ss[c(260,600,1295,1570,1980)],y=c_estG[c(1,2,3,4,5)]))+
   labs(x="Half hour",y=expression(hat(c)))
-filename <- "hh_max_sced(1).pdf"
-pdf(file=filename,width = 12,paper = "a4r")
 g
-dev.off()
+filename <- "hh_max_sced(2).pdf"
+ggsave(filename,plot=last_plot(),width = 11,height = 6.5,device = "pdf")
 
 #########################           Positive Differences          ##########################
 
