@@ -8,42 +8,6 @@ G_kernel <- function(u){
   return(G)
 }
 
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-  
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-  
-  numPlots = length(plots)
-  
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                     ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-  
-  if (numPlots==1) {
-    print(plots[[1]])
-    
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-    
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-      
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
-
 #########################       Epanechnikov Kernel     ##########################
 K_kernel <- function(u){
   if (abs(u)<=1){
@@ -53,6 +17,9 @@ K_kernel <- function(u){
   }
   return(K)
 }
+
+require(ggplot2)
+require(gridExtra)
 
 
 #########################       Set Directory    ##########################
@@ -114,10 +81,10 @@ for (s in ss){
 require(ggplot2)
 qwe=data.frame(n*ss,c_estG)
 g <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_estG)) +
-  geom_hline(yintercept=1,color="Dark Turquoise",linetype="dashed") +
+  geom_hline(yintercept=1,colour="Dark Turquoise",linetype="dashed") +
   geom_line(color="Salmon") + theme(legend.position="none",panel.grid.minor=element_line(size = 1)) +
   geom_point(data=qwe[c(260,600,1295,1570,1980),],aes(x=n*ss[c(260,600,1295,1570,1980)],y=c_estG[c(1,2,3,4,5)]))+
-  labs(x="Half hour",y=expression(hat(c)))
+  labs(x="Half hour",y=expression(hat(c))) + theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12))
 g
 filename <- "hh_max_sced(2).pdf"
 ggsave(filename,plot=last_plot(),width = 11,height = 6.5,device = "pdf")
@@ -150,12 +117,13 @@ for (s in ss){
   c_est1[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-qwe=data.frame(n*ss,c_est1)
-g1 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est1)) +
+qwe1=data.frame(n*ss,c_est1)
+g1 <- ggplot(data = qwe1,mapping = aes(x=n*ss+593,y=c_est1)) +
   geom_hline(yintercept=1,color="Black",linetype="dashed") +
   geom_line(color="Red") + 
-  labs(x="Half hour",y=expression(hat(c)),title="Total of Daily Max") +
-  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
+  labs(x="Day",y=expression(hat(c)),title="Total of Daily Max") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5)) +
+  geom_point(data=qwe1[c(4,12,19,27,32,41,46),],aes(x=n*ss[c(4,12,19,27,32,41,46)]+593,y=c_est1[c(1,2,3,4,5,6,7)]))
 g1
 
 # plot(x = n*ss,y = c_est,type="l",col="red",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Total of Daily Max")
@@ -186,12 +154,13 @@ for (s in ss){
   c_est2[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-qwe=data.frame(n*ss,c_est2)
-g2 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est2)) +
+qwe2=data.frame(n*ss,c_est2)
+g2 <- ggplot(data = qwe2,mapping = aes(x=n*ss+593,y=c_est2)) +
   geom_hline(yintercept=1,color="Black",linetype="dashed") +
   geom_line(color="Dark Green") +
   theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5)) +
-  labs(x="Half hour",y=expression(hat(c)),title="Max of Daily Max") 
+  labs(x="Day",y=expression(hat(c)),title="Max of Daily Max")+
+  geom_point(data=qwe2[c(5,13,21,37,47),],aes(x=n*ss[c(5,13,21,37,47)]+593,y=c_est2[c(1,2,3,4,5)]))
 g2
 
 # plot(x = n*ss,y = c_est,type="l",col="dark green",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Max")
@@ -221,12 +190,13 @@ for (s in ss){
   c_est3[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-qwe=data.frame(n*ss,c_est3)
-g3 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est3)) +
+qwe3=data.frame(n*ss,c_est3)
+g3 <- ggplot(data = qwe3,mapping = aes(x=n*ss+593,y=c_est3)) +
   geom_hline(yintercept=1,color="Black",linetype="dashed") +
   geom_line(color="Magenta") +
-  labs(x="Half hour",y=expression(hat(c)),title="Total of Daily Total") +
-  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
+  labs(x="Day",y=expression(hat(c)),title="Total of Daily Total") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5)) +
+  geom_point(data=qwe3[c(3,12,19,28,32,41,46),],aes(x=n*ss[c(3,12,19,28,32,41,46)]+593,y=c_est3[c(1,2,3,4,5,6,7)]))
 
 g3
 
@@ -258,12 +228,13 @@ for (s in ss){
   c_est4[match(s,ss)] <- (sum((data_max>k_largest)*sapply(u,FUN=G_kernel)))/(k*h)
 }
 
-qwe=data.frame(n*ss,c_est4)
-g4 <- ggplot(data = qwe,mapping = aes(x=n*ss,y=c_est4)) +
+qwe4=data.frame(n*ss,c_est4)
+g4 <- ggplot(data = qwe4,mapping = aes(x=n*ss+593,y=c_est4)) +
   geom_hline(yintercept=1,color="Black",linetype="dashed") +
   geom_line(color="Dark Turquoise") +
-  labs(x="Half hour",y=expression(hat(c)),title="Max of Daily Total") +
-  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))
+  labs(x="Day",y=expression(hat(c)),title="Max of Daily Total") +
+  theme(legend.position="none",panel.grid.minor=element_line(size = 1),plot.title = element_text(hjust=0.5))  +
+  geom_point(data=qwe4[c(2,11,20,26,31,41,47),],aes(x=n*ss[c(2,11,20,26,31,41,47)]+593,y=c_est4[c(1,2,3,4,5,6,7)]))
 g4
 
 # plot(x = n*ss,y = c_est,type="l",col="cyan",xaxt="n",yaxt="n",ylab=expression(hat(c)),xlab='Day',main = "Max of Daily Total")
@@ -271,7 +242,7 @@ g4
 # axis(side=2,at=c(0.3,0.75,1.2),labels = c(0.3,0.75,1.2))
 #dev.off()
 
-multiplot(g1,g3,g2,g4,cols=2)
+grid.arrange(g1,g2,g3,g4,ncol=2,nrow=2)
 
 #######################     checking with financial data      ########################
 

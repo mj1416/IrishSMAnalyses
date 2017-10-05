@@ -27,7 +27,7 @@
 
 \newcommand\Declaration[1]{
 \btypeout{Declaration of Authorship}
-\addtotoc{Declaration of Authorship}
+%\addtotoc{Declaration of Authorship}
 \thispagestyle{plain}
 \null\vfil
 %\vskip 60\p@
@@ -351,7 +351,7 @@
 }
 \newcommand\acknowledgements[1]{
 \btypeout{Acknowledgements}
-\addtotoc{Acknowledgements}
+%\addtotoc{Acknowledgements}
 \thispagestyle{plain}
 \begin{center}{\huge{\textbf{Acknowledgements}} \par}\end{center}
 {\normalsize #1}

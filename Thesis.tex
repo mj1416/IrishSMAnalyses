@@ -3,10 +3,11 @@
 %% ---------------------------------------------------------------- 
 
 % Set up the document
-\documentclass[a4paper, 11pt, oneside]{Thesis}  % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
+\documentclass[a4paper, 11.99pt,oneside]{Thesis}  % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
 %\graphicspath{Figures/}  % Location of the graphics files (set up for graphics to be in PDF format)
 
-\usepackage[a4paper,top=5cm,bottom=0.15cm,left=5.5cm,right=0.1cm,marginparwidth=1cm]{geometry}
+%\usepackage[top=5cm,bottom=3.5cm,inner=1.5cm,outer=1.5cm,bindingoffset=2cm]{geometry}
+\usepackage[a4paper,top=5cm,bottom=0.15cm,left=5cm,right=0cm,marginparwidth=1cm,bindingoffset=1cm]{geometry}
 \usepackage[english]{babel}
 \usepackage[authoryear]{natbib}
 \usepackage[utf8x]{inputenc}
@@ -18,6 +19,7 @@
 \usepackage{bbold}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
+\usepackage{multicol}
 %\usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 %Useful Commands
@@ -93,7 +95,7 @@
 % Declaration Page required for the Thesis, your institution may give you a different text to place here
 \Declaration{
 
-\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+%\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
 I, \authornames, declare that this thesis titled, \mytitle and the work presented in it are my own. I confirm that:
 
@@ -122,27 +124,30 @@ Date:\\
 \clearpage  % Declaration ended, now start a new page
 
 %% ----------------------------------------------------------------
-% The "Funny Quote Page"
-\pagestyle{empty}  % No headers or footers for the following pages
-
-\null\vfill
-% Now comes the "Funny Quote", written in italics
-\textit{``Write a funny quote here.''}
-
-\begin{flushright}
-If the quote is taken from someone, their name goes here
-\end{flushright}
-
-\vfill\vfill\vfill\vfill\vfill\vfill\null
-\clearpage  % Funny Quote page ended, start a new page
+%% The "Funny Quote Page"
+%\pagestyle{empty}  % No headers or footers for the following pages
+%
+%\null\vfill
+%% Now comes the "Funny Quote", written in italics
+%\textit{``Write a funny quote here.''}
+%
+%\begin{flushright}
+%If the quote is taken from someone, their name goes here
+%\end{flushright}
+%
+%\vfill\vfill\vfill\vfill\vfill\vfill\null
+%\clearpage  % Funny Quote page ended, start a new page
 %% ----------------------------------------------------------------
 
 % The Abstract Page
-\addtotoc{Abstract}  % Add the "Abstract" page entry to the Contents
+%\addtotoc{Abstract}  % Add the "Abstract" page entry to the Contents
 \abstract{
-\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+%\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
-The Thesis Abstract is written here (and usually kept to just this page). The page is kept centred vertically so can expand into the blank space above the title too\ldots
+Electric demand for households and other low voltage (LV) networks tend to fluctuate more than demand at regional and national levels. These fluctuations cause spikes in demand profiles which are spaced irregularly in time making forecasting the demand to a high enough quality challenging. To be able to assess the behaviour of peaks more robustly, we have applied some results from extreme value theory to electric load data collected from smart meters and used inferences from this framework to deduce the light tailed behaviour of weekly maxima and the finite right endpoint between 12 and 13.5 kWh. We also established the presence of heteroscedastic extremes. These results are intended to inform decision making at various levels: from demand response to network planning for effective management of electricity generation and supply.% with the view to support transition towards a low carbon future.
+
+
+%The Thesis Abstract is written here (and usually kept to just this page). The page is kept centred vertically so can expand into the blank space above the title too\ldots
 
 }
 
@@ -153,9 +158,13 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 
 % The Acknowledgements page, for thanking everyone
 \acknowledgements{
-\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+%\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
-The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
+First and foremost, I would like to thank both my supervisors Danica and Claudia for their support, guidance and direction throughout this project and of course to our industrial partner Dr. Maciej Fila is helping us adapt this work. 
+
+Naturally I would also like to thank the Mathematics of Planet Earth CDT staff, particularly the organisers of the Sandpit meeting without whom this project may not have come together. Also, a shoutout to Claire Morris who made sure we got enough chocolate and socials to keep us functioning for the whole time and to all my colleagues in cohort Charlie who joined me on this journey and kept me sane. %Lastly, I must thank the rain for not allowing too many opportunities to be distracted.
+
+%The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
 
 }
 \clearpage  % End of the Acknowledgements
@@ -175,21 +184,21 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \listofsymbols{rlrl}  % Include a list of Abbreviations (a table of two columns)
 {
 % \textbf{Acronym} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or \\
-\textbf{AA} & Adjusted Average & \textbf{PV} & Photovoltaic \\
-\textbf{BM} & Block Maxima & \textbf{QQ} & Quantile-Quantile \\
-\textbf{BRR} & Bayesian Ridge Regression & \textbf{SD} & Similar Day \\
-\textbf{d.f.} & Distribution function & \textbf{STLF} & Short Term Load Forecasts  \\
-\textbf{DLM} & Dynamic Linear Model & \textbf{VSTLF} & Very Short Term Load Forecasts  \\
-\textbf{DNO} & Distribution Network Operators & \textbf{WA} & Weighted Average \\
-\textbf{EVI} & Extreme Value Index & & \\
-\textbf{EVT} & Extreme Value Theorem & & \\
-\textbf{GEV} & Generalised Extreme Value & &\\
+\textbf{AA} & Adjusted Average & \textbf{PLF} & Probabilistic Load Forecasts  \\
+\textbf{BM} & Block Maxima & \textbf{POT} & Peaks Over Threshold \\
+\textbf{BRR} & Bayesian Ridge Regression & \textbf{PV} & Photovoltaic  \\
+\textbf{d.f.} & Distribution function  & \textbf{QQ} & Quantile-Quantile  \\
+\textbf{DLM} & Dynamic Linear Model & \textbf{SD} & Similar Day  \\
+\textbf{DNOs} & Distribution Network Operators & \textbf{STLF} & Short Term Load Forecasts  \\
+\textbf{EVI} & Extreme Value Index & \textbf{VSTLF} & Very Short Term Load Forecasts  \\
+\textbf{EVT} & Extreme Value Theory  & \textbf{WA} & Weighted Average  \\
+\textbf{GEV} & Generalised Extreme Value & & \\
 \textbf{GP} & Generalised Pareto & & \\
-\textbf{HH} & Half Hour & &\\
 \textbf{i.i.d} & Identically and Independently Distributed & & \\
 \textbf{kWh} & kiloWatt hours & &\\
 \textbf{LCT} & Low Carbon Technologies & & \\%\textbf{L}ow \textbf{C}arbon \textbf{T}echnologies \\
 \textbf{LTLF}  & Long Term Load Forecasts & & \\
+\textbf{LV} & Low Voltage & &\\
 \textbf{LW} & Last Week & & \\
 \textbf{M} & Moment & & \\
 \textbf{MAPE} & Mean Absolute Percentage Error & &\\
@@ -199,9 +208,9 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \textbf{MM} & Mixed Moment & & \\
 \textbf{MSP} & Maximum Product Spacing & & \\
 \textbf{MTLF} & Medium Term Load Forecasts && \\
-\textbf{PLF} & Probabilistic Load Forecasts & & \\ %\textbf{P}robabilistic \textbf{L}oad \textbf{F}orecasts \\
-\textbf{POT} & Peaks Over Threshold & &\\
-}
+%\textbf{PLF} & Probabilistic Load Forecasts & & \\ %\textbf{P}robabilistic \textbf{L}oad \textbf{F}orecasts \\
+%\textbf{POT} & Peaks Over Threshold & &\\
+} 
 
 \clearpage
 
@@ -288,7 +297,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \label{Bibliography}
 \lhead{\emph{Bibliography}}  % Change the left side page header to "Bibliography"
 \bibliographystyle{apalike}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
-\bibliography{sample1}  % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\bibliography{sample1} % The references (bibliography) information are stored in the file named "Bibliography.bib"
 
 \end{document}  % The End
 %% ----------------------------------------------------------------

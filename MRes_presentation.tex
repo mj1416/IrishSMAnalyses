@@ -5,8 +5,8 @@
 %			Set up
 %=====================================
 {
-  \usetheme{AnnArbor}      % or try Darmstadt, Madrid, Warsaw, ...
-  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usetheme{CambridgeUS}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{beaver} % or try albatross, beaver, crane, ...
   \usefonttheme{structurebold}  % or try serif, structurebold, ...
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{caption}[numbered]
@@ -21,12 +21,13 @@
 \usepackage{textpos}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{tikz}
+\usepackage[mathscr]{euscript}
 
 \title[Electric Load Profiles]{Forecasting Peaks of household Electric Load Profiles}
-\author[Jacob]{Maria Jacob \\ {\small Supervisors: Danica Greetham, Claudia Neves}}
+\author[Jacob]{Maria Jacob \\ {\small Supervisors: Dr. Danica Greetham, Dr. Claudia Neves \\ Industrial Partner: Dr. Maciej Fila}}
 
-\institute[University of Reading]{Mathematics of Planet Earth\\ University of Reading and Imperial College London\\ \textcolor{white}{word} \\ \includegraphics[height=1cm,width=2.5cm]{mpecdt_logo.png}}
-\date{12th July 2017}
+\institute[University of Reading]{Mathematics of Planet Earth\\ University of Reading and Imperial College London\\ \textcolor{white}{word} \\ \includegraphics[height=1cm,width=2.5cm]{mpecdt_logo.png} \hspace{1cm} \includegraphics[height=1cm,width=2.5cm]{epsrc_logo.png}}
+\date{29th September 2017}
 
 \begin{document}
 %=====================================
@@ -45,15 +46,42 @@
 %=====================================
 
 %\begin{frame}{Motivation}
+%%\begin{enumerate}
+%%\item \pause Plenty of literature on point load forecasts using averages and expected values \pause
+%%\item Recently lots of probabilistic load forecasts \pause
+%%\item But no real analyses of extremes \pause
+%%\item Demands are peaky and each peak can be considered to be a local extreme \pause
+%%\item How do we quantify this? \pause
+%%\item How do we connect this with what exists? \pause
+%%\item How do we do this in a way that is both mathematically solid as well as industrially applicable? \pause
+%%\item For whom are we doing this?
+%%\end{enumerate}
 %\begin{figure}
 %\centering
-%\includegraphics[width=0.7\textwidth]{end_motivation.png}
-%\caption{Source: Marinescu et al (2013). Accessed: $30{\text{th}}$ June 2017 from \url{https://www.tcd.ie/futurecities/research/energy/demand-forecasting.php}}
-%\label{fig:motivation} 
+%\includegraphics[width=0.8\textwidth]{elecfor.png}
+%\caption{Various classifications for electric load forecasts and their applications. Source: Hong and Fan (2016)} %\citet{hong16}}%The abbreviations are Short Term Load Forecasting (STLF), Very Short Term Load Forecasting (VSTLF), Medium Term Load Forecasting (MTLF) and Long Term Load Forecasting (LTLF).
+%\label{fig:elecfor} 
 %\end{figure}
-%\note{talk about the following \begin{itemize} \item General Forecasting in Literature: that there is plenty of forecasts that work on averages, however they have smoothing effects which are undesirable in this context \item Unexplored Extreme behaviour: in the context of electricity load have not been studied \item Industrial applications: to look at both of the above has huge significance in industry as both an accumulation of modest and extreme and individual extreme behaviour will inform customer care, tailor products, plan infrastructure, also important for electricity trading, etc. \item Goals: thus we wish to improve upon what has been done and combine it with the well established theory of extremes to improve electric load forecasting \end{itemize}}
+%
+%%\begin{figure}
+%%\centering
+%%\includegraphics[width=0.7\textwidth]{end_motivation.png}
+%%\caption{Source: Marinescu et al (2013). Accessed: $30{\text{th}}$ June 2017 from \url{https://www.tcd.ie/futurecities/research/energy/demand-forecasting.php}}
+%%\label{fig:motivation} 
+%%\end{figure}
+%%\note{talk about the following \begin{itemize} \item General Forecasting in Literature: that there is plenty of forecasts that work on averages, however they have smoothing effects which are undesirable in this context \item Unexplored Extreme behaviour: in the context of electricity load have not been studied \item Industrial applications: to look at both of the above has huge significance in industry as both an accumulation of modest and extreme and individual extreme behaviour will inform customer care, tailor products, plan infrastructure, also important for electricity trading, etc. \item Goals: thus we wish to improve upon what has been done and combine it with the well established theory of extremes to improve electric load forecasting \end{itemize}}
 %\end{frame}
 
+\begin{frame}{Outline}
+\begin{itemize}
+\item Data
+\item Forecasts
+\item Error metrics
+\item Extreme Value Analyses
+\item Scedasis
+\item Conclusion
+\end{itemize}
+\end{frame}
 % Uncomment these lines for an automatically generated outline.
 % \begin{frame}{Outline}
   % \tableofcontents
@@ -66,7 +94,7 @@
 \begin{frame}{Data}
 \begin{figure}
 \centering
-\includegraphics[scale=0.33]{data_desc.pdf}
+\includegraphics[scale=0.3]{data_desc.pdf}
 \caption{Top: Sample load profile of one customer for one day.\\ Centre and Bottom: Average Daily profiles.}
 \label{fig:sums} 
 \end{figure}
@@ -78,13 +106,83 @@
 %=====================================
 
 \begin{frame}{Forecasts}
+\begin{itemize}
+\item \textbf{S}imilar \textbf{D}ay Forecast: 
+\begin{center} $f_{h,d,c}^{(n+1)} =  \frac{1}{n} \displaystyle \sum_{j=1}^{n} a_{h,d,c}^{(j)}$ \end{center}
+\pause
+\item \textbf{L}ast \textbf{W}eek Forecast:
+\begin{center} $f_{h,d,c}^{(n+1)} =  a_{h,d,c}^{(n)}$ \end{center}
+\pause
+\item \textbf{A}djusted \textbf{A}verage Forecast:
+
+\begin{center} $ f^{(n+1)}_{d,c}  = \frac{1}{n+1}\left( \displaystyle \sum_{j=1}^n \hat{a}^{(j)}_{d,c} + f^{(1)}_{d,c}\right)$ \end{center}
+where $f^{(1)}_{d,c} \equiv (f^{(1)}_{1,d,c}, ... , f^{(1)}_{48,d,c}) = \text{median}(a^{(1)}_{h,d,c}, ... , a^{(n)}_{h,d,c})$ and $\hat{a}_{d,c}^{(k)} = \hat{P} a_{d,c}^{(k)}$ where $P \in \mathscr{P}$ s.t $|| \hat{P} a_{d,c}^{(k)} - f^{(k)} ||_4 = \displaystyle \min_{P \in \mathscr{P}} || P a_{d,c}^{(k)} - f^{(k)} ||_4$
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Forecasts (ctd.)}
+\begin{itemize}
+
+\item \textbf{W}eighted \textbf{A}verage Forecast:
+\begin{center} $f_{h,d,c}^{(n+1)} =  \displaystyle \sum_{k=h-2}^{h+2} \sum_{j=1}^{n} \beta_{k,j} a_{k,d,c}^{(j)}$ \end{center}
+\pause
+
+\item \textbf{B}ayesian \textbf{R}idge \textbf{R}egression Forecast:
+\begin{center} $f_{h,d,c}^{(n+1)} =  \displaystyle \sum_{k=h-2}^{h+2} \sum_{j=1}^{n} \beta_{k,j} a_{k,d,c}^{(j)}$ \end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Forecasts}
 \begin{figure}
 \centering
-\includegraphics[scale=0.33]{forecast_Mon_P1.pdf}
+\includegraphics[scale=0.3]{forecast_Mon_P1(1).pdf}
 \caption{Simple point forecasts.}
 \label{fig:forecasts} 
 %\note{ \tiny Say: \begin{itemize} \item here I have shown you three different forecasts, each with an additional complexity. \item The first one, known as the Same Day forecast or ``Ess Dee'' forecast for short is the simplest forecast one here. It says that the forecast for next Monday at 9 is an average of what it was for the all past Mondays (obviously if you have long historical data) you may use the past 5 or 6 weeks of data. \item The second, linear regression forecast, is along the same lines but gets a window, meaning that next Monday at 9 is some weighted average of all the load between 7 and 11 of all past Mondays. \item we can see with both of these, that we will have lots of smooths as we average which is contextually undesirable and unrealistics \item Thus we come to the last forecast which iteratively updates a base profile which is much like the SD and LR forecast but optimises an error norm. We can see clearly then that we now do have a peakier forecasts whose magnitudes are better aligned and more accurate. \item While more improvements have been made they are not novel in the area of electricity load forecasting and thus let's move on to what is: Extremes behaviour. \end{itemize}}
-\end{figure}\end{frame}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Forecast Errors}
+\begin{enumerate}
+\item $E_4^c := \left[ \displaystyle \sum_{h,d} \left(f^{(n+1)}_{h,d,c} - a^{(n+1)}_{h,d,c} \right)^4 \right]^\frac{1}{4} $
+\pause
+\item $\hat{E}_{4}^c := \displaystyle \left[ \sum_{h,d} \left(\min_{P \in \mathscr{P}} || Pf_{h,d,c}^{(n+1)} - a_{h,d,c}^{(n+1)} || \right)^4 \right]^{\frac{1}{4}}$
+\pause
+\end{enumerate}
+%image 1 and 2
+
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+ & $E_4$ & $\hat{E}_4$ \\
+ \hline
+\textbf{SD} & 3.829 & 3.496 \\
+\textbf{LW} & 4.76 & 4.100 \\ 
+\textbf{AA} & 4.125 & \textbf{3.396} \\ 
+\textbf{WA} & 3.866 & 3.542 \\ 
+\textbf{BRR} & \textbf{3.805} & 3.575 \\
+\hline
+\end{tabular}
+\caption{Mean of errors over all households.}
+\label{tab:errs}
+\end{table}
+
+\end{frame}
+
+%\begin{frame}{Forecast Errors}
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.33]{Errors.pdf}
+%\caption{Simple point forecasts.}
+%\label{fig:forecast_errs} 
+%\end{figure}
+%\end{frame}
+
 
 %=====================================
 %			New Slide 4
@@ -92,16 +190,16 @@
 
 \begin{frame}{Extreme Value Theory}
 \begin{itemize}
-\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$. 
-\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}.
+\item Suppose that we have $X_1, X_2, ... , X_n, ... $ i.i.d. random variables with common distribution function $F$.  \pause
+\item The random variables, $X_1, ... , X_n$ can be ordered so that $X_{1,n} \le ... \le X_{n.n}$. Then $X_{k,n} $ for $k \in \mathbb{N}$ is $k^{th}$ upper \textbf{order statistic}. \pause
 
 \item The \textbf{sample/block maximum} is defined to be:
 
-\begin{center} $ X_{n,n} = \max\{X_1, ... , X_n\}$ \end{center}
+\begin{center} $ X_{n,n} = \max\{X_1, ... , X_n\}$ \end{center} \pause
 
 \item The \textbf{right endpoint} is defined as
 
-\begin{center} $x^* \equiv x^F:= \sup\{x | F(x) < 1\}$ \end{center}
+\begin{center} $x^* \equiv x^F:= \sup\{x | F(x) < 1\}$ \end{center} 
 
 
 \end{itemize}
@@ -118,14 +216,18 @@ If there exist constants $a_n >0$ and $b_n \in \mathbb{R}$ s.t. \newline
 
 \begin{center}$\displaystyle \lim_{n \rightarrow \infty} \mathbb{P}\left(\frac{X_{n,n} - b_n}{a_n} \le x\right) =  \lim_{n \rightarrow \infty} F^n (a_n x + b_n) = G(x)$ \end{center}
 
-for every continuity of $G$, then $G(x) = G_\gamma(x)$ is given by
+for every continuity of $G$, \pause then $G(x) = G_\gamma(x)$ is given by
 
-\begin{center} $G_\gamma(x) = \exp\{-(1+\gamma x)^{-\frac{1}{\gamma}}\} $ \end{center}
+\begin{center} $G_\gamma(x) = \exp\{-(1+\gamma x)^{-\frac{1}{\gamma}}\}, $ \end{center}
 
-for $1 + \gamma x >0$. $G$ is known as a Generalised Extreme Value (GEV) distribution and $F$ is said to be in the (maximum) domain of attraction of $G_\gamma$, $F \in MDA(G_\gamma)$. \newline
+for $1 + \gamma x >0$.
+
+$\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter. \pause 
+
+$G$ is known as a \textbf{Generalised Extreme Value (GEV)} distribution and $F$ is said to be in the \textbf{(maximum) domain of attraction} of $G_\gamma$, $F \in MDA(G_\gamma)$. \newline
 
 
-$\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
+
 
 %\note{\tiny This slide is for those people who know a little bit about Extreme Value theory. It's the analogue of Central Limit Theorem except for extremes. \begin{itemize} \item It's the theorem that makes our analyses mathematically robust. \item it tells us that maxima, when appropriately centred and scaled, tend to an extreme value distribution. \item There are three generalised extreme value distributions: Gumble, Weibull and Frechet and which of these is dependent on the sign of the shape parameter  for example if gamma is 0 it is the Frechet distribution. \item because of this theorem we can come up with stability properties and parametrically estimate using the block maxima. \item I will first present results of the shape parameter aka EVI. gamma describes the tail heavy-ness of the distribution of sample maxima. Distributions which have are light tails have negligible probability of extreme behaviour. Again think of the normal distribution where once we usually ignore anything outside of 3 standard deviations. As a result, light tailed distributions have an ultimate upper bound.\end{itemize}}
 
@@ -165,16 +267,17 @@ $\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
 
 \begin{frame}{Scedasticity}
 \begin{itemize}
-\item At time points $i=1, ... , n$, we have independent observations $X_1 , ... , X_n$ with continuous distribution function $F_{n,1} , ... , F_{n,n}$ that share the same $x^*$. Then the \textbf{scedasis function}, $c$, is
-\begin{center} $ \displaystyle \lim_{x \rightarrow x^*} \frac{1-F_{n,i}(x)}{1-F(x)} =: c\left(\frac{i}{n}\right) $ \end{center}
-\begin{center} $\int_0^1 c(s) ds = 1$ \end{center}
+\item At time points $i=1, ... , n$, we have independent observations $X_1 , ... , X_n$ with continuous distribution function $F_{n,1} , ... , F_{n,n}$ that share the same $x^*$. \pause Then the \textbf{scedasis function}, $c$, is
+\begin{center} $ \displaystyle \lim_{x \rightarrow x^*} \frac{1-F_{n,i}(x)}{1-F(x)} =: c\left(\frac{i}{n}\right), $ \end{center} \pause
+\begin{center} $\int_0^1 c(s) ds = 1$. \end{center} \pause
 \item \textbf{Scedasis estimator}:
-\begin{center} $\hat{c}(s) = \frac{1}{kh} \displaystyle \sum_{i=1}^{n} \mathbb{1}\{X_i > X_{n,n-k}\} G\left(\frac{s-\frac{i}{n}}{h}\right)$ \end{center}
+\begin{center} $\hat{c}(s) = \frac{1}{kh} \displaystyle \sum_{i=1}^{n} \mathbb{1}\{X_i > X_{n,n-k}\} G\left(\frac{s-\frac{i}{n}}{h}\right)$. \end{center} \pause
 \item Choose an intermediate sequence $k = k(n)$, for the upper order statistics, such that
-\begin{center} $\displaystyle \lim_{n \rightarrow \infty} k = \infty, \quad \lim_{n \rightarrow \infty} \frac{k}{n} = 0$ \end{center}
+\begin{center} $\displaystyle \lim_{n \rightarrow \infty} k = \infty, \quad \lim_{n \rightarrow \infty} \frac{k}{n} = 0$. \end{center}
 \end{itemize}
 %\note{\tiny \begin{itemize} \item We come to the last of the mathematical slides and there is the concept of scedasticity to understand which is the main result of my talk today. \item For simplicity we often assume that all random variables in a data set have the same variability (this could mean they have the same standard deviation, the same variance or some other appropriate measure of statistical dispersion). This is known as homoscedasticity. \item However, sometimes that's not realistic. Definitely in the case of customers and how much electricity they use, the variance of all customers should not be the same. When we allow subpopulations in our collection of random variables to have different variabilities, we call them heteroscedastic. \item Thus the scedasis function, as we define it here, tells us about the relative risk as we tend towards the maxima in our sample. \item we can look at the sample analogue/estimator of our scedasis function. This finds the density of occurences that surpass some threshold decided by our choice of k. \item Our choice of k must be carefully done. We must understand that it depends on our data and that there should be large number so that we can do some inference but it should be a very small part of our entire data set to ensure that it is indeed extremes that we're looking at. \item The G function there is the kernel density, the part that makes the estimator a density.Thus c does not exactly tells us about probability of extremes but the density of extremes. i.e. it tells us not where/when the most extreme is occurring but where most extremes are.\item without further ado, then we should just go ahead and look at what we have. \end{itemize}}
 \end{frame}
+
 
 %=====================================
 %			New Slide 9
@@ -183,12 +286,49 @@ $\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
 \begin{frame}{Half hourly Maxima}
 \begin{figure}
 \centering
-\includegraphics[scale=0.3]{hh_max_sced_pres.pdf}
+\begin{tikzpicture}
+\node[anchor=west] (note1) at (0,4) {Sat.};
+\node[anchor=east] (note2) at (5,6) {Sat./Sun.};
+\node[anchor=east] (note3) at (8,6) {Fri.};
+\node[anchor=east] (note4) at (12,4) {Thu.};
+\begin{scope}[xshift=1.5cm]
+\node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[scale=0.3]{hh_max_sced(2).pdf}};
+\begin{scope}
+%\draw[black,rounded corners] (0.48,0.80) rectangle (0.55,0.95);
+\draw [-stealth, line width=0.5pt,black] (note1) -- ++ (2.4,0);
+\draw [-stealth, line width=0.5pt,black] (note1) -- ++ (3.4,0.3);
+\draw [-stealth, line width=0.5pt,black] (note2) -- ++ (1.9,-1.2);
+\draw [-stealth, line width=0.5pt,black] (note3) -- ++ (-0.4,-0.9);
+\draw [-stealth, line width=0.5pt,black] (note4) -- ++ (-2.7,0);
+\end{scope}
+\end{scope}
+\end{tikzpicture}
 \caption{Estimated scedasis of half hourly maxima.}
 \label{fig:hh_max_sced} 
 \end{figure}
 %\note{What I want to explore here are the timings of the peaks and I want to see if I can explain why those peaks might appear there: \begin{itemize} \item The first peak occurs  \item 597,605,617-621,625,633 \item  Friday,Sat,Fri-Mon,Fri,sat  \item k=400 \item Thus we can see that peaks are most frequent during the weekends. This makes sense from the earlier images we saw that in general and on average, the highest usage is on Saturday and Sundays. \end{itemize}}
 \end{frame}
+
+\begin{frame}{Statistical Tests for trend in $c$}
+For $C(s) := \displaystyle \int_0^s c (u) du$ and $C_0(s) := \displaystyle \int_0^s c_0 (u) du $ for some $c_0$ given: \pause
+
+\textbf{Kolmogorov-Smirnov-type} test statistic:
+\begin{center} {$T_1 : = \displaystyle \sup_{0 \le s \le 1} | \hat{C}(s) - C_0 (s) |$} \end{center}
+
+\textbf{Cramer-Von-Mises-type} test statistic:
+\begin{center} {$T_2 : = \displaystyle \int_0^1 \left( \hat{C}(s) - C_0 (s) \right)^2 dC_0(s)$} \end{center}
+
+
+where $\hat{(\cdot)}$ denotes a corresponding estimator. \pause
+
+
+\textbf{Corollary 1:} Under certain conditions, for a given $c_0$, 
+\begin{equation*} \sqrt k T_1 \xrightarrow{d} \sup |B(s)|, \qquad  kT_2 \xrightarrow{d} \int_0^1 B^2(s) ds \end{equation*} 
+where $B$ is a brownian bridge.
+%
+%$p_{T_1} \approx 0 \qquad p_{T_2} \approx 0$
+\end{frame}
+
 
 %=====================================
 %			New Slide 10
@@ -197,26 +337,49 @@ $\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
 %\begin{frame}{Positive Difference}
 %\begin{figure}
 %\centering
-%\includegraphics[scale=0.3]{pos_diff_sced.pdf}
+%\includegraphics[scale=0.3]{pos_diff_sced(2).pdf}
 %\caption{Estimated scedasis of Daily positive differences.}
 %\label{fig:pos_diff_sced} 
 %\end{figure}
-%\note{\tiny Here I am showing you the scedasis of the what I call positive difference. \begin{itemize} \item Scedasis requires one time series. Since we have a time series for each customer, we need to aggregate data in some way, which is why we have various positive difference. \item For each customer we also 48 measurements on each day thus we also need to aggregate over each day. \item positive difference takes the difference between some aggregate for one day and the day before. where that difference is negative, we set it to zero. \item The reason we want to do something like this is because we are not always interested in the absolute values themselves but in the difference. And since it is surpluses that concern us right now, we look at positive differences. \item Recall that for each customer we have 49 days of data at half hourly resolutoon, so we get max or total load at day and then max or total over all customers to get one time series. \item since we're talking about differences between subsequent days, we have 48 days data with between 20 and 30 days where the difference is positive. \item We can go through the where and when the peaks occur again ... \item k=20. \end{itemize}}
+%%\note{\tiny Here I am showing you the scedasis of the what I call positive difference. \begin{itemize} \item Scedasis requires one time series. Since we have a time series for each customer, we need to aggregate data in some way, which is why we have various positive difference. \item For each customer we also 48 measurements on each day thus we also need to aggregate over each day. \item positive difference takes the difference between some aggregate for one day and the day before. where that difference is negative, we set it to zero. \item The reason we want to do something like this is because we are not always interested in the absolute values themselves but in the difference. And since it is surpluses that concern us right now, we look at positive differences. \item Recall that for each customer we have 49 days of data at half hourly resolutoon, so we get max or total load at day and then max or total over all customers to get one time series. \item since we're talking about differences between subsequent days, we have 48 days data with between 20 and 30 days where the difference is positive. \item We can go through the where and when the peaks occur again ... \item k=20. \end{itemize}}
 %\end{frame}
+
+%\begin{frame}{Positive differences}
+%\begin{table}
+%\centering
+%\begin{tabular}{|c|c|c|c|c|}
+%\hline
+% & & & & \\
+% \textbf{Peak} & \textbf{\shortstack{Total of \\Daily Total}} & \textbf{\shortstack{Max of \\Daily Max}} & \textbf{\shortstack{Max of \\Daily Total}} & \textbf{\shortstack{Total of \\Daily Total}} \\
+%  & & & & \\
+% \hline
+%1 & Friday & Saturday & Thursday & Wednesday \\
+%2 & Saturday & Sunday & Saturday & Friday \\
+%3 & Saturday & Monday & Saturday & Sunday \\ 
+%4 & Sunday & & Monday & Saturday \\
+%5 & Friday & & Friday & Thursday \\
+%6 & Sunday & Wednesday & Sunday & Sunday \\
+%7 & Friday & Saturday & Friday & Saturday \\
+%\hline
+%\end{tabular}
+%\caption{Day of the week of the peaks of estimated scedasis functions for various positive difference.}
+%\label{tab:pos_diff_scedd}
+%\end{table}\end{frame}
+
 
 %=====================================
 %			New Slide 11
 %=====================================
 
-\begin{frame}{Forecast Errors}
-\begin{figure}
-\centering
-\includegraphics[scale=0.3]{err_sced_together.pdf}
-\caption{Estimated Scedasis of point forecast errors.}
-\label{fig:err_sced} 
-\end{figure}
-%\note{\tiny The last result before I wrap things up. Here I have estimated the scedasis function again of forecasted errors (the point-wise difference between the forecast and observation). \begin{itemize} \item I am using the same forecasts as before but now we're looking at the maximum error over all households at each half hour. \item the xticks have been placed at noon-time of each day. \item you can see that there are 7 peaks in each scedasis estimate when the forecast is a week long. \item this means that some times of the day are particularly susceptible on everyday though maybe mid-week days are less so than weekends. \item Also we have peaks either around noon-time or in the evening dinner peak implying that higher error scedasis is associated with higher usage. \item this means that we this is an issue arising from the data and those periods are inherently susceptable to higher errors, this makes sense because we used a point wise estimate, without any permutations. \item but it also means that we will have to add other complexities and parameters to reduce this such as clustering and cluster specific models. \item k=100\end{itemize}}
-\end{frame}
+%\begin{frame}{Forecast Errors}
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.3]{err_sced_together.pdf}
+%\caption{Estimated Scedasis of point forecast errors.}
+%\label{fig:err_sced} 
+%\end{figure}
+%%\note{\tiny The last result before I wrap things up. Here I have estimated the scedasis function again of forecasted errors (the point-wise difference between the forecast and observation). \begin{itemize} \item I am using the same forecasts as before but now we're looking at the maximum error over all households at each half hour. \item the xticks have been placed at noon-time of each day. \item you can see that there are 7 peaks in each scedasis estimate when the forecast is a week long. \item this means that some times of the day are particularly susceptible on everyday though maybe mid-week days are less so than weekends. \item Also we have peaks either around noon-time or in the evening dinner peak implying that higher error scedasis is associated with higher usage. \item this means that we this is an issue arising from the data and those periods are inherently susceptable to higher errors, this makes sense because we used a point wise estimate, without any permutations. \item but it also means that we will have to add other complexities and parameters to reduce this such as clustering and cluster specific models. \item k=100\end{itemize}}
+%\end{frame}
 
 %=====================================
 %			New Slide 12
@@ -224,11 +387,13 @@ $\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
 
 \begin{frame}{In Conclusion}
 \begin{itemize}
-\item Weekly maxima are light tailed
-\item Right Endpoint: 12 kWh - 13.5 kWh
-\item High electric load are more frequent on weekends.
+\item Created benchmark forecasts and error measures. \pause \begin{itemize} \item improve speed \item introduce clustering \item model social and meteorological factors \end{itemize} \pause
+\item Weekly maxima are light tailed.
+\item Right Endpoint: 12 kWh - 13.5 kWh. \pause
+%\item High electric load are more frequent on weekends.
+\item Data are not identically distributed. \pause \begin{itemize} \item Develop $\gamma <0$ in the semi-parametric framework \item analyse scedasis with the trend removed \end{itemize}
 %\item For Positive differences...
-\item Error are large when load is high.
+%\item Error are large when load is high.
 \end{itemize}
 
 %\note{ \tiny Coming back to this image, we know \begin{itemize} \item We know the data are light tailed (which has been shown rigorously for weekly maxima). This means that there exists an absolute upper limit. We have already found this. We can now move on ask what physical and perhaps meteorological limitations/dependencies to put on it so that it's contextually meaningful and robust. \item we can use scedasis for each customer to monitor huge changes, even predict an imminent change. This is great for electricity distributors so that they can respond appropriately and act before a power failure occurs. \item by using scedasis functions for individual customers, DNOs can also infer if customers have recently purchased any huge appliances or electric vehicles, installed PV cells, and tailor future electricity contracts accordingly. \item We can even look at it from societal point of view, we can form models societal behaviours and dynamics with respect to low carbon technologies and the uptake of these technologies into this study so that we can study how the temperature change might impact load in the future, how much PV cell electricity generation may offset electric vehicle charging, plan and strategise major infrastructure changes. \end{itemize}}
@@ -238,14 +403,17 @@ $\gamma$ is known as the \textbf{Extreme Value Index} (EVI) or shape parameter.
 %			New Slide 13
 %=====================================
 
-\begin{frame}{What's Next?}
-\begin{itemize}
-\item Physical and meteorological limitations for right endpoint.
-\item Model social influences and low carbon technologies.
-\item Create forecasts that include both averages and extremes.
-\end{itemize}
-%\note{ \tiny Coming back to this image, we know \begin{itemize} \item We know the data are light tailed (which has been shown rigorously for weekly maxima). This means that there exists an absoluted upper limit. We have already found this. We can now move on ask what physical and perhaps meteorological limitations/dependencies to put on it so that it's contextually meaningful and robust. \item we can use scedasis for each customer to monitor huge changes, even predict an imminent change. This is great for electricity distributors so that they can respond appropriately and act before a power failure occurs. \item by using scedasis functions for individual customers, DNOs can also infer if customers have recently purchased any huge appliances or electric vehicles, installed PV cells, and tailor future electricity contracts accordingly. \item We can even look at it from societal point of view, we can form models societal behaviours and dynamics with respect to low carbon technologies and the uptake of these technologies into this study so that we can study how the temperature change might impact load in the future, how much PV cell electricity generation may offset electric vehicle charging, plan and strategise major infrastructure changes. \end{itemize}}
-\end{frame}
+%\begin{frame}{What's Next?}
+%\begin{itemize}
+%\item Introduce clustering in forecasting.
+%\item Improve forecast speeds. \pause
+%\item Model social influences and low carbon technologies. \pause
+%\item Create forecasts that include both averages and extremes. \pause
+%%\item Develop estimators for $\gamma < 0 $ in a semi-parametric framework. \pause
+%\item Identify the trend in scedasis and analyse with the trend removed.
+%\end{itemize}
+%%\note{ \tiny Coming back to this image, we know \begin{itemize} \item We know the data are light tailed (which has been shown rigorously for weekly maxima). This means that there exists an absoluted upper limit. We have already found this. We can now move on ask what physical and perhaps meteorological limitations/dependencies to put on it so that it's contextually meaningful and robust. \item we can use scedasis for each customer to monitor huge changes, even predict an imminent change. This is great for electricity distributors so that they can respond appropriately and act before a power failure occurs. \item by using scedasis functions for individual customers, DNOs can also infer if customers have recently purchased any huge appliances or electric vehicles, installed PV cells, and tailor future electricity contracts accordingly. \item We can even look at it from societal point of view, we can form models societal behaviours and dynamics with respect to low carbon technologies and the uptake of these technologies into this study so that we can study how the temperature change might impact load in the future, how much PV cell electricity generation may offset electric vehicle charging, plan and strategise major infrastructure changes. \end{itemize}}
+%\end{frame}
 
 %=====================================
 %			New Slide 14

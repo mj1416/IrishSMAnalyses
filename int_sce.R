@@ -22,10 +22,16 @@ for (s in ss){
   #print(s.index)
 }
 
-require(graphics)
-filename="hh_max_int_sced.pdf"
-pdf(file=filename,width=12,paper="a4r")
-plot(x = n*ss,y = C_est,type="l",xaxt="n",yaxt="n",col="blue",ylab=expression(hat(C)),xlab='Day')
-axis(side = 1,at=seq(1,n,by=48*4),labels = seq(1,49,by=4))
-axis(side=2,at=c(0,0.5,1),labels = c(0,0.5,1))
-dev.off()
+# require(graphics)
+# filename="hh_max_int_sced.pdf"
+# pdf(file=filename,width=12,paper="a4r")
+# plot(x = n*ss,y = C_est,type="l",xaxt="n",yaxt="n",col="blue",ylab=expression(hat(C)),xlab='Day')
+# axis(side = 1,at=seq(1,n,by=48*4),labels = seq(1,49,by=4))
+# axis(side=2,at=c(0,0.5,1),labels = c(0,0.5,1))
+# dev.off()
+
+qwe = data.frame(n*ss,C_est)
+qw <- ggplot(data=qwe,aes(x=n*ss,y=C_est))  + 
+  geom_line(colour="salmon") + 
+  labs(x="Half Hour",y=expression(hat(C)))
+qw

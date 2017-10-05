@@ -1,3 +1,10 @@
+def myload_data():
+    import pandas as pd
+    data = pd.read_csv("short_data.csv",index_col=0)
+    past = data[data.Week!=22]
+    obs = data[data.Week==22]
+    return data,past,obs
+
 def mySD(past):
     import numpy as np
     import pandas as pd
@@ -366,7 +373,7 @@ def plot_forecast_sample(P=4):
     obs = data[data.Week==22]
     #
     plt.subplot(5,1,1)
-    plt.plot(SD[SD.Day==1].HH,SD[SD.Day==1][SD.columns[P]],"r",label="SD")
+    plt.plot(SD[SD.Day==1].HH,SD[SD.Day==1][SD.columns[P]],"blue",label="SD")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1][obs.columns[P]],'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
@@ -375,7 +382,7 @@ def plot_forecast_sample(P=4):
     plt.legend(loc="upper left")
     #
     plt.subplot(5,1,2)
-    plt.plot(LW[LW.Day==1].HH,LW[LW.Day==1][LW.columns[P]],"r",label="LW")
+    plt.plot(LW[LW.Day==1].HH,LW[LW.Day==1][LW.columns[P]],"green",label="LW")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1][obs.columns[P]],'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
@@ -384,7 +391,7 @@ def plot_forecast_sample(P=4):
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
     #
     plt.subplot(5,1,3)
-    plt.plot(AA[AA.Day==1].HH,AA[AA.Day==1][AA.columns[P]],"r",label="AA")
+    plt.plot(AA[AA.Day==1].HH,AA[AA.Day==1][AA.columns[P]],"tomato",label="AA")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1][obs.columns[P]],'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
@@ -393,7 +400,7 @@ def plot_forecast_sample(P=4):
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
     #
     plt.subplot(5,1,4)
-    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1][LR.columns[P]],"r",label="WA")
+    plt.plot(LR[LR.Day==1].HH,LR[LR.Day==1][LR.columns[P]],"red",label="WA")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1][obs.columns[P]],'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")
@@ -402,7 +409,7 @@ def plot_forecast_sample(P=4):
     plt.xticks([1,7,13,19,25,31,37,43,48],[" "," "," "," "," "," "," "," "," "])
     #
     plt.subplot(5,1,5)
-    plt.plot(BR[BR.Day==1].HH,BR[BR.Day==1][BR.columns[P]],"r",label="BR")
+    plt.plot(BR[BR.Day==1].HH,BR[BR.Day==1][BR.columns[P]],"magenta",label="BRR")
     plt.plot(obs[obs.Day==1].HH,obs[obs.Day==1][obs.columns[P]],'k',label="obs")
     plt.legend()
     plt.ylabel("kWh")

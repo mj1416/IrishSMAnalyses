@@ -111,4 +111,10 @@ Ranneby, B. (1984).
   maximum likelihood method.
 \newblock {\em Scandinavian Journal of Statistics}, pages 93--112.
 
+\bibitem[R{\'e}nyi, 1953]{renyi53}
+R{\'e}nyi, A. (1953).
+\newblock On the theory of order statistics.
+\newblock {\em Acta Mathematica Academiae Scientiarum Hungarica},
+  4(3-4):191--231.
+
 \end{thebibliography}
